@@ -1,11 +1,10 @@
 "use client"
 import React, { useContext } from "react";
-import styles from "../app/styles/map.module.css"
-import MapContext from "@/context/mapContext";
+import styles from "../styles/map.module.css"
+import MapContext from "@/app/context/mapContext";
 
 const Map = () => {
   const { mapData, setMapData } = useContext(MapContext)
-  console.log(mapData)
 
   return (
     <div className={styles.main}>

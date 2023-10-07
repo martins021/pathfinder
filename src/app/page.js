@@ -1,7 +1,8 @@
-import Map from '@/components/map'
-import Controls from '@/components/controls'
+"use client"
+import Map from '@/app/components/map'
+import Controls from '@/app/components/controls'
 import styles from './styles/main.module.css'
-import { MapProvider } from '@/context/mapContext'
+import { MapProvider } from '@/app/context/mapContext'
 
 export default function Home() {
   return (
