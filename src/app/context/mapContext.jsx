@@ -6,7 +6,7 @@ const MapContext = createContext(null);
 
 export const MapProvider = ({ children }) => {
   const prisma = new PrismaClient()
-  const [mapSize, setMapSize] = useState({ x: 70 , y: 40 });
+  const [mapSize, setMapSize] = useState({ x: 60 , y: 34 });
   const [mapData, setMapData] = useState([]);
 
   const createMap = () => {
