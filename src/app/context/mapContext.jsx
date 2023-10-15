@@ -30,6 +30,8 @@ export const MapProvider = ({ children }) => {
     createMap()
   }, [mapSize])
 
+  console.log(mapData);
+
   return (
     <MapContext.Provider value={{ mapData, setMapData, mapSize, setMapSize }}>
       {children}
