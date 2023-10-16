@@ -9,6 +9,7 @@
   border: 1px solid rgba(110, 110, 110, 0.5);
   box-sizing: border-box;
   border-radius: 3px;
+  cursor: pointer;
 }
 .empty {
   background-color: rgb(255, 255, 255);
@@ -19,6 +20,6 @@
 .start {
   background-color: rgb(7, 137, 0);
 }
-.finish {
+.target {
   background-color: rgb(170, 0, 0);
 }

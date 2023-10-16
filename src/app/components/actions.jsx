@@ -1,6 +1,5 @@
 "use client"
 import React from "react";
-import SizeController from "./sizeController";
 import SaveBtn from "./saveBtn";
 import { fetchMaps } from "@/lib/apiRequests";
 
@@ -12,7 +11,6 @@ const Actions = () => {
   }
   return (
     <>
-      <SizeController />
       <SaveBtn onClick={saveMap} />
     </>
   );
