@@ -19,6 +19,7 @@ module.exports = {
       gray:'rgb(63, 63, 63)',
       white:'rgb(255, 255, 255)',
       violet:'rgb(170, 0, 170)',
+      blue:'rgb(0, 0, 170)',
     }
   },
   plugins: [],
