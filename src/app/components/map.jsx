@@ -9,9 +9,12 @@ const Cell = memo(({ cellState, onClick }) => {
 });
 
 const Map = ({ tool }) => {
-  const { mapData, mapSize, setMapData } = useContext(MapContext);
+  const { mapData, mapSize, setMapData, setStart, setTarget } = useContext(MapContext);
 
-  const handleCellClick = (index) => {
+  const handleCellClick = (cell, index) => {
+    if(tool === "start") setStart(index);
+    else if(tool === "target") setTarget(index);
+    
     const cp = [...mapData];
     cp[index].state = tool;
     setMapData(cp);
@@ -23,7 +26,7 @@ const Map = ({ tool }) => {
       gridTemplateColumns: `repeat(${mapSize.x}, 1fr)`
     }}>
       {mapData.map((cell, i) => (
-        <Cell key={i} cellState={cell.state} onClick={() => handleCellClick(i)} />
+        <Cell key={i} cellState={cell.state} onClick={() => handleCellClick(cell, i)} />
       ))}
     </div>
   );

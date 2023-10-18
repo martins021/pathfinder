@@ -6,7 +6,7 @@ import { launchDfs } from "../apiRequests/algorithms";
 import MapContext from "../context/mapContext";
 
 const Actions = ({ algorithm }) => {
-  const { mapData } = useContext(MapContext);
+  const { mapData, mapSize, start, target } = useContext(MapContext);
 
   const saveMap = async () => {
     console.log("hi");
@@ -17,7 +17,7 @@ const Actions = ({ algorithm }) => {
   const launchAlgorithm = async () => {
     switch (algorithm) {
       case "dfs":
-        const resp = await launchDfs(mapData);
+        const resp = await launchDfs(mapData, mapSize, start, target);
         break;
       default:
         break;

@@ -6,13 +6,15 @@ const MapContext = createContext(null);
 
 export const MapProvider = ({ children }) => {
   const prisma = new PrismaClient()
-  const [mapSize, setMapSize] = useState({ x: 25 , y: 14 });
+  const [mapSize, setMapSize] = useState({ x: 20 , y: 11 });
   const [mapData, setMapData] = useState([]);
+  const [start, setStart] = useState(null);
+  const [target, setTarget] = useState(null);
 
   const createMap = () => {
     const data = []
-    for (let x = 0; x < mapSize.x; x++) {
-      for (let y = 0; y < mapSize.y; y++) {
+    for (let y = 0; y < mapSize.y; y++) {
+      for (let x = 0; x < mapSize.x; x++) {
         data.push({ x, y, state: "empty", elev: 1 })
       }
     }
@@ -24,7 +26,18 @@ export const MapProvider = ({ children }) => {
   }, [mapSize])
 
   return (
-    <MapContext.Provider value={{ mapData, setMapData, mapSize, setMapSize }}>
+    <MapContext.Provider 
+      value={{ 
+        mapData, 
+        setMapData, 
+        mapSize, 
+        setMapSize,
+        start,
+        setStart,
+        target,
+        setTarget 
+      }}
+    >
       {children}
     </MapContext.Provider>
   );
