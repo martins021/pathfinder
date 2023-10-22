@@ -1,31 +1,31 @@
+import createAdjacencyList from "@/lib/createAdjacencyList";
 const { default: prisma } = require("@/lib/database");
 const { NextResponse } = require("next/server");
 
-const generateAdjacencyList = (data, colCount, rowCount) => {
-  const adjList = data.map((node, i) => {
-    const neighbors = [];
-    if(i > colCount) neighbors.push(data[i - colCount]); // top neighbor
-    if(i % colCount !== 0) neighbors.push(data[i - 1]); // left neighbor
-    if(i % colCount !== colCount - 1) neighbors.push(data[i + 1]); // right neighbor
-    if(i < colCount * (rowCount - 1)) neighbors.push(data[i + colCount]); // bottom neighbor
-    return neighbors;
-  });
-  return adjList;
-}
 
-const dfs = (start, graph) => {
-  const visitedNodes = new Array(graph.length).fill(false);
-
-}
-
-export async function POST(request) {
+const POST = async (request) => {
   try {
     const {data, size, start, target} = await request.json();
-    const adjacencyList = generateAdjacencyList(data, size.x, size.y);
-    dfs(start, adjacencyList);
+    const adjacencyList = createAdjacencyList(data, size.x, size.y);
+    const result = [];
 
-    return NextResponse.json({ ok: true });
+    const dfs = (current, graph, visited) => {
+      if(visited[current]) return;
+      visited[current] = true;
+      result.push(current);  
+      const currNeighbors = graph[current];
+      for(const neighbor of currNeighbors) {
+        dfs(neighbor, graph, visited);
+      }
+    }
+
+    const visitedNodes = new Array(data.length).fill(false);
+    dfs(start, adjacencyList, visitedNodes);
+
+    return NextResponse.json({ result });
   } catch (error) {
     console.log(error);
   }
 }
+
+export {POST};

@@ -2,7 +2,7 @@
 import React, { useContext } from "react";
 import SaveBtn from "./saveBtn";
 import { fetchMaps } from "@/app/apiRequests/maps";
-import { launchDfs } from "../apiRequests/algorithms";
+import { launchBfs, launchDfs } from "../apiRequests/algorithms";
 import MapContext from "../context/mapContext";
 
 const Actions = ({ algorithm }) => {
@@ -15,9 +15,13 @@ const Actions = ({ algorithm }) => {
   }
 
   const launchAlgorithm = async () => {
+    let resp;
     switch (algorithm) {
       case "dfs":
-        const resp = await launchDfs(mapData, mapSize, start, target);
+        resp = await launchDfs(mapData, mapSize, start, target);
+        break;
+      case "bfs":
+        resp = await launchBfs(mapData, mapSize, start, target);
         break;
       default:
         break;
