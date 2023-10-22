@@ -14,12 +14,15 @@ module.exports = {
       },
     },
     colors:{
-      green:'rgb(7, 137, 0)',
-      red:'rgb(170, 0, 0)',
-      gray:'rgb(63, 63, 63)',
-      white:'rgb(255, 255, 255)',
-      violet:'rgb(170, 0, 170)',
-      blue:'rgb(0, 0, 170)',
+      background: 'rgb(53, 53, 53)',
+      customGreen:'rgb(7, 137, 0)',
+      customRed:'rgb(170, 0, 0)',
+      customGray:'rgb(63, 63, 63)',
+      customWhite:'rgb(255, 255, 255)',
+      customViolet:'rgb(170, 0, 170)',
+      customBlue:'rgb(0, 0, 170)',
+      customYellow:'rgb(255, 205, 73)',
+      customYellowHover:'rgb(211, 169, 59)'
     }
   },
   plugins: [],

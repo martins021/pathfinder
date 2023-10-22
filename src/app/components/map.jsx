@@ -9,15 +9,42 @@ const Cell = memo(({ cellState, onClick }) => {
 });
 
 const Map = ({ tool }) => {
-  const { mapData, mapSize, setMapData, setStart, setTarget } = useContext(MapContext);
+  const { mapData, mapSize, start, target, setMapData, setStart, setTarget } = useContext(MapContext);
 
   const handleCellClick = (cell, index) => {
-    if(tool === "start") setStart(index);
-    else if(tool === "target") setTarget(index);
-    
-    const cp = [...mapData];
-    cp[index].state = tool;
-    setMapData(cp);
+    let setState = false;
+    switch (tool) {
+      case "empty":
+        if(cell.state === "start") {
+          setStart(null);
+        } else if(cell.state === "target") {
+          setTarget(null);
+        }
+        setState = true;
+        break;
+      case "start":
+        if(cell.state !== "target" && start === null){
+          setStart(index);
+          setState = true;
+        }
+        break;
+      case "target":
+        if(cell.state !== "start" && target === null){
+          setTarget(index);
+          setState = true;
+        }
+        break;
+      case "wall":
+        if(cell.state !== "start" && cell.state !== "target"){
+          setState = true;
+        }
+    }
+
+    if(setState){
+      const copy = [...mapData];
+      copy[index].state = tool;
+      setMapData(copy);
+    }
   }
 
   return (

@@ -12,14 +12,14 @@
   cursor: pointer;
 }
 .empty {
-  background-color: rgb(255, 255, 255);
+  background-color: rgb(229, 229, 229);
 }
 .wall {
-  background-color: rgb(63, 63, 63);
+  background-color: rgb(53, 53, 53);
 }
 .start {
-  background-color: rgb(7, 137, 0);
+  background-color: rgb(60, 110, 113);
 }
 .target {
-  background-color: rgb(170, 0, 0);
+  background-color: rgb(164, 22, 26);
 }

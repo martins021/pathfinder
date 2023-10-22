@@ -4,7 +4,7 @@ import React, { useContext, memo } from "react";
 
 const SaveBtn = ({ onClick }) => {
   return(
-    <button onClick={onClick} className="bg-blue hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
+    <button onClick={onClick} className="bg-customBlue text-customWhite font-bold py-2 px-4 rounded-full">
       Save
     </button>
   )

@@ -4,10 +4,10 @@ import Link from "next/link";
 const Navbar = () => {
   return (
     <>
-      <div className="w-full pt-3 pb-3 bg-violet sticky top-0">
+      <div className="w-full pt-3 pb-3 bg-customViolet sticky top-0">
         <div className="container mx-auto max-w-[1920px] px-8 h-full">
           <div className="flex justify-between items-center h-full">
-            <ul className="hidden md:flex gap-x-8 text-white">
+            <ul className="hidden md:flex gap-x-8 text-customWhite">
               <li>
                 <Link href="/">
                   <p>Home</p>
@@ -19,7 +19,7 @@ const Navbar = () => {
                 </Link>
               </li>
             </ul>
-            <div className="ml-auto text-white">
+            <div className="ml-auto text-customWhite">
                 <Link href="/auth">
                     <p>Login</p>
                 </Link>

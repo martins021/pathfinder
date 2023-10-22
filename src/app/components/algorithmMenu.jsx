@@ -1,11 +1,26 @@
 import React from "react";
+import AlgorithmBtn from "./buttons/algorithmBtn";
 
-const AlgorithmMenu = ({ setAlgorithm }) => {
+const menuStyle ={
+  display: "grid",
+  gridTemplateColumns: "repeat(2, 1fr)",
+  gap: "1vw",
+}
+
+const AlgorithmMenu = ({ algorithm, setAlgorithm }) => {
   return (
-    <>
-      <button onClick={() => setAlgorithm("dfs")} className="text-black bg-white rounded-lg text-sm p-2">DFS</button>
-      <button onClick={() => setAlgorithm("bfs")} className="text-black bg-white rounded-lg text-sm p-2">BFS</button>
-    </>
+    <div style={menuStyle}>
+      <AlgorithmBtn 
+        onClick={() => setAlgorithm("bfs")} 
+        title={"BFS"}
+        selected={algorithm === "bfs"}
+      />    
+      <AlgorithmBtn 
+        onClick={() => setAlgorithm("dfs")} 
+        title={"DFS"}
+        selected={algorithm === "dfs"}
+      />
+    </div>
   );
 }
 

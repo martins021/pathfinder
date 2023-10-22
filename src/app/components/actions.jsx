@@ -1,6 +1,6 @@
 "use client"
 import React, { useContext } from "react";
-import SaveBtn from "./saveBtn";
+import SaveBtn from "./buttons/saveBtn";
 import { fetchMaps } from "@/app/apiRequests/maps";
 import { launchBfs, launchDfs } from "../apiRequests/algorithms";
 import MapContext from "../context/mapContext";
@@ -31,7 +31,7 @@ const Actions = ({ algorithm }) => {
   return (
     <>
       <SaveBtn onClick={saveMap} />
-      <button onClick={launchAlgorithm} className="text-black bg-white rounded-lg text-sm p-2">Launch</button>
+      <button onClick={launchAlgorithm} className="text-black bg-customWhite rounded-lg text-sm p-2">Launch</button>
     </>
   );
 }

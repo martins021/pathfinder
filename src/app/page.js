@@ -10,11 +10,12 @@ import React, { useContext, useEffect, useState } from "react";
 
 export default function Home() {
   const [tool, setTool] = useState('start')
-  const [algorithm, setAlgorithm] = useState(null)
-
+  const [algorithm, setAlgorithm] = useState("bfs")
+  console.log("algorithm", algorithm);
+  
   return (
     <MapProvider>
-      <main className="mx-auto max-w-[1920px] min-h-screen px-4">
+      <main className="mx-auto max-w-[1920px] min-h-screen bg-background px-4">
         <div className={styles.mainGrid} >
           <div className={styles.actionsTile}>
             <Actions algorithm={algorithm} />
@@ -30,6 +31,7 @@ export default function Home() {
           </div>
           <div className={styles.algorithmsTile}>
             <AlgorithmMenu 
+              algorithm={algorithm}
               setAlgorithm={setAlgorithm} 
             />
           </div>

@@ -8,9 +8,10 @@ const Controls = ({ tool, setTool }) => {
     <>
      <SizeController />
      <div style={{ display: "flex", justifyContent: "space-around" }}>
-      <button onClick={() => setTool("start")} className="text-white bg-green rounded-lg text-sm p-2">Start</button>
-      <button onClick={() => setTool("target")} className="text-white bg-red rounded-lg  text-sm p-2">Target</button>
-      <button onClick={() => setTool("wall")} className="text-white bg-gray rounded-lg  text-sm p-2">Wall</button>
+      <button onClick={() => setTool("start")} className="text-customWhite bg-customGreen rounded-lg text-sm p-2">Start</button>
+      <button onClick={() => setTool("target")} className="text-customWhite bg-customRed rounded-lg  text-sm p-2">Target</button>
+      <button onClick={() => setTool("wall")} className="text-customWhite bg-customGray rounded-lg  text-sm p-2">Wall</button>
+      <button onClick={() => setTool("empty")} className="rounded-lg  text-sm p-2">Clear</button>
      </div>
     </>
   );
