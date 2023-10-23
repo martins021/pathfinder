@@ -20,6 +20,11 @@ const AlgorithmMenu = ({ algorithm, setAlgorithm }) => {
         title={"DFS"}
         selected={algorithm === "dfs"}
       />
+      <AlgorithmBtn 
+        onClick={() => setAlgorithm("dijkstra")} 
+        title={"Dijkstra"}
+        selected={algorithm === "dijkstra"}
+      />
     </div>
   );
 }
