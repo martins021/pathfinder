@@ -21,8 +21,9 @@ module.exports = {
       customWhite:'rgb(255, 255, 255)',
       customViolet:'rgb(170, 0, 170)',
       customBlue:'rgb(0, 0, 170)',
-      customYellow:'rgb(255, 205, 73)',
-      customYellowHover:'rgb(211, 169, 59)'
+      customYellow:'rgb(255,215,0)',
+      customYellowHover:'rgb(144, 122, 0)',
+      customBlack: 'rgb(0, 0, 0)'
     }
   },
   plugins: [],

@@ -4,7 +4,7 @@ import AlgorithmBtn from "./buttons/algorithmBtn";
 const menuStyle ={
   display: "grid",
   gridTemplateColumns: "repeat(2, 1fr)",
-  gap: "1vw",
+  gap: ".5vw",
 }
 
 const AlgorithmMenu = ({ algorithm, setAlgorithm }) => {
@@ -24,6 +24,16 @@ const AlgorithmMenu = ({ algorithm, setAlgorithm }) => {
         onClick={() => setAlgorithm("dijkstra")} 
         title={"Dijkstra"}
         selected={algorithm === "dijkstra"}
+      />
+      <AlgorithmBtn 
+        onClick={() => setAlgorithm("aStar")} 
+        title={"A*"}
+        selected={algorithm === "aStar"}
+      />
+      <AlgorithmBtn 
+        onClick={() => setAlgorithm("bellmanFord")} 
+        title={"Bellman-Ford"}
+        selected={algorithm === "bellmanFord"}
       />
     </div>
   );

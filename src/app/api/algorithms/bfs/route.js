@@ -31,7 +31,12 @@ const bfs = (start, target, graph) => {
     }
   }
   const path = createPath(parrents, target);
-  return path;
+  const visitedNodeIDs = visitedNodes.reduce((acc, current, index) => {
+    if(current) acc.push(index);
+    return acc;
+  }, []);
+
+  return { path, visitedNodes: visitedNodeIDs};
 }
 
 const POST = async (request) => {
@@ -39,9 +44,9 @@ const POST = async (request) => {
     const {data, size, start, target} = await request.json();
     const adjacencyList = createAdjacencyList(data, size.x, size.y);
     console.log("Adjacency list: ", adjacencyList);
-    const path = bfs(start, target, adjacencyList)
+    const { path, visitedNodes } = bfs(start, target, adjacencyList)
 
-    return NextResponse.json({ path })
+    return NextResponse.json({ path, visitedNodes })
   } catch (error) {
     console.log(error);
   }

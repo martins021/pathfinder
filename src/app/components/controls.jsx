@@ -3,10 +3,13 @@ import React, { useContext, useEffect, useState } from "react";
 import SizeController from "./sizeController";
 
 
-const Controls = ({ tool, setTool }) => {
+const Controls = ({ tool, setTool, mapSize, setMapSize }) => {
   return (
     <>
-     <SizeController />
+     <SizeController 
+        mapSize={mapSize}
+        setMapSize={setMapSize}
+     />
      <div style={{ display: "flex", justifyContent: "space-around" }}>
       <button onClick={() => setTool("start")} className="text-customWhite bg-customGreen rounded-lg text-sm p-2">Start</button>
       <button onClick={() => setTool("target")} className="text-customWhite bg-customRed rounded-lg  text-sm p-2">Target</button>
