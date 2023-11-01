@@ -3,18 +3,28 @@
   height: 100%;
   display: grid;
   grid-auto-rows: auto;
-  gap: 2px;
+  gap: 3px;
 }
 .cell {
   box-sizing: border-box;
   border-radius: 3px;
   cursor: pointer;
 }
+.cell:hover {
+  transform: scale(0.95);
+  transition: transform 0.2s ease-in-out;
+}
 .visited {
-  background-color: rgb(255,215,0);
+  animation-name: visitedAnimation;
+  animation-duration: 4s;
+  animation-delay: var(--delay, 0s);
+  animation-fill-mode: both;
 }
 .path {
-  background-color: rgb(0, 42, 255);
+  animation-name: pathAnimation;
+  animation-duration: 4s;
+  animation-delay: var(--delay, 0s);
+  animation-fill-mode: both;
 }
 .empty {
   background-color: rgb(229, 229, 229);
@@ -27,4 +37,32 @@
 }
 .target {
   background-color: rgb(164, 22, 26);
+}
+
+@keyframes visitedAnimation {
+  0% {
+    background-color: rgb(229, 229, 229);
+  }
+  20% {
+    background-color: rgb(255, 215, 0);
+    box-shadow: 0 0 10px 5px rgb(255, 215, 0);
+    z-index: 100;
+  }
+  100% {
+    background-color: rgb(144, 122, 0);
+  }
+}
+
+@keyframes pathAnimation {
+  0% {
+    background-color: rgb(144, 122, 0);
+  }
+  20% {
+    background-color: rgb(0, 42, 255);
+    box-shadow: 0 0 10px 10px rgb(0, 42, 255);
+    z-index: 100;
+  }
+  100% {
+    background-color: rgb(0, 140, 255);
+  }
 }

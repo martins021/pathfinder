@@ -13,6 +13,7 @@ const bfs = (start, target, graph) => {
   const queue = [start];
   visitedNodes[start] = true;
   let targetFound = false;
+  const visitedNodeIDs = []
 
   while(queue.length && targetFound === false){
     const currNode = queue.shift();
@@ -22,6 +23,7 @@ const bfs = (start, target, graph) => {
       if(!visitedNodes[currNeighbors[i]]){
         queue.push(currNeighbors[i]); // ieliek rindā kaimiņus
         visitedNodes[currNeighbors[i]] = true;
+        visitedNodeIDs.push(currNeighbors[i]);
         parrents[currNeighbors[i]] = currNode; // pašreizējo node ieraksta kā kaimiņa vecāku
         if(currNeighbors[i] === target){
           targetFound = true;
@@ -31,10 +33,6 @@ const bfs = (start, target, graph) => {
     }
   }
   const path = createPath(parrents, target);
-  const visitedNodeIDs = visitedNodes.reduce((acc, current, index) => {
-    if(current) acc.push(index);
-    return acc;
-  }, []);
 
   return { path, visitedNodes: visitedNodeIDs};
 }

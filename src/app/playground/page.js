@@ -9,11 +9,12 @@ import styles from '../styles/main.module.css'
 const PlayGround = () => {
   const [tool, setTool] = useState('start')
   const [algorithm, setAlgorithm] = useState("bfs")
-  const [path, setPath] = useState([])
-  const [mapSize, setMapSize] = useState({ x: 50 , y: 30 });
+  const [result, setResult] = useState({})
+  const [mapSize, setMapSize] = useState({ x: 55 , y: 31 });
   const [mapData, setMapData] = useState([]);
   const [start, setStart] = useState(null);
   const [target, setTarget] = useState(null);
+  const [animationSpeed, setAnimationSpeed] = useState(0.05)
 
   const createMap = () => {
     const data = []
@@ -31,46 +32,46 @@ const PlayGround = () => {
   
   return (
     <div className={styles.mainGrid} >
-    <div className={styles.actionsTile}>
-      <Actions 
-        algorithm={algorithm}
-        setPath={setPath} 
-        mapData={mapData}
-        setMapData={setMapData}
-        mapSize={mapSize}
-        start={start}
-        target={target}
-      />
+      <div className={styles.actionsTile}>
+        <Actions 
+          algorithm={algorithm}
+          setResult={setResult} 
+          mapData={mapData}
+          setMapData={setMapData}
+          mapSize={mapSize}
+          start={start}
+          target={target}
+        />
+      </div>
+      <div className={styles.mapTile}>
+        <Map 
+          tool={tool}
+          result={result} 
+          mapData={mapData}
+          mapSize={mapSize}
+          start={start}
+          animationSpeed={animationSpeed}
+          target={target}
+          setMapData={setMapData}
+          setStart={setStart}
+          setTarget={setTarget}
+        />
+      </div>
+      <div className={styles.controlsTile}>
+        <Controls 
+          tool={tool} 
+          setTool={setTool} 
+          mapSize={mapSize}
+          setMapSize={setMapSize}
+        />
+      </div>
+      <div className={styles.algorithmsTile}>
+        <AlgorithmMenu 
+          algorithm={algorithm}
+          setAlgorithm={setAlgorithm} 
+        />
+      </div>
     </div>
-    <div className={styles.mapTile}>
-      <Map 
-        tool={tool}
-        path={path} 
-        mapData={mapData}
-        mapSize={mapSize}
-        start={start}
-        target={target}
-        setMapData={setMapData}
-        setStart={setStart}
-        setTarget={setTarget}
-      />
-    </div>
-    <div className={styles.controlsTile}>
-      <Controls 
-        tool={tool} 
-        setTool={setTool} 
-        mapSize={mapSize}
-        setMapSize={setMapSize}
-      />
-    </div>
-    <div className={styles.algorithmsTile}>
-      <AlgorithmMenu 
-        algorithm={algorithm}
-        setAlgorithm={setAlgorithm} 
-      />
-    </div>
-  </div>
-
   )
 }
 

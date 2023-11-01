@@ -1,67 +1,134 @@
-"use client"
-import React, { useMemo, useCallback, useContext, memo } from "react";
-import styles from "../styles/map.module.css"
+"use client";
+import React, { useMemo, useState, useCallback, memo, useEffect } from "react";
+import styles from "../styles/map.module.css";
+import Node from "../components/node";
 
-const Cell = memo(({ cellState, onClick }) => {
-  const cl = `${styles["cell"]} ${styles[cellState]}`;
-  return <div className={cl} onClick={onClick}></div>;
-});
+const Map = ({
+  tool,
+  result: { path, visitedNodes },
+  mapData,
+  mapSize,
+  start,
+  target,
+  setMapData,
+  setStart,
+  setTarget,
+  animationSpeed
+}) => {
+  const [isMouseDown, setIsMouseDown] = useState(false);
 
-const arePropsEqual = (prevProps, newProps) => {
-  return prevProps.path === newProps.path
-}
+  const gridStyle = useMemo(
+    () => ({
+      gridTemplateRows: `repeat(${mapSize.y}, 1fr)`,
+      gridTemplateColumns: `repeat(${mapSize.x}, 1fr)`,
+    }),
+    [mapSize]
+  );
 
-const Map = ({ tool, path, mapData, mapSize, start, target, setMapData, setStart, setTarget }) => {
-  const gridStyle = useMemo(() => ({
-    gridTemplateRows: `repeat(${mapSize.y}, 1fr)`,
-    gridTemplateColumns: `repeat(${mapSize.x}, 1fr)`
-  }), [mapSize]);
-  
-  const handleCellClick = (cell, index) => {
-    let setState = false;
-    switch (tool) {
-      case "empty":
-        if(cell.state === "start") {
-          setStart(null);
-        } else if(cell.state === "target") {
-          setTarget(null);
-        }
-        setState = true;
-        break;
-      case "start":
-        if(cell.state !== "target" && start === null){
-          setStart(index);
-          setState = true;
-        }
-        break;
-      case "target":
-        if(cell.state !== "start" && target === null){
-          setTarget(index);
-          setState = true;
-        }
-        break;
-      case "wall":
-        if(cell.state !== "start" && cell.state !== "target"){
-          setState = true;
-        }
-    }
+  const animatePath = (withVisited, delay) => {
+    const updatedMapData = withVisited.map((node, i) => {
+      if (path?.includes(i) && !nonMutableNodes.includes(node.state)) {
+        return ({
+          ...node,
+          state: "path",
+          animationDelay: path.indexOf(i)
+        })
+      } 
+      return node;
+    })
 
-    if(setState){
-      const copy = [...mapData];
-      copy[index].state = tool;
-      setMapData(copy);
-    }
+    setTimeout(() => {
+      setMapData(updatedMapData)
+    }, delay)
   }
 
-  console.log("Map received new path: ", path);
+  const animateVisitedNodes = useCallback(
+    () => {
+      if(mapData.length){
+        const lastVisitedNode = visitedNodes?.length - 1;
+        const updatedMapData = mapData.map((node, i) => {
+          if (visitedNodes?.includes(i) && !nonMutableNodes.includes(node.state)) {
+            return ({
+              ...node,
+              state: "visited",
+              animationDelay: visitedNodes.indexOf(i)
+            })
+          }
+          return node;
+        })
+
+        setMapData(updatedMapData);
+        animatePath(updatedMapData, lastVisitedNode * animationSpeed * 1000)
+      }
+    }, [visitedNodes, path, setMapData]
+  )
+
+  useEffect(() => {
+    animateVisitedNodes();
+  }, [visitedNodes])
+
+  const handleNodeAction = useCallback(
+    (node, index) => {
+      let setState = false;
+      switch (tool) {
+        case "empty":
+          if (node.state === "start") {
+            setStart(null);
+          } else if (node.state === "target") {
+            setTarget(null);
+          }
+          setState = true;
+          break;
+        case "start":
+          if (node.state !== "target" && start === null) {
+            setStart(index);
+            setState = true;
+          }
+          break;
+        case "target":
+          if (node.state !== "start" && target === null) {
+            setTarget(index);
+            setState = true;
+          }
+          break;
+        case "wall":
+          if (node.state !== "start" && node.state !== "target") {
+            setState = true;
+          }
+      }
+
+      if (setState) {
+        const copy = [...mapData];
+        copy[index].state = tool;
+        setMapData(copy);
+      }
+    },
+    [tool, mapData]
+  );
+
+  const mapElement = document.getElementById("map");
+  mapElement?.addEventListener("mousedown", () => setIsMouseDown(true));
+  mapElement?.addEventListener("mouseup", () => setIsMouseDown(false));
+
+  const nonMutableNodes = ["start", "target", "wall"];
 
   return (
-    <div className={styles.main} style={gridStyle}>
+    <div id="map" className={styles.main} style={gridStyle}>
       {mapData.map((cell, i) => {
-        console.log(i);
-        return(
-          <Cell key={i} cellState={cell.state} onClick={() => handleCellClick(cell, i)} />
-        )
+
+        return (
+          <Node
+            key={i}
+            index={i}
+            delay={cell.animationDelay}
+            speed={animationSpeed}
+            cellState={cell.state}
+            onClick={() => handleNodeAction(cell, i)}
+            onMouseLeave={() =>
+              isMouseDown ? handleNodeAction(cell, i) : null
+            }
+          />
+        );
       })}
     </div>
   );
