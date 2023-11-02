@@ -10,7 +10,7 @@ const PlayGround = () => {
   const [tool, setTool] = useState('start')
   const [algorithm, setAlgorithm] = useState("bfs")
   const [result, setResult] = useState({})
-  const [mapSize, setMapSize] = useState({ x: 55 , y: 31 });
+  const [mapSize, setMapSize] = useState({ x: 20 , y: 14 });
   const [mapData, setMapData] = useState([]);
   const [start, setStart] = useState(null);
   const [target, setTarget] = useState(null);

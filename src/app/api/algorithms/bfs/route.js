@@ -1,10 +1,5 @@
-const { default: createAdjacencyList } = require("@/lib/createAdjacencyList");
+import { createAdjacencyList, createPath } from "@/app/helpers";
 const { NextResponse } = require("next/server");
-
-const createPath = (parrents, node) => {
-  if(parrents[node] === null) return [node]; // ja nākamā virsotne ir null, tad tas ir sākums
-  return createPath(parrents, parrents[node]).concat(node);
-}
 
 const bfs = (start, target, graph) => {
   const visitedNodes = new Array(graph.length).fill(false);

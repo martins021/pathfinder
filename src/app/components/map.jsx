@@ -106,9 +106,12 @@ const Map = ({
     [tool, mapData]
   );
 
-  const mapElement = document.getElementById("map");
-  mapElement?.addEventListener("mousedown", () => setIsMouseDown(true));
-  mapElement?.addEventListener("mouseup", () => setIsMouseDown(false));
+  useEffect(() => {
+    const mapElement = document.getElementById("map");
+    mapElement?.addEventListener("mousedown", () => setIsMouseDown(true));
+    mapElement?.addEventListener("mouseup", () => setIsMouseDown(false));
+  }, [])
+
 
   const nonMutableNodes = ["start", "target", "wall"];
 
@@ -118,8 +121,7 @@ const Map = ({
 
         return (
           <Node
-            key={i}
-            index={i}
+            i={i}
             delay={cell.animationDelay}
             speed={animationSpeed}
             cellState={cell.state}

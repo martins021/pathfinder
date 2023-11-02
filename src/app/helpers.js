@@ -11,4 +11,12 @@ const createAdjacencyList = (data, colCount, rowCount) => {
   return adjList;
 }
 
-export default createAdjacencyList;
+const createPath = (parrents, node) => {
+  if(parrents[node] === null) return [node]; // ja nākamā virsotne ir null, tad tas ir sākums
+  return createPath(parrents, parrents[node]).concat(node);
+}
+
+export {
+  createAdjacencyList,
+  createPath
+}
