@@ -1,22 +1,122 @@
 "use client"
-import React, { useContext, useEffect, useState } from "react";
+import React, { useState } from "react";
 import SizeController from "./sizeController";
+import ToolsSelect from "./dropdowns/tools";
+import Slider from "./sliders/slider";
 
+const toolOptions = [
+  {
+    label: "Start",
+    value: "start",
+    description: "Sets starting node"
+  },
+  {
+    label: "Target",
+    value: "target",
+    description: "Sets target node"
+  },
+  {
+    label: "Wall",
+    value: "wall",
+    description: "Creates a wall node"
+  },
+  {
+    label: "Clear",
+    value: "empty",
+    description: "Sets node to empty"
+  }
+]
 
-const Controls = ({ tool, setTool, mapSize, setMapSize }) => {
+const speedOptions = ["Slowest", "Slow", "Normal", "Fast", "Fastest"]
+
+const Controls = ({ 
+  tool, 
+  setTool, 
+  mapSize, 
+  setMapSize, 
+  createMap, 
+  mapData, 
+  setMapData,
+  setAnimationSpeed
+}) => {
+  const [speedLabel, setSpeedLabel] = useState("Normal")
+
+  const handleResetMap = () => {
+    createMap();
+  }
+
+  const handleClearPath = () => {
+    const withoutPath = mapData.map(node => {
+      if(node.state === 'visited' || node.state === 'path'){
+        return ({
+          ...node, 
+          state: 'empty'
+        });
+      } 
+      return node;
+    })
+
+    setMapData(withoutPath);
+  }
+
+  const handleSpeedChange = (value) => {
+    switch (value) {
+      case "0":
+        setAnimationSpeed(0.0768);
+        setSpeedLabel("Slowest");
+        break;
+      case "25":
+        setAnimationSpeed(0.048);
+        setSpeedLabel("Slow");
+        break;
+      case "50":
+        setAnimationSpeed(0.03);
+        setSpeedLabel("Normal");
+        break;
+      case "75":
+        setAnimationSpeed(0.012);
+        setSpeedLabel("Fast");
+        break;
+      default:
+        setAnimationSpeed(0.0048);
+        setSpeedLabel("Fastest");
+        break;
+    }
+  }
+
   return (
-    <>
-     <SizeController 
-        mapSize={mapSize}
-        setMapSize={setMapSize}
-     />
-     <div style={{ display: "flex", justifyContent: "space-around" }}>
-      <button onClick={() => setTool("start")} className="text-customWhite bg-customGreen rounded-lg text-sm p-2">Start</button>
-      <button onClick={() => setTool("target")} className="text-customWhite bg-customRed rounded-lg  text-sm p-2">Target</button>
-      <button onClick={() => setTool("wall")} className="text-customWhite bg-customGray rounded-lg  text-sm p-2">Wall</button>
-      <button onClick={() => setTool("empty")} className="rounded-lg  text-sm p-2">Clear</button>
-     </div>
-    </>
+    <div className="flex flex-col justify-center items-center gap-2">
+      <div className="flex flex-row justify-between pl-16 pr-16" style={{ width: "100%" }}>
+        <Slider
+          options={speedOptions} 
+          handleChange={handleSpeedChange}
+        />
+        <div className="text-customWhite">{speedLabel}</div>
+      </div>
+      <SizeController 
+          mapSize={mapSize}
+          setMapSize={setMapSize}
+      />
+      <ToolsSelect 
+        tool={tool}
+        setTool={setTool}
+        toolOptions={toolOptions}
+      />
+      <div className="flex flex-row gap-2">
+        <button 
+          onClick={handleClearPath}
+          className="rounded p-3 text-md font-semibold bg-customWhite hover:bg-customHoverGray"
+        >
+          Clear path
+        </button>
+        <button 
+          onClick={handleResetMap}
+          className="rounded p-3 text-md font-semibold bg-customWhite hover:bg-customHoverGray"
+        >
+          Reset map
+        </button>
+      </div>
+    </div>
   );
 }
 

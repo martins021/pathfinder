@@ -24,6 +24,8 @@ const PlayGround = () => {
       }
     }
     setMapData(data)
+    setStart(null);
+    setTarget(null);
   }
 
   useEffect(() => {
@@ -63,6 +65,11 @@ const PlayGround = () => {
           setTool={setTool} 
           mapSize={mapSize}
           setMapSize={setMapSize}
+          createMap={createMap}
+          mapData={mapData}
+          setMapData={setMapData}
+          animationSpeed={animationSpeed}
+          setAnimationSpeed={setAnimationSpeed}
         />
       </div>
       <div className={styles.algorithmsTile}>

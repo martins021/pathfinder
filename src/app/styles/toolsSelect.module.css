@@ -1,0 +1,38 @@
+.dropdown {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+.triggerBtn {
+  width: 100%;
+  padding: 8px 32px 8px 32px;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
+}
+.triggerBtn:hover {
+  border-radius: 5px 5px 0 0;
+}
+.dropdownContent {
+  width: 100%;
+  border-radius: 0 0 5px 5px;
+  display: none;
+  position: absolute;
+  background-color: white;
+  z-index: 1;
+  display: block;
+  overflow-y: scroll;
+  max-height: 200px;
+}
+.dropdown:hover .triggerBtn {
+  background-color: rgb(207, 207, 207);
+}
+.toolsOption {
+  padding: 8px 0 8px 0;
+  text-align: center;
+  cursor: pointer;
+}
+.toolsOption:hover {
+  background-color: rgb(207, 207, 207);
+}

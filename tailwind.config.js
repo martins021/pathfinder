@@ -18,6 +18,8 @@ module.exports = {
       customGreen:'rgb(7, 137, 0)',
       customRed:'rgb(170, 0, 0)',
       customGray:'rgb(63, 63, 63)',
+      customHoverGray:'rgb(207, 207, 207)',
+      customFadedGray: 'rgb(63, 63, 63, 0.5)',
       customWhite:'rgb(255, 255, 255)',
       customViolet:'rgb(170, 0, 170)',
       customBlue:'rgb(0, 0, 170)',
