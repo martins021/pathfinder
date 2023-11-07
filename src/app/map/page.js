@@ -10,7 +10,7 @@ const PlayGround = () => {
   const [tool, setTool] = useState('start')
   const [algorithm, setAlgorithm] = useState("bfs")
   const [result, setResult] = useState({})
-  const [mapSize, setMapSize] = useState({ x: 20 , y: 14 });
+  const [mapSize, setMapSize] = useState({ x: 25 , y: 14 });
   const [mapData, setMapData] = useState([]);
   const [start, setStart] = useState(null);
   const [target, setTarget] = useState(null);
@@ -43,6 +43,7 @@ const PlayGround = () => {
           mapSize={mapSize}
           start={start}
           target={target}
+          animationSpeed={animationSpeed}
         />
       </div>
       <div className={styles.mapTile}>

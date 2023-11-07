@@ -121,6 +121,7 @@ const Map = ({
 
         return (
           <Node
+            key={i}
             i={i}
             delay={cell.animationDelay}
             speed={animationSpeed}
