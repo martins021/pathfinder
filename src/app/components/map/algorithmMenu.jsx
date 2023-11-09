@@ -1,5 +1,5 @@
 import React from "react";
-import AlgorithmBtn from "./buttons/algorithmBtn";
+import AlgorithmBtn from "../buttons/algorithmBtn";
 
 const menuStyle ={
   display: "grid",

@@ -1,6 +1,6 @@
 "use client";
 import React, { memo } from "react";
-import styles from "../styles/map.module.css";
+import styles from "../../styles/map.module.css";
 
 const Node = ({ i, cellState, delay, speed, onClick, onMouseLeave }) => (
   <div

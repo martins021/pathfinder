@@ -1,7 +1,7 @@
 "use client";
 import React, { useMemo, useState, useCallback, memo, useEffect } from "react";
-import styles from "../styles/map.module.css";
-import Node from "../components/node";
+import styles from "../../styles/map.module.css";
+import Node from "./node";
 
 const Map = ({
   tool,

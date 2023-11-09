@@ -1,0 +1,22 @@
+.main {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.createMapDiv{
+  border: 2px solid #ffffff;
+  color: #ffffff;
+  width: 10%;
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+  background-image: linear-gradient(to bottom, transparent 50%, white 50%);
+  background-size: 100% 200%;
+  transition: background-position 0.4s, color 0.4s;
+}
+.createMapDiv:hover{
+  background-position: 0 -100%;
+  color: black;
+}

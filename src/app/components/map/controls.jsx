@@ -1,8 +1,8 @@
 "use client"
 import React, { useState } from "react";
 import SizeController from "./sizeController";
-import ToolsSelect from "./dropdowns/tools";
-import Slider from "./sliders/slider";
+import ToolsSelect from "../dropdowns/tools";
+import Slider from "../sliders/slider";
 
 const toolOptions = [
   {

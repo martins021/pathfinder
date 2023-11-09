@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import styles from "../styles/sizeController.module.css"
+import styles from "../../styles/sizeController.module.css"
 
 const SizeController = ({ mapSize, setMapSize }) => {
   const [x, setX] = useState(mapSize.x)
