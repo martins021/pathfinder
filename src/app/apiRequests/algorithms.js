@@ -1,5 +1,5 @@
 export const launchDfs = async (data, size, start, target) => {
-  const res = await fetch(`http://localhost:3000/api/algorithms/dfs`, {
+  const res = await fetch(`/api/algorithms/dfs`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -18,7 +18,7 @@ export const launchDfs = async (data, size, start, target) => {
 
 export const launchBfs = async (data, size, start, target) => {
   try {
-    const res = await fetch(`http://localhost:3000/api/algorithms/bfs`, {
+    const res = await fetch(`/api/algorithms/bfs`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

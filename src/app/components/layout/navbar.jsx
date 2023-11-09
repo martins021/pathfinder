@@ -24,7 +24,7 @@ const Navbar = () => {
               </li>
             </ul>
             <div className={`ml-auto text-customWhite ${pathname === '/auth' ? 'text-customHoverGray' : ''}`}>
-                <Link href="/auth">
+                <Link href="/login">
                     <p>Login</p>
                 </Link>
             </div>
