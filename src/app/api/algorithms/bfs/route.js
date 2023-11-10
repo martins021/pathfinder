@@ -41,7 +41,7 @@ const POST = async (request) => {
 
     return NextResponse.json({ path, visitedNodes })
   } catch (error) {
-    console.log(error);
+    console.log("BFS error: ", error);
   }
 }
 

@@ -33,7 +33,7 @@ export const launchBfs = async (data, size, start, target) => {
     const newData = res.json()
     return newData
   } catch (error) {
-    console.log(error);
+    console.log("Error launching Bfs: ", error);
   }
 
 } 

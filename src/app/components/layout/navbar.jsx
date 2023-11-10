@@ -2,8 +2,10 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from 'next/navigation'
+import { useSession } from "next-auth/react";
 
 const Navbar = () => {
+  const { data: session, status } = useSession();
   const pathname = usePathname();
 
   return (

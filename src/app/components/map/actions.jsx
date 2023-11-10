@@ -11,14 +11,19 @@ const Actions = ({ algorithm, setResult, mapData, mapSize, start, target, animat
   const onSubmit = data => console.log(data);
 
   const handleSave = async () => {
-    const test = await fetchMaps();
-    const dataToSave = {
-      name: mapName,
-      mapData,
-      animationSpeed,
-      algorithm
+    try {
+      const test = await fetchMaps();
+      const dataToSave = {
+        name: mapName,
+        mapData,
+        animationSpeed,
+        algorithm
+      }
+      console.log("Fetch maps result: ", test);
+      await saveMap(dataToSave);
+    } catch (error) {
+      console.log("BIIIIG ERROR: ", error);
     }
-    saveMap(dataToSave);
   }
 
 
@@ -45,7 +50,7 @@ const Actions = ({ algorithm, setResult, mapData, mapSize, start, target, animat
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(handleSave)}>
         <div className="flex gap justify-around">
           <div>
             <input  

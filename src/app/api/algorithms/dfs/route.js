@@ -36,7 +36,7 @@ const POST = async (request) => {
 
     return NextResponse.json({ path, visitedNodes: targetVisitedNodes });
   } catch (error) {
-    console.log(error);
+    console.log("DFS error: ", error);
   }
 }
 

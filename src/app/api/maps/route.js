@@ -22,6 +22,7 @@ export async function GET(request) {
 
 export async function POST(request) {
   try {
+    console.log("PRISMA CLIENT: ", prisma);
     const json = await request.json();
 
     const map = await prisma.map.create({ 
