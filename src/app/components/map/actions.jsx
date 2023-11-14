@@ -1,7 +1,7 @@
 "use client"
 import React, { useRef, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { fetchMaps, saveMap } from "@/app/apiRequests/maps";
+import { saveMap } from "@/app/apiRequests/maps";
 import { launchBfs, launchDfs } from "../../apiRequests/algorithms";
 
 const Actions = ({ algorithm, setResult, mapData, mapSize, start, target, animationSpeed }) => {
@@ -12,14 +12,13 @@ const Actions = ({ algorithm, setResult, mapData, mapSize, start, target, animat
 
   const handleSave = async () => {
     try {
-      const test = await fetchMaps();
       const dataToSave = {
         name: mapName,
         mapData,
         animationSpeed,
         algorithm
       }
-      console.log("Fetch maps result: ", test);
+      console.log({ dataToSave });
       await saveMap(dataToSave);
     } catch (error) {
       console.log("BIIIIG ERROR: ", error);

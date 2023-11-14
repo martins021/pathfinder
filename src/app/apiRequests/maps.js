@@ -1,3 +1,5 @@
+const baseUrl = process.env.BASE_URL
+
 export async function fetchMaps() {
   const res = await fetch(`http://localhost:3000/api/maps`)
   const data = await res.json()
@@ -6,6 +8,7 @@ export async function fetchMaps() {
 }
 
 export async function saveMap(data) {
+  console.log("SAve map receives data: ", data);
   const res = await fetch(`http://localhost:3000/api/maps`, {
     method: 'POST',
     headers: {
@@ -13,8 +16,8 @@ export async function saveMap(data) {
     },
     body: JSON.stringify(data),
   })
-
+  console.log({ res });
   const newData = await res.json()
-
+  console.log({ newData });
   return newData
 }

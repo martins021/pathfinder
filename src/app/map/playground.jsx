@@ -6,7 +6,7 @@ import Map from "../components/map/map";
 import Actions from "../components/map/actions";
 import AlgorithmMenu from "../components/map/algorithmMenu";
 
-const PlayGround = ({ params }) => {
+const PlayGround = () => {
   const [tool, setTool] = useState('start')
   const [algorithm, setAlgorithm] = useState("bfs")
   const [result, setResult] = useState({})
@@ -15,8 +15,6 @@ const PlayGround = ({ params }) => {
   const [start, setStart] = useState(null);
   const [target, setTarget] = useState(null);
   const [animationSpeed, setAnimationSpeed] = useState(0.05)
-
-  console.log(params);
 
   const createMap = () => {
     const data = []

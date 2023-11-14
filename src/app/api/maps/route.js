@@ -22,20 +22,19 @@ export async function GET(request) {
 
 export async function POST(request) {
   try {
-    console.log("PRISMA CLIENT: ", prisma);
     const json = await request.json();
-
+    console.log({ json });
     const map = await prisma.map.create({ 
       data: json 
     })
-
+    console.log({map});
     let jsonResp = {
       status: "success",
       data: map
     }
 
     return new NextResponse(JSON.stringify(jsonResp), {
-      status: 201,
+      status: 200,
       headers: {
         "Content-Type": "application/json"
       }

@@ -3,11 +3,12 @@ import React from "react";
 import Link from "next/link";
 import { usePathname } from 'next/navigation'
 import { useSession } from "next-auth/react";
+import CredentialsComponent from "../dropdowns/credentialsComponent";
 
 const Navbar = () => {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const pathname = usePathname();
-
+  
   return (
     <>
       <div className="w-full pt-3 pb-3 bg-customViolet sticky top-0">
@@ -20,16 +21,22 @@ const Navbar = () => {
                 </Link>
               </li>
               <li>
+                <Link href="/maps/explore" className={`${pathname === '/maps/explore' ? 'text-customHoverGray' : ''}`}>
+                  <p>Explore</p>
+                </Link>
+              </li>
+              {status === "authenticated" && <li>
+                <Link href="/maps/mymaps" className={`${pathname === '/maps/mymaps' ? 'text-customHoverGray' : ''}`}>
+                  <p>My maps</p>
+                </Link>
+              </li>}
+              <li>
                 <Link href="/about" className={`${pathname === '/about' ? 'text-customHoverGray' : ''}`}>
                   <p>About</p>
                 </Link>
               </li>
             </ul>
-            <div className={`ml-auto text-customWhite ${pathname === '/auth' ? 'text-customHoverGray' : ''}`}>
-                <Link href="/login">
-                    <p>Login</p>
-                </Link>
-            </div>
+            <CredentialsComponent />
           </div>
         </div>
       </div>

@@ -8,7 +8,6 @@ const RegisterPage = () => {
   const router = useRouter();
 
   const registerUser = async (data) => {
-    console.log(data);
 
     const resp = await fetch("/api/register", {
       method: "POST",
@@ -22,8 +21,7 @@ const RegisterPage = () => {
       throw new Error(`Error! status: ${resp.status}`);
     }
 
-    const userInfo = await resp.json()
-    console.log(userInfo);
+    await resp.json()
     router.push('/login');
   }
 
