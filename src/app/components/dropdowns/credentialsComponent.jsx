@@ -6,8 +6,6 @@ import { useSession, signOut } from "next-auth/react";
 const CredentialsComponent = () => {
   const { data: session, status } = useSession();
   
-  console.log("Credentials: ", session, status);
-
   const handleLogOut = () => {
     signOut()
   }

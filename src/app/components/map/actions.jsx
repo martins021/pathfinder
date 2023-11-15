@@ -2,13 +2,10 @@
 import React, { useRef, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { saveMap } from "@/app/apiRequests/maps";
-import { launchBfs, launchDfs } from "../../apiRequests/algorithms";
 
-const Actions = ({ algorithm, setResult, mapData, mapSize, start, target, animationSpeed }) => {
+const Actions = ({ algorithm, mapData, mapSize, animationSpeed, session }) => {
   const [mapName, setMapName] = useState("");
-  const mapNameChanged = useRef(false); // tells wether user has changed name manually
   const { register, handleSubmit, formState: { errors } } = useForm();
-  const onSubmit = data => console.log(data);
 
   const handleSave = async () => {
     try {
@@ -16,29 +13,15 @@ const Actions = ({ algorithm, setResult, mapData, mapSize, start, target, animat
         name: mapName,
         mapData,
         animationSpeed,
-        algorithm
+        size: `${mapSize.x}x${mapSize.y}`,
+        algorithm,
+        authorId: session?.user?.id
       }
       console.log({ dataToSave });
       await saveMap(dataToSave);
     } catch (error) {
-      console.log("BIIIIG ERROR: ", error);
+      console.log("ERROR SAVING: ", error);
     }
-  }
-
-
-  const launchAlgorithm = async () => {
-    let resp;
-    switch (algorithm) {
-      case "dfs":
-        resp = await launchDfs(mapData, mapSize, start, target);
-        break;
-      case "bfs":
-        resp = await launchBfs(mapData, mapSize, start, target);
-        break;
-      default:
-        break;
-    }
-    setResult(resp)
   }
 
   useEffect(() => {
@@ -70,7 +53,6 @@ const Actions = ({ algorithm, setResult, mapData, mapSize, start, target, animat
           </div>
         </div>
       </form>
-      <button onClick={launchAlgorithm} className="text-black bg-customWhite rounded-lg text-sm p-2">Launch</button>
     </>
   );
 }

@@ -40,6 +40,7 @@ export async function POST(request) {
       }
     })
   } catch (error) {
+    console.log("Error saving map: ", error);
     let errorResp = {
       status: "error",
       message: error.message

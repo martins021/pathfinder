@@ -5,8 +5,11 @@ import Controls from "../components/map/controls";
 import Map from "../components/map/map";
 import Actions from "../components/map/actions";
 import AlgorithmMenu from "../components/map/algorithmMenu";
+import { useSession } from "next-auth/react";
+import { launchBfs, launchDfs } from "../apiRequests/algorithms";
 
 const PlayGround = () => {
+  const { data: session, status } = useSession();
   const [tool, setTool] = useState('start')
   const [algorithm, setAlgorithm] = useState("bfs")
   const [result, setResult] = useState({})
@@ -28,23 +31,39 @@ const PlayGround = () => {
     setTarget(null);
   }
 
+    const launchAlgorithm = async () => {
+    let resp;
+    switch (algorithm) {
+      case "dfs":
+        resp = await launchDfs(mapData, mapSize, start, target);
+        break;
+      case "bfs":
+        resp = await launchBfs(mapData, mapSize, start, target);
+        break;
+      default:
+        break;
+    }
+    setResult(resp)
+  }
+
   useEffect(() => {
     createMap()
   }, [mapSize])
-  
+console.log(session);
   return (
     <div className={styles.mainGrid} >
       <div className={styles.actionsTile}>
-        <Actions 
+        {status === "authenticated" && <Actions 
           algorithm={algorithm}
-          setResult={setResult} 
           mapData={mapData}
           setMapData={setMapData}
           mapSize={mapSize}
-          start={start}
-          target={target}
           animationSpeed={animationSpeed}
-        />
+          session={session}
+        />}
+      </div>
+      <div className={styles.launchBtn}>
+        <button onClick={launchAlgorithm} className="text-black bg-customWhite rounded-lg text-sm p-2">Launch</button>
       </div>
       <div className={styles.mapTile}>
         <Map 

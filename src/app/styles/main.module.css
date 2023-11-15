@@ -3,23 +3,22 @@
     height: 90vh;
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: repeat(6, 1fr);
+    grid-template-rows: repeat(15, 1fr);
     padding: 10px;
     gap: 8px;
 }
 .mapTile {
-    /* border: 1px solid gray; */
-    grid-area: 1 / 1 / 7 / 5;
+    grid-area: 1 / 1 / 16 / 5;
 }
 .actionsTile {
-    /* border: 1px solid rgba(0, 0, 0, 0.8); */
-    grid-area: 1 / 5 / 3 / 6;
+    grid-area: 1 / 5 / 2 / 6;
+}
+.launchBtn {
+  grid-area: 2 / 5 / 3 / 6;
 }
 .controlsTile {
-    /* border: 1px solid rgba(0, 0, 0, 0.8); */
-    grid-area: 3 / 5 / 5 / 6;
+    grid-area: 3 / 5 / 10 / 6;
 }
 .algorithmsTile {
-    /* border: 1px solid rgba(0, 0, 0, 0.8); */
-    grid-area: 5 / 5 / 7 / 6;
+    grid-area: 10 / 5 / 16 / 6;
 }
