@@ -12,7 +12,7 @@ const CredentialsComponent = () => {
   
   return (
       status === "authenticated" ?
-      <div className={`ml-auto text-customWhite flex gap-4`}>
+      <div className={`ml-auto text-customBlack flex gap-4`}>
           <p>
             Welcome, 
             <span className="italic"> {session?.user?.name}</span>
@@ -20,7 +20,7 @@ const CredentialsComponent = () => {
           <p className="cursor-pointer" onClick={handleLogOut}>Log out</p>
       </div>
       :
-      <div className={`ml-auto text-customWhite flex gap-4`}>
+      <div className={`ml-auto text-customBlack flex gap-4`}>
         <Link href="/login">
           <p className="cursor-pointer">Login</p>
         </Link>
