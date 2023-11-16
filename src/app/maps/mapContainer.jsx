@@ -3,7 +3,7 @@ import dayjs from "dayjs"
 
 const MapContainer = ({ id, name, algorithm, speed, size, author, createdAt }) => {
   return (
-    <div className="bg-customWhite rounded-lg p-4">
+    <div className="bg-customWhite rounded-lg p-4 cursor-pointer transition-transform duration-300 hover:scale-105">
       <div className="grid grid-cols-6 grid-rows-6">
         <div className="row-start-1 row-end-4 col-start-1 col-end-7">
           Photo

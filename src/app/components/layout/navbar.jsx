@@ -21,12 +21,12 @@ const Navbar = () => {
                 </Link>
               </li>
               <li>
-                <Link href="/maps/explore" className={`${pathname === '/maps/explore' ? 'text-customHoverGray' : ''}`}>
+                <Link href="/maps" className={`${pathname === '/maps/explore' ? 'text-customHoverGray' : ''}`}>
                   <p>Explore</p>
                 </Link>
               </li>
               {status === "authenticated" && <li>
-                <Link href="/maps/mymaps" className={`${pathname === '/maps/mymaps' ? 'text-customHoverGray' : ''}`}>
+                <Link href="/maps?filters=my" className={`${pathname === '/maps/mymaps' ? 'text-customHoverGray' : ''}`}>
                   <p>My maps</p>
                 </Link>
               </li>}

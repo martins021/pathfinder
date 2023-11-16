@@ -17,7 +17,7 @@ const PlayGround = () => {
   const [mapData, setMapData] = useState([]);
   const [start, setStart] = useState(null);
   const [target, setTarget] = useState(null);
-  const [animationSpeed, setAnimationSpeed] = useState(0.05)
+  const [animationSpeed, setAnimationSpeed] = useState(0.03)
 
   const createMap = () => {
     const data = []

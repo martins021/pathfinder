@@ -3,29 +3,7 @@ import React, { useState } from "react";
 import SizeController from "./sizeController";
 import ToolsSelect from "../dropdowns/tools";
 import Slider from "../sliders/slider";
-
-const toolOptions = [
-  {
-    label: "Start",
-    value: "start",
-    description: "Sets starting node"
-  },
-  {
-    label: "Target",
-    value: "target",
-    description: "Sets target node"
-  },
-  {
-    label: "Wall",
-    value: "wall",
-    description: "Creates a wall node"
-  },
-  {
-    label: "Clear",
-    value: "empty",
-    description: "Sets node to empty"
-  }
-]
+import { toolOptions } from "@/lib/cofigs";
 
 const speedOptions = ["Slowest", "Slow", "Normal", "Fast", "Fastest"]
 

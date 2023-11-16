@@ -1,6 +1,5 @@
 import React from "react";
 
-
 const AlgorithmBtn = ({ onClick, title, selected }) => {
   return(
     <button 

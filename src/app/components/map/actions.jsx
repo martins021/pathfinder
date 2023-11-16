@@ -1,13 +1,13 @@
 "use client"
 import React, { useRef, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { saveMap } from "@/app/apiRequests/maps";
+import { publishMap } from "@/app/apiRequests/maps";
 
 const Actions = ({ algorithm, mapData, mapSize, animationSpeed, session }) => {
   const [mapName, setMapName] = useState("");
   const { register, handleSubmit, formState: { errors } } = useForm();
 
-  const handleSave = async () => {
+  const handlePublish = async () => {
     try {
       const dataToSave = {
         name: mapName,
@@ -18,7 +18,7 @@ const Actions = ({ algorithm, mapData, mapSize, animationSpeed, session }) => {
         authorId: session?.user?.id
       }
       console.log({ dataToSave });
-      await saveMap(dataToSave);
+      await publishMap(dataToSave);
     } catch (error) {
       console.log("ERROR SAVING: ", error);
     }
@@ -32,7 +32,7 @@ const Actions = ({ algorithm, mapData, mapSize, animationSpeed, session }) => {
 
   return (
     <>
-      <form onSubmit={handleSubmit(handleSave)}>
+      <form onSubmit={handleSubmit(handlePublish)}>
         <div className="flex gap justify-around">
           <div>
             <input  

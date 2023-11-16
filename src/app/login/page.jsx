@@ -16,6 +16,10 @@ const LoginPage = () => {
     }
   }, [status]);
 
+  useEffect(() => { // prefetching homepage
+    router.prefetch('/')
+  }, [router])
+
   const handleLogin = async (data) => {
     await signIn("credentials", {
       redirect: false,

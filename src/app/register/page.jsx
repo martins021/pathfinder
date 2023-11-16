@@ -7,6 +7,10 @@ import AuthForm from "../components/forms/authForm";
 const RegisterPage = () => {
   const router = useRouter();
 
+  useEffect(() => { // prefetching login page
+    router.prefetch('/login')
+  }, [router])
+
   const registerUser = async (data) => {
 
     const resp = await fetch("/api/register", {

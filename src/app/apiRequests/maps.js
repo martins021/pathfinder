@@ -1,14 +1,14 @@
 const baseUrl = process.env.BASE_URL
 
-export async function fetchMaps() {
-  const res = await fetch(`http://localhost:3000/api/maps`)
+export async function fetchMaps(params) {
+  console.log(params);
+  const res = await fetch(`http://localhost:3000/api/maps?${params}`)
   const data = await res.json()
 
   return data.data
 }
 
-export async function saveMap(data) {
-  console.log("SAve map receives data: ", data);
+export async function publishMap(data) {
   const res = await fetch(`http://localhost:3000/api/maps`, {
     method: 'POST',
     headers: {
