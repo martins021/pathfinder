@@ -1,7 +1,7 @@
 import Navbar from '@/app/components/layout/navbar'
 import './globals.css'
 import { Inter } from 'next/font/google'
-import UserProvider from '@/context/userContext'
+import { Providers } from './providers'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -13,16 +13,16 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <UserProvider>
-        <body className={inter.className}>
-            <header>
-              <Navbar />
-            </header>
-            <main className="mx-auto max-w-[1920px] min-h-screen bg-background px-4">
-              {children}
-            </main>
-        </body>
-      </UserProvider>
+      <body className={inter.className}>
+        <Providers>
+          <header>
+            <Navbar />
+          </header>
+          <main className="mx-auto max-w-[1920px] min-h-screen px-4">
+            {children}
+          </main>
+        </Providers>
+      </body>
     </html>
   )
 }

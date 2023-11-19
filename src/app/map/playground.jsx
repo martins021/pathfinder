@@ -49,7 +49,7 @@ const PlayGround = () => {
   useEffect(() => {
     createMap()
   }, [mapSize])
-console.log(session);
+  
   return (
     <div className={styles.mainGrid} >
       <div className={styles.actionsTile}>
@@ -88,7 +88,6 @@ console.log(session);
           createMap={createMap}
           mapData={mapData}
           setMapData={setMapData}
-          animationSpeed={animationSpeed}
           setAnimationSpeed={setAnimationSpeed}
         />
       </div>

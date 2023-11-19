@@ -1,23 +1,62 @@
 export const animationSpeedOptions = [
   {
-    label: "Slowest",
-    value: "0.0768"
+    label: 1,
+    value: 0.0768
   },
   {
-    label: "Slow",
-    value: "0.048"
+    label: 2,
+    value: 0.048
   },
   {
-    label: "Normal",
-    value: "0.03"
+    label: 3,
+    value: 0.03
   },
   {
-    label: "Fast",
-    value: "0.012"
+    label: 4,
+    value: 0.012
   },
   {
-    label: "Fastest",
-    value: "0.0048"
+    label: 5,
+    value: 0.0048
+  }
+]
+
+export const sizeOptions = [
+  {
+    label: 1,
+    value: 20
+  },
+  {
+    label: 2,
+    value: 25
+  },
+  {
+    label: 3,
+    value: 30
+  },
+  {
+    label: 4,
+    value: 35
+  },
+  {
+    label: 5,
+    value: 40
+  },
+  {
+    label: 6,
+    value: 45
+  },
+  {
+    label: 7,
+    value: 50
+  },
+  {
+    label: 8,
+    value: 55
+  },
+  {
+    label: 9,
+    value: 60
   }
 ]
 

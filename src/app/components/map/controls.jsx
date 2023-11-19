@@ -2,10 +2,8 @@
 import React, { useState } from "react";
 import SizeController from "./sizeController";
 import ToolsSelect from "../dropdowns/tools";
-import Slider from "../sliders/slider";
 import { toolOptions } from "@/lib/cofigs";
-
-const speedOptions = ["Slowest", "Slow", "Normal", "Fast", "Fastest"]
+import SpeedController from "./speedController";
 
 const Controls = ({ 
   tool, 
@@ -17,7 +15,6 @@ const Controls = ({
   setMapData,
   setAnimationSpeed
 }) => {
-  const [speedLabel, setSpeedLabel] = useState("Normal")
 
   const handleResetMap = () => {
     createMap();
@@ -37,40 +34,11 @@ const Controls = ({
     setMapData(withoutPath);
   }
 
-  const handleSpeedChange = (value) => {
-    switch (value) {
-      case "0":
-        setAnimationSpeed(0.0768);
-        setSpeedLabel("Slowest");
-        break;
-      case "25":
-        setAnimationSpeed(0.048);
-        setSpeedLabel("Slow");
-        break;
-      case "50":
-        setAnimationSpeed(0.03);
-        setSpeedLabel("Normal");
-        break;
-      case "75":
-        setAnimationSpeed(0.012);
-        setSpeedLabel("Fast");
-        break;
-      default:
-        setAnimationSpeed(0.0048);
-        setSpeedLabel("Fastest");
-        break;
-    }
-  }
-
   return (
-    <div className="flex flex-col justify-center items-center gap-2">
-      <div className="flex flex-row justify-between pl-16 pr-16" style={{ width: "100%" }}>
-        <Slider
-          options={speedOptions} 
-          handleChange={handleSpeedChange}
-        />
-        <div className="text-customWhite">{speedLabel}</div>
-      </div>
+    <div className="flex flex-col justify-center items-center gap-10">
+      <SpeedController 
+        setAnimationSpeed={setAnimationSpeed}
+      />
       <SizeController 
           mapSize={mapSize}
           setMapSize={setMapSize}

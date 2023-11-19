@@ -14,7 +14,6 @@ module.exports = {
       },
     },
     colors:{
-      background: 'rgb(53, 53, 53)',
       mainBtn: 'rgb(46, 73, 130)',
       customGreen:'rgb(7, 137, 0)',
       customRed:'rgb(170, 0, 0)',
