@@ -15,7 +15,7 @@ const ToolsSelect = ({ tool, setTool, toolOptions }) => {
       </button>
       {open && <div className={styles.dropdownContent}>
         {toolOptions.map(opt => (
-          <div className={styles.toolsOption} onClick={() => setTool(opt.value)}>
+          <div key={opt.value} className={styles.toolsOption} onClick={() => setTool(opt.value)}>
             <p>{opt.label}</p>
             <p className="text-xs text-customFadedGray">{opt.description}</p>
           </div>

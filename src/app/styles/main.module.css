@@ -14,9 +14,11 @@
     grid-area: 1 / 5 / 2 / 6;
 }
 .launchBtn {
+  margin: auto;
   grid-area: 2 / 5 / 3 / 6;
 }
 .controlsTile {
+    margin-top: 30px;
     grid-area: 3 / 5 / 10 / 6;
 }
 .algorithmsTile {

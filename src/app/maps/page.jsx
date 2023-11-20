@@ -5,7 +5,7 @@ import { useRouter, useSearchParams, usePathname } from 'next/navigation'
 import { fetchMaps } from "../apiRequests/maps";
 import MapContainer from "./mapContainer";
 import Filters from "../components/forms/filters";
-import { animationSpeedOptions } from "@/lib/cofigs";
+import { animationSpeedOptions } from "@/lib/configs";
 
 const MyMaps = ({ ref }) => {
   const { data: session } = useSession();

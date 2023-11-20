@@ -1,6 +1,6 @@
 "use client"
 import React from "react";
-import { algorithmOptions, animationSpeedOptions } from "@/lib/cofigs";
+import { algorithmOptions, animationSpeedOptions } from "@/lib/configs";
 
 const Filters = ({ filters, setFilters }) => {
   const onNameChange = (e) => {

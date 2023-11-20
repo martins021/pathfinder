@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import styles from "../../styles/sizeController.module.css"
-import { sizeOptions } from "@/lib/cofigs";
+import { sizeOptions } from "@/lib/configs";
 import CustomSlider from "../sliders/slider";
 
 const SizeController = ({ mapSize, setMapSize }) => {

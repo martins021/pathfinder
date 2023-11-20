@@ -1,6 +1,6 @@
 import React from "react";
 import AlgorithmBtn from "../buttons/algorithmBtn";
-import { algorithmOptions } from "@/lib/cofigs";
+import { algorithmOptions } from "@/lib/configs";
 
 const menuStyle ={
   display: "grid",

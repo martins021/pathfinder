@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { animationSpeedOptions } from "@/lib/cofigs";
+import { animationSpeedOptions } from "@/lib/configs";
 import CustomSlider from "../sliders/slider";
 
 const SpeedController = ({ setAnimationSpeed }) => {

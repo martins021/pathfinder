@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import SizeController from "./sizeController";
 import ToolsSelect from "../dropdowns/tools";
-import { toolOptions } from "@/lib/cofigs";
+import { toolOptions } from "@/lib/configs";
 import SpeedController from "./speedController";
 
 const Controls = ({ 
