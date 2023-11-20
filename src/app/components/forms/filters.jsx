@@ -42,8 +42,8 @@ const Filters = ({ filters, setFilters }) => {
       </div>
       <div className="flex flex-col">
         Animation speed
-        {animationSpeedOptions.map(opt => (
-          <span>
+        {animationSpeedOptions.map((opt, i) => (
+          <span key={i}>
             <input 
               type="checkbox" 
               name="animationSpeed" 
@@ -51,14 +51,14 @@ const Filters = ({ filters, setFilters }) => {
               value={opt.value} 
               onChange={(e) => onCheckBoxGroupChange(e, "animationSpeed")} 
             /> 
-            <label for={`animationSpeed_${opt.value}`}>{opt.label}</label>
+            <label>{opt.label}</label>
           </span>
         ))}
       </div>
       <div className="flex flex-col">
         Algorithm
-        {algorithmOptions.map(opt => (
-          <span>
+        {algorithmOptions.map((opt, i) => (
+          <span key={i}>
             <input 
               type="checkbox" 
               name="algorithm" 
@@ -66,7 +66,7 @@ const Filters = ({ filters, setFilters }) => {
               value={opt.value} 
               onChange={(e) => onCheckBoxGroupChange(e, "algorithm")} 
             /> 
-            <label for={`algorithm_${opt.value}`}>{opt.label}</label>
+            <label>{opt.label}</label>
           </span>
         ))}
       </div>

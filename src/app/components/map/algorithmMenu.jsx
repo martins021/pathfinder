@@ -13,6 +13,7 @@ const AlgorithmMenu = ({ algorithm, setAlgorithm }) => {
     <div style={menuStyle}>
       {algorithmOptions.map(option => (
         <AlgorithmBtn 
+          key={option.value}
           onClick={() => setAlgorithm(option.value)} 
           title={option.label}
           selected={algorithm === option.value}

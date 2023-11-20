@@ -21,7 +21,7 @@ const MyMaps = ({ ref }) => {
       const transformedData = data.map(item => {
         return ({
           ...item,
-          animationSpeed: animationSpeedOptions.find(opt => opt.value === item.animationSpeed).label
+          animationSpeed: animationSpeedOptions.find(opt => opt.value === item.animationSpeed)?.label
         })
       })
       console.log("Fetch maps res: ", data);
