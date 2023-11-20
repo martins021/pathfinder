@@ -13,11 +13,12 @@ const PlayGround = () => {
   const [tool, setTool] = useState('start')
   const [algorithm, setAlgorithm] = useState("bfs")
   const [result, setResult] = useState({})
-  const [mapSize, setMapSize] = useState({ x: 25 , y: 14 });
+  const [mapSize, setMapSize] = useState({ x: 40 , y: 23 });
   const [mapData, setMapData] = useState([]);
   const [start, setStart] = useState(null);
   const [target, setTarget] = useState(null);
   const [animationSpeed, setAnimationSpeed] = useState(0.03)
+  const [brushSize, setBrushSize] = useState(3)
 
   const createMap = () => {
     const data = []
@@ -77,6 +78,7 @@ const PlayGround = () => {
           result={result} 
           mapData={mapData}
           mapSize={mapSize}
+          brushSize={brushSize}
           start={start}
           animationSpeed={animationSpeed}
           target={target}
@@ -95,6 +97,7 @@ const PlayGround = () => {
           mapData={mapData}
           setMapData={setMapData}
           setAnimationSpeed={setAnimationSpeed}
+          setBrushSize={setBrushSize}
         />
       </div>
       <div className={styles.algorithmsTile}>

@@ -13,7 +13,8 @@ const Map = ({
   setMapData,
   setStart,
   setTarget,
-  animationSpeed
+  animationSpeed,
+  brushSize 
 }) => {
   const [isMouseDown, setIsMouseDown] = useState(false);
 
@@ -67,6 +68,47 @@ const Map = ({
     animateVisitedNodes();
   }, [visitedNodes])
 
+  const handleSetTerrain = (index) => {
+    const mapSizeX = mapSize.x; // horizontal map size
+    const mapSizeY = mapSize.y; // vertical map size
+    const squareBrushSize = brushSize * 2 - 1;
+
+    const brushNodes = [] // 2d array containing all nodes in brush area
+    for (let s = brushSize; s >= -Math.abs(brushSize - 2); s--) {
+      const brushRowStart = index - (s - 1) * mapSizeX - (brushSize -1); // start node of each row within brush area
+      // create array containing brush nodes from this row
+      const subArray = Array.from(
+        { length: squareBrushSize }, 
+        (_, index) => brushRowStart + index
+      ); 
+      brushNodes.push(subArray);
+    }
+
+    const mainNodeCoords = Math.floor(squareBrushSize / 2); // coordinates within the brush area of the clicked node
+    for (let i = 0; i < brushNodes.length; i++) {
+      // get row id of the middle element of the current brush area row
+      const middleElementRow = brushNodes[i][Math.floor(brushNodes[i].length / 2)] / mapSizeX | 0 // bitwise or operator for integer division
+      for (let j = 0; j < brushNodes[i].length; j++) {
+        // distance from the clicked node to other nodes in brush area
+        const distance = Math.sqrt(Math.pow((mainNodeCoords - i), 2) + Math.pow((mainNodeCoords - j), 2)); 
+        if(distance <= brushSize - 1){ // brush will only affect these nodes
+          const distanceFloored = Math.floor(distance);
+          const elevToAdd = brushSize - distanceFloored;
+          const affectedNodeIndex = brushNodes[i][j];
+
+          // check if node affected by brush is within map borders and all left and right neighbors are in the same row
+          if(affectedNodeIndex >= 0 && affectedNodeIndex < mapSizeX * mapSizeY && (affectedNodeIndex / mapSizeX | 0) === middleElementRow){
+            const mapDataCopy = [...mapData];
+            mapDataCopy[affectedNodeIndex].state = tool;
+            mapDataCopy[affectedNodeIndex].elev = mapDataCopy[affectedNodeIndex].elev + elevToAdd
+
+            setMapData(mapDataCopy);  
+          }
+        }
+      }
+    }
+  }
+
   const handleNodeAction = useCallback(
     (node, index) => {
       let setState = false;
@@ -95,15 +137,21 @@ const Map = ({
           if (node.state !== "start" && node.state !== "target") {
             setState = true;
           }
+          break;
+        case "terrain":
+          if(node.state === "empty"){
+            handleSetTerrain(index)
+          }
+          break;
       }
 
       if (setState) {
-        const copy = [...mapData];
-        copy[index].state = tool;
-        setMapData(copy);
+        const mapDataCopy = [...mapData];
+        mapDataCopy[index].state = tool;
+        setMapData(mapDataCopy);
       }
     },
-    [tool, mapData]
+    [tool, mapData, brushSize]
   );
 
   useEffect(() => {

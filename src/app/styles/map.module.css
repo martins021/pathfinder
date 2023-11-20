@@ -38,6 +38,9 @@
 .target {
   background-color: rgb(164, 22, 26);
 }
+.terrain {
+  background-color: aqua;
+}
 
 @keyframes visitedAnimation {
   0% {

@@ -4,6 +4,7 @@ import SizeController from "./sizeController";
 import ToolsSelect from "../dropdowns/tools";
 import { toolOptions } from "@/lib/configs";
 import SpeedController from "./speedController";
+import BrushSizeController from "./brushController";
 
 const Controls = ({ 
   tool, 
@@ -13,7 +14,8 @@ const Controls = ({
   createMap, 
   mapData, 
   setMapData,
-  setAnimationSpeed
+  setAnimationSpeed,
+  setBrushSize
 }) => {
 
   const handleResetMap = () => {
@@ -43,6 +45,9 @@ const Controls = ({
           mapSize={mapSize}
           setMapSize={setMapSize}
       />
+      {tool === "terrain" && <BrushSizeController 
+        setBrushSize={setBrushSize}
+      />}
       <ToolsSelect 
         tool={tool}
         setTool={setTool}
