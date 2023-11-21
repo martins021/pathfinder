@@ -14,9 +14,11 @@ const Map = ({
   setStart,
   setTarget,
   animationSpeed,
-  brushSize 
+  brushSize,
+  brushMode
 }) => {
   const [isMouseDown, setIsMouseDown] = useState(false);
+  const MAX_ELEVATION = 89
 
   const gridStyle = useMemo(
     () => ({
@@ -99,10 +101,12 @@ const Map = ({
           // check if node affected by brush is within map borders and all left and right neighbors are in the same row
           if(affectedNodeIndex >= 0 && affectedNodeIndex < mapSizeX * mapSizeY && (affectedNodeIndex / mapSizeX | 0) === middleElementRow){
             const mapDataCopy = [...mapData];
-            mapDataCopy[affectedNodeIndex].state = tool;
-            mapDataCopy[affectedNodeIndex].elev = mapDataCopy[affectedNodeIndex].elev + elevToAdd
-
-            setMapData(mapDataCopy);  
+            const newNodeWeight = mapDataCopy[affectedNodeIndex].elev + (elevToAdd * brushMode)
+            if(newNodeWeight <= MAX_ELEVATION && newNodeWeight >= 0){
+              mapDataCopy[affectedNodeIndex].state = tool;
+              mapDataCopy[affectedNodeIndex].elev = newNodeWeight
+              setMapData(mapDataCopy);  
+            }
           }
         }
       }
@@ -139,7 +143,7 @@ const Map = ({
           }
           break;
         case "terrain":
-          if(node.state === "empty"){
+          if(node.state === "empty" || node.state === "terrain"){
             handleSetTerrain(index)
           }
           break;
@@ -178,6 +182,7 @@ const Map = ({
             onMouseLeave={() =>
               isMouseDown ? handleNodeAction(cell, i) : null
             }
+            elevation={cell.elev}
           />
         );
       })}

@@ -1,14 +1,25 @@
 "use client";
 import React, { memo } from "react";
 import styles from "../../styles/map.module.css";
+import { elevationColors } from "@/lib/configs";
 
-const Node = ({ i, cellState, delay, speed, onClick, onMouseLeave }) => (
+const getBackgroundColor = (cellState, elevation) => {
+  if (cellState === "terrain"){
+    return elevationColors[elevation];
+  }
+  return "";
+}
+
+const Node = ({ i, cellState, delay, speed, onClick, onMouseLeave, elevation }) => (
   <div
     className={`${styles["cell"]} ${styles[cellState]}`}
     onClick={onClick}
     onMouseLeave={onMouseLeave}
-    style={{ "--delay": delay ? `${delay * speed}s` : `0s` }}
-  ></div>
+    style={{ 
+      "--delay": delay ? `${delay * speed}s` : `0s`, 
+      backgroundColor: getBackgroundColor(cellState, elevation)
+    }}
+  >{elevation}</div>
 );
 
 export default memo(Node);

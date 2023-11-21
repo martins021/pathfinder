@@ -19,6 +19,7 @@ const PlayGround = () => {
   const [target, setTarget] = useState(null);
   const [animationSpeed, setAnimationSpeed] = useState(0.03)
   const [brushSize, setBrushSize] = useState(3)
+  const [brushMode, setBrushMode] = useState(1)
 
   const createMap = () => {
     const data = []
@@ -79,6 +80,7 @@ const PlayGround = () => {
           mapData={mapData}
           mapSize={mapSize}
           brushSize={brushSize}
+          brushMode={brushMode}
           start={start}
           animationSpeed={animationSpeed}
           target={target}
@@ -98,6 +100,8 @@ const PlayGround = () => {
           setMapData={setMapData}
           setAnimationSpeed={setAnimationSpeed}
           setBrushSize={setBrushSize}
+          brushMode={brushMode}
+          setBrushMode={setBrushMode}
         />
       </div>
       <div className={styles.algorithmsTile}>
