@@ -6,7 +6,7 @@ import Map from "../components/map/map";
 import Actions from "../components/map/actions";
 import AlgorithmMenu from "../components/map/algorithmMenu";
 import { useSession } from "next-auth/react";
-import { launchBfs, launchDfs } from "../apiRequests/algorithms";
+import { launchBfs, launchDfs, launchDijkstra } from "../apiRequests/algorithms";
 
 const PlayGround = () => {
   const { data: session, status } = useSession();
@@ -41,6 +41,9 @@ const PlayGround = () => {
         break;
       case "bfs":
         resp = await launchBfs(mapData, mapSize, start, target);
+        break;
+      case "dijkstra":
+        resp = await launchDijkstra(mapData, mapSize, start, target);
         break;
       default:
         break;

@@ -18,7 +18,8 @@ const Map = ({
   brushMode
 }) => {
   const [isMouseDown, setIsMouseDown] = useState(false);
-  const MAX_ELEVATION = 89
+  const MIN_ELEVATION = -100
+  const MAX_ELEVATION = 99
 
   const gridStyle = useMemo(
     () => ({
@@ -102,7 +103,7 @@ const Map = ({
           if(affectedNodeIndex >= 0 && affectedNodeIndex < mapSizeX * mapSizeY && (affectedNodeIndex / mapSizeX | 0) === middleElementRow){
             const mapDataCopy = [...mapData];
             const newNodeWeight = mapDataCopy[affectedNodeIndex].elev + (elevToAdd * brushMode)
-            if(newNodeWeight <= MAX_ELEVATION && newNodeWeight >= 0){
+            if(newNodeWeight <= MAX_ELEVATION && newNodeWeight >= MIN_ELEVATION){
               mapDataCopy[affectedNodeIndex].state = tool;
               mapDataCopy[affectedNodeIndex].elev = newNodeWeight
               setMapData(mapDataCopy);  

@@ -30,10 +30,32 @@ export const launchBfs = async (data, size, start, target) => {
         target 
       })
     })
+    
     const newData = res.json()
     return newData
   } catch (error) {
     console.log("Error launching Bfs: ", error);
   }
-
 } 
+
+export const launchDijkstra = async (data, size, start, target) => {
+  try {
+    const res = await fetch(`/api/algorithms/dijkstra`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        data,
+        size,
+        start,
+        target
+      })
+    })
+
+    const newData = res.json()
+    return newData
+  } catch (error) {
+    console.log("Error launching dijkstra: ", error);
+  }
+}

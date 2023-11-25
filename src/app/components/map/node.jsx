@@ -5,7 +5,7 @@ import { elevationColors } from "@/lib/configs";
 
 const getBackgroundColor = (cellState, elevation) => {
   if (cellState === "terrain"){
-    return elevationColors[elevation];
+    return elevationColors[elevation + 100];
   }
   return "";
 }
@@ -19,7 +19,7 @@ const Node = ({ i, cellState, delay, speed, onClick, onMouseLeave, elevation }) 
       "--delay": delay ? `${delay * speed}s` : `0s`, 
       backgroundColor: getBackgroundColor(cellState, elevation)
     }}
-  >{elevation}</div>
+  ></div>
 );
 
 export default memo(Node);
