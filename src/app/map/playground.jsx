@@ -25,7 +25,7 @@ const PlayGround = () => {
     const data = []
     for (let y = 0; y < mapSize.y; y++) {
       for (let x = 0; x < mapSize.x; x++) {
-        data.push({ x, y, state: "empty", elev: 1 })
+        data.push({ x, y, state: "empty", prevState: "empty", elev: 1 })
       }
     }
     setMapData(data)
@@ -33,7 +33,27 @@ const PlayGround = () => {
     setTarget(null);
   }
 
-    const launchAlgorithm = async () => {
+  useEffect(() => {
+    if(start){
+      mapData.map(node => node.state === "start" ? node.state = node.prevState : null)
+      const mapDataCopy = [...mapData];
+      mapDataCopy[start].prevState = mapDataCopy[start].state;
+      mapDataCopy[start].state = tool;
+      setMapData(mapDataCopy);
+    }
+  }, [start])
+
+  useEffect(() => {
+    if(target){
+      mapData.map(node => node.state === "target" ? node.state = node.prevState : null)
+      const mapDataCopy = [...mapData];
+      mapDataCopy[target].prevState = mapDataCopy[target].state;
+      mapDataCopy[target].state = tool;
+      setMapData(mapDataCopy);
+    }
+  }, [target])
+
+  const launchAlgorithm = async () => {
     let resp;
     switch (algorithm) {
       case "dfs":

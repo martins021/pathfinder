@@ -104,7 +104,6 @@ const Map = ({
             const mapDataCopy = [...mapData];
             const newNodeWeight = mapDataCopy[affectedNodeIndex].elev + (elevToAdd * brushMode)
             if(newNodeWeight <= MAX_ELEVATION && newNodeWeight >= MIN_ELEVATION){
-              mapDataCopy[affectedNodeIndex].state = tool;
               mapDataCopy[affectedNodeIndex].elev = newNodeWeight
               setMapData(mapDataCopy);  
             }
@@ -127,15 +126,13 @@ const Map = ({
           setState = true;
           break;
         case "start":
-          if (node.state !== "target" && start === null) {
+          if (node.state !== "target") {
             setStart(index);
-            setState = true;
           }
           break;
         case "target":
-          if (node.state !== "start" && target === null) {
+          if (node.state !== "start") {
             setTarget(index);
-            setState = true;
           }
           break;
         case "wall":
@@ -152,6 +149,7 @@ const Map = ({
 
       if (setState) {
         const mapDataCopy = [...mapData];
+        mapDataCopy[index].prevState = mapDataCopy[index].state;
         mapDataCopy[index].state = tool;
         setMapData(mapDataCopy);
       }
@@ -178,6 +176,7 @@ const Map = ({
             i={i}
             delay={cell.animationDelay}
             speed={animationSpeed}
+            prevCellState={cell.prevState}
             cellState={cell.state}
             onClick={() => handleNodeAction(cell, i)}
             onMouseLeave={() =>
