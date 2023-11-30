@@ -62,7 +62,24 @@ const createPath = (parrents, node) => {
   return createPath(parrents, parrents[node]).concat(node);
 }
 
+const validateStartAndTargetNodes = (start, target) => {
+  if(!start && !target) {
+    const error = new Error("Nav norādītas sākuma un beigu virsotnes");
+    error.status = 400;
+    throw error;
+  } else if(!start) {
+    const error = new Error("Nav norādīta sākuma virsotne");
+    error.status = 400;
+    throw error;
+  } else if (!target) {
+    const error = new Error("Nav norādīta beigu virsotne");
+    error.status = 400;
+    throw error;
+  }
+}
+
 export {
   createAdjacencyList,
-  createPath
+  createPath,
+  validateStartAndTargetNodes
 }

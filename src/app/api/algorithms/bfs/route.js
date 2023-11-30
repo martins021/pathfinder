@@ -1,4 +1,8 @@
-import { createAdjacencyList, createPath } from "@/app/helpers";
+import { 
+  createAdjacencyList, 
+  createPath, 
+  validateStartAndTargetNodes 
+} from "@/app/helpers";
 const { NextResponse } = require("next/server");
 
 const bfs = (start, target, graph) => {
@@ -29,19 +33,20 @@ const bfs = (start, target, graph) => {
   }
   const path = createPath(parrents, target);
 
-  return { path, visitedNodes: visitedNodeIDs};
+  return { targetFound, path, visitedNodes: visitedNodeIDs};
 }
 
 const POST = async (request) => {
   try {
     const {data, size, start, target} = await request.json();
+    validateStartAndTargetNodes(start, target);
     const adjacencyList = createAdjacencyList(data, size.x, size.y);
-    console.log("Adjacency list: ", adjacencyList);
-    const { path, visitedNodes } = bfs(start, target, adjacencyList)
+    const { targetFound, path, visitedNodes } = bfs(start, target, adjacencyList)
 
-    return NextResponse.json({ path, visitedNodes })
+    return NextResponse.json({ targetFound, path, visitedNodes })
   } catch (error) {
     console.log("BFS error: ", error);
+    return NextResponse.json({ error: error.message }, { status: error.status || 500 })
   }
 }
 

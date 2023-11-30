@@ -1,5 +1,5 @@
 "use client"
-import React, { useContext, useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styles from "../styles/main.module.css"
 import Controls from "../components/map/controls";
 import Map from "../components/map/map";
@@ -7,6 +7,8 @@ import Actions from "../components/map/actions";
 import AlgorithmMenu from "../components/map/algorithmMenu";
 import { useSession } from "next-auth/react";
 import { launchBfs, launchDfs, launchDijkstra } from "../apiRequests/algorithms";
+import { useToast } from '@chakra-ui/react'
+
 
 const PlayGround = () => {
   const { data: session, status } = useSession();
@@ -22,8 +24,10 @@ const PlayGround = () => {
   const [brushSize, setBrushSize] = useState(3)
   const [brushMode, setBrushMode] = useState(1)
   const animationId = useRef(0) // used to cancel animation 
+  const toast = useToast();
 
   const createMap = () => {
+    setAnimate(false)
     animationId.current += 1
     const data = []
     for (let y = 0; y < mapSize.y; y++) {
@@ -37,6 +41,7 @@ const PlayGround = () => {
   }
 
   const clearPath = () => {
+    setAnimate(false)
     animationId.current += 1
     const withoutPath = mapData.map(node => {
       if(node.state === 'visited' || node.state === 'path'){
@@ -87,6 +92,15 @@ const PlayGround = () => {
         break;
       default:
         break;
+    }
+    
+    if(resp.error){
+      toast({
+        description: resp.error,
+        status: 'error',
+        duration: 6000,
+        isClosable: true,
+      })
     }
     setResult(resp)
   }

@@ -1,4 +1,8 @@
-import { createAdjacencyList, createPath } from "@/app/helpers";
+import { 
+  createAdjacencyList, 
+  createPath,
+  validateStartAndTargetNodes
+} from "@/app/helpers";
 const { default: prisma } = require("@/lib/database");
 const { NextResponse } = require("next/server");
 
@@ -6,12 +10,14 @@ const { NextResponse } = require("next/server");
 const POST = async (request) => {
   try {
     const {data, size, start, target} = await request.json();
+    validateStartAndTargetNodes(start, target);
     const adjacencyList = createAdjacencyList(data, size.x, size.y);
     const visitedNodeIDs = [];
     const parrents = new Array(data.length).fill(null)
 
     let targetParrents;
-    let targetVisitedNodes;
+    let finalVisitedNodes;
+    let targetFound = false;
 
     const dfs = (current, graph, visited) => {
       if(visited[current]) return;
@@ -22,8 +28,9 @@ const POST = async (request) => {
         if(!visited[neighbor]) {
           parrents[neighbor] = current;
           if(neighbor === target) {
+            targetFound = true;
             targetParrents = [...parrents]; // nokopē parrents masīvu brīdī, kad sastop mērķi
-            targetVisitedNodes = [...visitedNodeIDs];
+            finalVisitedNodes = [...visitedNodeIDs];
           }
           dfs(neighbor, graph, visited);
         }
@@ -32,11 +39,18 @@ const POST = async (request) => {
 
     const visitedNodes = new Array(data.length).fill(false);
     dfs(start, adjacencyList, visitedNodes);
-    const path = createPath(targetParrents, target);
+    
+    let path = [];
+    if(targetFound){
+      path = createPath(targetParrents, target);
+    } else {
+      finalVisitedNodes = [...visitedNodeIDs];
+    }
 
-    return NextResponse.json({ path, visitedNodes: targetVisitedNodes });
+    return NextResponse.json({ targetFound, path, visitedNodes: finalVisitedNodes });
   } catch (error) {
     console.log("DFS error: ", error);
+    return NextResponse.json({ error: error.message }, { status: error.status || 500 })
   }
 }
 
