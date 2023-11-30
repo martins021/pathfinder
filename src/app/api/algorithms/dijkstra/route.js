@@ -48,7 +48,14 @@ const POST = async (request) => {
       path = createPath(parrents, target);
     }
 
-    return NextResponse.json({ targetFound, path, visitedNodes: visitedNodeIDs });
+    const precentageVisited = (visitedNodeIDs.length / adjacencyList.length) * 100;
+    return NextResponse.json({ 
+      targetFound,
+      precentageVisited,
+      name: "Dijkstra",
+      path, 
+      visitedNodes: visitedNodeIDs 
+    });
   } catch (error) {
     console.log("Dijkstra error: ", error);
     return NextResponse.json({ error: error.message }, { status: error.status || 500 })

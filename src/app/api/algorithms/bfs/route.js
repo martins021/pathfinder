@@ -43,7 +43,14 @@ const POST = async (request) => {
     const adjacencyList = createAdjacencyList(data, size.x, size.y);
     const { targetFound, path, visitedNodes } = bfs(start, target, adjacencyList)
 
-    return NextResponse.json({ targetFound, path, visitedNodes })
+    const precentageVisited = (visitedNodes.length / adjacencyList.length) * 100;
+    return NextResponse.json({ 
+      targetFound, 
+      precentageVisited, 
+      name: "BFS", 
+      path, 
+      visitedNodes 
+    })
   } catch (error) {
     console.log("BFS error: ", error);
     return NextResponse.json({ error: error.message }, { status: error.status || 500 })

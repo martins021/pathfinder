@@ -110,66 +110,78 @@ const PlayGround = () => {
   }, [mapSize])
   
   return (
-    <div className={styles.mainGrid} >
-      <div className={styles.actionsTile}>
-        {status === "authenticated" && <Actions 
-          algorithm={algorithm}
-          mapData={mapData}
-          setMapData={setMapData}
-          mapSize={mapSize}
-          animationSpeed={animationSpeed}
-          session={session}
-        />}
+    <>
+      <div className="text-customWhite p-2">
+        {Object.keys(result).length ?
+          <div className="flex gap-4">
+            <p>{result.name}:</p>
+            <p>Visited nodes: {result.visitedNodes?.length}</p>
+            <p>Path length: {result.path?.length}</p>
+            <p>Visited precentage: {result.precentageVisited?.toFixed(2)}%</p>
+          </div>
+        : <p>Launch an algorithm to see visualization</p>}
       </div>
-      <div className={styles.launchBtn}>
-        <button 
-          onClick={launchAlgorithm} 
-          className="text-black bg-customWhite rounded-lg text-sm p-3 pl-10 pr-10 font-bold 
-                    hover:bg-customRed hover:text-customWhite transition-all duration-300"
-        >
-          Launch
-        </button>
+      <div className={styles.mainGrid} >
+        <div className={styles.actionsTile}>
+          {status === "authenticated" && <Actions 
+            algorithm={algorithm}
+            mapData={mapData}
+            setMapData={setMapData}
+            mapSize={mapSize}
+            animationSpeed={animationSpeed}
+            session={session}
+          />}
+        </div>
+        <div className={styles.launchBtn}>
+          <button 
+            onClick={launchAlgorithm} 
+            className="text-black bg-customWhite rounded-lg text-sm p-3 pl-10 pr-10 font-bold 
+                      hover:bg-customRed hover:text-customWhite transition-all duration-300"
+          >
+            Launch
+          </button>
+        </div>
+        <div className={styles.mapTile}>
+          <Map 
+            tool={tool}
+            result={result} 
+            mapData={mapData}
+            mapSize={mapSize}
+            brushSize={brushSize}
+            brushMode={brushMode}
+            animationSpeed={animationSpeed}
+            animate={animate}
+            animationId={animationId}
+            setMapData={setMapData}
+            setStart={setStart}
+            setTarget={setTarget}
+            clearPath={clearPath}
+            setAnimate={setAnimate}
+          />
+        </div>
+        <div className={styles.controlsTile}>
+          <Controls 
+            tool={tool} 
+            setTool={setTool} 
+            mapSize={mapSize}
+            setMapSize={setMapSize}
+            createMap={createMap}
+            clearPath={clearPath}
+            setAnimationSpeed={setAnimationSpeed}
+            setBrushSize={setBrushSize}
+            brushMode={brushMode}
+            setBrushMode={setBrushMode}
+            animationInProgress={animate}
+          />
+        </div>
+        <div className={styles.algorithmsTile}>
+          <AlgorithmMenu 
+            algorithm={algorithm}
+            setAlgorithm={setAlgorithm} 
+          />
+        </div>
       </div>
-      <div className={styles.mapTile}>
-        <Map 
-          tool={tool}
-          result={result} 
-          mapData={mapData}
-          mapSize={mapSize}
-          brushSize={brushSize}
-          brushMode={brushMode}
-          animationSpeed={animationSpeed}
-          animate={animate}
-          animationId={animationId}
-          setMapData={setMapData}
-          setStart={setStart}
-          setTarget={setTarget}
-          clearPath={clearPath}
-          setAnimate={setAnimate}
-        />
-      </div>
-      <div className={styles.controlsTile}>
-        <Controls 
-          tool={tool} 
-          setTool={setTool} 
-          mapSize={mapSize}
-          setMapSize={setMapSize}
-          createMap={createMap}
-          clearPath={clearPath}
-          setAnimationSpeed={setAnimationSpeed}
-          setBrushSize={setBrushSize}
-          brushMode={brushMode}
-          setBrushMode={setBrushMode}
-          animationInProgress={animate}
-        />
-      </div>
-      <div className={styles.algorithmsTile}>
-        <AlgorithmMenu 
-          algorithm={algorithm}
-          setAlgorithm={setAlgorithm} 
-        />
-      </div>
-    </div>
+    </>
   )
 }
 

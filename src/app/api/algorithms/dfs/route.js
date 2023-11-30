@@ -47,7 +47,14 @@ const POST = async (request) => {
       finalVisitedNodes = [...visitedNodeIDs];
     }
 
-    return NextResponse.json({ targetFound, path, visitedNodes: finalVisitedNodes });
+    const precentageVisited = (finalVisitedNodes.length / adjacencyList.length) * 100;
+    return NextResponse.json({ 
+      targetFound,
+      precentageVisited,
+      name: "DFS",
+      path, 
+      visitedNodes: finalVisitedNodes 
+    });
   } catch (error) {
     console.log("DFS error: ", error);
     return NextResponse.json({ error: error.message }, { status: error.status || 500 })
