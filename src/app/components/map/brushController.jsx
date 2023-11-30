@@ -22,24 +22,31 @@ const BrushController = ({ setBrushSize, setBrushMode, brushMode }) => {
 
   return (
     <>
-      <CustomSlider 
-        defaultValue={3} 
-        min={1} 
-        max={5} 
-        step={1} 
-        handleChange={handleSpeedChange}
-        value={brushSizeValue}
-      />
-      <div className="flex text-customWhite">
-        <p className="pr-10">Brush mode</p>
-        <p className="pr-6 text-xl">-</p>
-        <Switch 
-          sx={{ '.chakra-switch__track': { bg: 'rgb(203,213,224)' } }} 
-          size='lg' 
-          onChange={onSwitchChange}
-          isChecked={brushMode === 1 ? true : false}
-        />
-        <p className="pl-6 text-xl">+</p>
+      <div className="grid grid-cols-5" style={{ width: "100%" }}>
+        <p className="col-span-1 text-customWhite text-sm text-center mr-2">Brush size</p>
+        <div className="col-span-4">
+          <CustomSlider 
+            defaultValue={3} 
+            min={1} 
+            max={5} 
+            step={1} 
+            handleChange={handleSpeedChange}
+            value={brushSizeValue}
+          />
+        </div>
+      </div>
+      <div className="grid grid-cols-5" style={{ width: "100%" }}>
+        <p className="col-span-2 text-customWhite text-sm text-center mr-2">Brush mode</p>
+        <div className="col-span-3 flex text-customWhite">
+          <p className="pr-6 text-xl">-</p>
+          <Switch 
+            sx={{ '.chakra-switch__track': { bg: 'rgb(144, 122, 0)' } }} 
+            size='lg' 
+            onChange={onSwitchChange}
+            isChecked={brushMode === 1 ? true : false}
+          />
+          <p className="pl-6 text-xl">+</p>
+        </div>
       </div>
     </>
   )

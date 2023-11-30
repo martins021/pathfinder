@@ -8,9 +8,10 @@ import {
   Box
 } from '@chakra-ui/react'
 
-const CustomSlider = ({ defaultValue, min, max, step, handleChange, value }) => {
+const CustomSlider = ({ defaultValue, min, max, step, handleChange, value, disabled = false }) => {
   return (
     <Slider 
+      isDisabled={disabled}
       defaultValue={defaultValue} 
       min={min} 
       max={max} 

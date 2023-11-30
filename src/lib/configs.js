@@ -128,10 +128,10 @@ export const algorithmOptions = [
     label: "A*",
     value: "aStar"
   },
-  {
-    label: "Bellman-Ford",
-    value: "bellmanFord"
-  }
+  // {
+  //   label: "Bellman-Ford",
+  //   value: "bellmanFord"
+  // }
 ]
 
 export const elevationColors = [

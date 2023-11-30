@@ -24,15 +24,18 @@ const SizeController = ({ mapSize, setMapSize }) => {
 
   return (
     <>
-      <div className={styles.container}>
-        <CustomSlider 
-          defaultValue={5} 
-          min={1} 
-          max={9} 
-          step={1} 
-          handleChange={handleSizeChange}   
-          value={sizeValue}     
-        />
+      <div className="grid grid-cols-5" style={{ width: "100%" }}>
+        <p className="col-span-1 text-customWhite text-sm text-center mr-2">Size</p>
+        <div className="col-span-4">
+          <CustomSlider 
+            defaultValue={5} 
+            min={1} 
+            max={9} 
+            step={1} 
+            handleChange={handleSizeChange}   
+            value={sizeValue}     
+          />
+        </div>
       </div>
     </>
   );

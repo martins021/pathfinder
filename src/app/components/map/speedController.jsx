@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { animationSpeedOptions } from "@/lib/configs";
 import CustomSlider from "../sliders/slider";
 
-const SpeedController = ({ setAnimationSpeed }) => {
+const SpeedController = ({ setAnimationSpeed, animationInProgress }) => {
   const [speedValue, setSpeedValue] = useState(3)
 
   const handleSpeedChange = (value) => {
@@ -12,14 +12,20 @@ const SpeedController = ({ setAnimationSpeed }) => {
   }
 
   return (
-    <CustomSlider 
-      defaultValue={3} 
-      min={1} 
-      max={5} 
-      step={1} 
-      handleChange={handleSpeedChange}
-      value={speedValue}
-    />
+    <div className="grid grid-cols-5" style={{ width: "100%" }}>
+      <p className="col-span-1 text-customWhite text-sm text-center mr-2">Speed</p>
+      <div className="col-span-4">
+        <CustomSlider 
+          disabled={animationInProgress}
+          defaultValue={3} 
+          min={1} 
+          max={5} 
+          step={1} 
+          handleChange={handleSpeedChange}
+          value={speedValue}
+        />
+      </div>
+    </div>
   )
 }
 

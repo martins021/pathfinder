@@ -12,36 +12,19 @@ const Controls = ({
   mapSize, 
   setMapSize, 
   createMap, 
-  mapData, 
-  setMapData,
+  clearPath,
   setAnimationSpeed,
   setBrushSize,
   setBrushMode,
-  brushMode
+  brushMode,
+  animationInProgress
 }) => {
 
-  const handleResetMap = () => {
-    createMap();
-  }
-
-  const handleClearPath = () => {
-    const withoutPath = mapData.map(node => {
-      if(node.state === 'visited' || node.state === 'path'){
-        return ({
-          ...node, 
-          state: 'empty'
-        });
-      } 
-      return node;
-    })
-
-    setMapData(withoutPath);
-  }
-
   return (
-    <div className="flex flex-col justify-center items-center gap-10">
+    <div className="flex flex-col justify-center gap-6">
       <SpeedController 
         setAnimationSpeed={setAnimationSpeed}
+        animationInProgress={animationInProgress}
       />
       <SizeController 
           mapSize={mapSize}
@@ -57,16 +40,16 @@ const Controls = ({
         setTool={setTool}
         toolOptions={toolOptions}
       />
-      <div className="flex flex-row gap-2">
+      <div className="flex justify-between flex-row gap-2 -mt-4">
         <button 
-          onClick={handleClearPath}
-          className="rounded p-3 text-md font-semibold bg-customWhite hover:bg-customHoverGray"
+          onClick={clearPath}
+          className="rounded p-2 pl-7 pr-7 text-md font-semibold bg-customWhite hover:bg-customHoverGray"
         >
           Clear path
         </button>
         <button 
-          onClick={handleResetMap}
-          className="rounded p-3 text-md font-semibold bg-customWhite hover:bg-customHoverGray"
+          onClick={createMap}
+          className="rounded p-2 pl-7 pr-7 text-md font-semibold bg-customWhite hover:bg-customHoverGray"
         >
           Reset map
         </button>

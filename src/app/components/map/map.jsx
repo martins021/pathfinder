@@ -8,14 +8,16 @@ const Map = ({
   result: { path, visitedNodes },
   mapData,
   mapSize,
-  start,
-  target,
   setMapData,
   setStart,
   setTarget,
   animationSpeed,
   brushSize,
-  brushMode
+  brushMode,
+  clearPath,
+  setAnimate,
+  animate,
+  animationId
 }) => {
   const [isMouseDown, setIsMouseDown] = useState(false);
   const MIN_ELEVATION = -100
@@ -29,7 +31,7 @@ const Map = ({
     [mapSize]
   );
 
-  const animatePath = (withVisited, delay) => {
+  const animatePath = (withVisited, delay, originalAnimationId) => {
     const updatedMapData = withVisited.map((node, i) => {
       if (path?.includes(i) && !nonMutableNodes.includes(node.state)) {
         return ({
@@ -40,9 +42,12 @@ const Map = ({
       } 
       return node;
     })
-
+    setAnimate(true)
     setTimeout(() => {
-      setMapData(updatedMapData)
+      if(animationId.current === originalAnimationId){
+        setMapData(updatedMapData)
+      }
+      setAnimate(false)
     }, delay)
   }
 
@@ -62,9 +67,9 @@ const Map = ({
         })
 
         setMapData(updatedMapData);
-        animatePath(updatedMapData, lastVisitedNode * animationSpeed * 1000)
+        animatePath(updatedMapData, lastVisitedNode * animationSpeed * 1000, animationId.current)
       }
-    }, [visitedNodes, path, setMapData]
+    }, [visitedNodes, path, setMapData, animationSpeed]
   )
 
   useEffect(() => {
@@ -141,7 +146,7 @@ const Map = ({
           }
           break;
         case "terrain":
-          if(node.state === "empty" || node.state === "terrain"){
+          if(node.state === "empty" || node.state === "terrain" || node.state === "visited" || node.state === "path"){
             handleSetTerrain(index)
           }
           break;
@@ -178,9 +183,9 @@ const Map = ({
             speed={animationSpeed}
             prevCellState={cell.prevState}
             cellState={cell.state}
-            onClick={() => handleNodeAction(cell, i)}
+            onClick={() => !animate ? handleNodeAction(cell, i) : null}
             onMouseLeave={() =>
-              isMouseDown ? handleNodeAction(cell, i) : null
+              (isMouseDown && !animate) ? handleNodeAction(cell, i) : null
             }
             elevation={cell.elev}
           />

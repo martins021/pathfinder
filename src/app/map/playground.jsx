@@ -1,5 +1,5 @@
 "use client"
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import styles from "../styles/main.module.css"
 import Controls from "../components/map/controls";
 import Map from "../components/map/map";
@@ -12,16 +12,19 @@ const PlayGround = () => {
   const { data: session, status } = useSession();
   const [tool, setTool] = useState('start')
   const [algorithm, setAlgorithm] = useState("bfs")
-  const [result, setResult] = useState({})
+  const [result, setResult] = useState({}) // result of the algorithm
   const [mapSize, setMapSize] = useState({ x: 40 , y: 23 });
   const [mapData, setMapData] = useState([]);
-  const [start, setStart] = useState(null);
-  const [target, setTarget] = useState(null);
+  const [start, setStart] = useState(null); // start node
+  const [target, setTarget] = useState(null); // target node
   const [animationSpeed, setAnimationSpeed] = useState(0.03)
+  const [animate, setAnimate] = useState(false) // indicates if the animation is running
   const [brushSize, setBrushSize] = useState(3)
   const [brushMode, setBrushMode] = useState(1)
+  const animationId = useRef(0) // used to cancel animation 
 
   const createMap = () => {
+    animationId.current += 1
     const data = []
     for (let y = 0; y < mapSize.y; y++) {
       for (let x = 0; x < mapSize.x; x++) {
@@ -31,6 +34,21 @@ const PlayGround = () => {
     setMapData(data)
     setStart(null);
     setTarget(null);
+  }
+
+  const clearPath = () => {
+    animationId.current += 1
+    const withoutPath = mapData.map(node => {
+      if(node.state === 'visited' || node.state === 'path'){
+        return ({
+          ...node, 
+          state: 'empty'
+        });
+      } 
+      return node;
+    })
+
+    setMapData(withoutPath);
   }
 
   useEffect(() => {
@@ -54,6 +72,8 @@ const PlayGround = () => {
   }, [target])
 
   const launchAlgorithm = async () => {
+    clearPath();
+    animationId.current += 1
     let resp;
     switch (algorithm) {
       case "dfs":
@@ -104,12 +124,14 @@ const PlayGround = () => {
           mapSize={mapSize}
           brushSize={brushSize}
           brushMode={brushMode}
-          start={start}
           animationSpeed={animationSpeed}
-          target={target}
+          animate={animate}
+          animationId={animationId}
           setMapData={setMapData}
           setStart={setStart}
           setTarget={setTarget}
+          clearPath={clearPath}
+          setAnimate={setAnimate}
         />
       </div>
       <div className={styles.controlsTile}>
@@ -119,12 +141,12 @@ const PlayGround = () => {
           mapSize={mapSize}
           setMapSize={setMapSize}
           createMap={createMap}
-          mapData={mapData}
-          setMapData={setMapData}
+          clearPath={clearPath}
           setAnimationSpeed={setAnimationSpeed}
           setBrushSize={setBrushSize}
           brushMode={brushMode}
           setBrushMode={setBrushMode}
+          animationInProgress={animate}
         />
       </div>
       <div className={styles.algorithmsTile}>

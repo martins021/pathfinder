@@ -1,8 +1,8 @@
 const getWeight = (nodeTo, nodeFrom) => {
   if(nodeFrom > nodeTo){ // going from higher elevation to lower
-    return 200 + Math.abs(nodeTo - nodeFrom) + 1;
+    return 200 + 15 * (Math.abs(nodeTo - nodeFrom) + 1);
   } else if (nodeFrom < nodeTo) { // going from lower elevation to higher
-    return 800 + Math.abs(nodeTo - nodeFrom) + 1;
+    return 200 + 50 * (Math.abs(nodeTo - nodeFrom) + 1);
   } else {
     return 200; // no elevation change
   }

@@ -19,8 +19,8 @@
 }
 .controlsTile {
     margin-top: 30px;
-    grid-area: 3 / 5 / 10 / 6;
+    grid-area: 3 / 5 / 13 / 6;
 }
 .algorithmsTile {
-    grid-area: 10 / 5 / 16 / 6;
+    grid-area: 13 / 5 / 16 / 6;
 }
