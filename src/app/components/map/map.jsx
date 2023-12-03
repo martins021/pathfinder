@@ -14,7 +14,6 @@ const Map = ({
   animationSpeed,
   brushSize,
   brushMode,
-  clearPath,
   setAnimate,
   animate,
   animationId
@@ -132,11 +131,21 @@ const Map = ({
           break;
         case "start":
           if (node.state !== "target") {
+            mapData.map(node => node.state === "start" ? node.state = node.prevState : null)
+            const mapDataCopy = [...mapData];
+            mapDataCopy[index].prevState = mapDataCopy[index].state;
+            mapDataCopy[index].state = tool;
+            setMapData(mapDataCopy);      
             setStart(index);
           }
           break;
         case "target":
           if (node.state !== "start") {
+            mapData.map(node => node.state === "target" ? node.state = node.prevState : null)
+            const mapDataCopy = [...mapData];
+            mapDataCopy[index].prevState = mapDataCopy[index].state;
+            mapDataCopy[index].state = tool;
+            setMapData(mapDataCopy);      
             setTarget(index);
           }
           break;

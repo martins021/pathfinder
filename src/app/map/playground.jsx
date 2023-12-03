@@ -27,17 +27,28 @@ const PlayGround = () => {
   const toast = useToast();
 
   const createMap = () => {
+    const startX = Math.floor(mapSize.x / 3);
+    const startY = Math.floor(mapSize.y / 2);
+    const targetX = Math.floor(mapSize.x / 3 * 2) + 1;
+    const targetY = Math.floor(mapSize.y / 2);
+
     setAnimate(false)
     animationId.current += 1
     const data = []
     for (let y = 0; y < mapSize.y; y++) {
       for (let x = 0; x < mapSize.x; x++) {
-        data.push({ x, y, state: "empty", prevState: "empty", elev: 1 })
+        if(x % mapSize.x === startX && y % mapSize.y   === startY){
+          data.push({ x, y, state: "start", prevState: "empty", elev: 1 })
+        } else if(x % mapSize.x === targetX && y % mapSize.y === targetY){
+          data.push({ x, y, state: "target", prevState: "empty", elev: 1 })
+        } else {
+          data.push({ x, y, state: "empty", prevState: "empty", elev: 1 })
+        }
       }
     }
     setMapData(data)
-    setStart(null);
-    setTarget(null);
+    setStart(startY * mapSize.x + startX);
+    setTarget(targetY * mapSize.x + targetX);
   }
 
   const clearPath = () => {
@@ -55,26 +66,6 @@ const PlayGround = () => {
 
     setMapData(withoutPath);
   }
-
-  useEffect(() => {
-    if(start){
-      mapData.map(node => node.state === "start" ? node.state = node.prevState : null)
-      const mapDataCopy = [...mapData];
-      mapDataCopy[start].prevState = mapDataCopy[start].state;
-      mapDataCopy[start].state = tool;
-      setMapData(mapDataCopy);
-    }
-  }, [start])
-
-  useEffect(() => {
-    if(target){
-      mapData.map(node => node.state === "target" ? node.state = node.prevState : null)
-      const mapDataCopy = [...mapData];
-      mapDataCopy[target].prevState = mapDataCopy[target].state;
-      mapDataCopy[target].state = tool;
-      setMapData(mapDataCopy);
-    }
-  }, [target])
 
   const launchAlgorithm = async () => {
     clearPath();
