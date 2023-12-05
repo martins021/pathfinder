@@ -6,7 +6,12 @@
   align-items: center;
 }
 .authForm {
+  color: white;
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  width: fit-content;
+  gap: 15px;
+}
+.submitBtn {
+  cursor: pointer;
 }

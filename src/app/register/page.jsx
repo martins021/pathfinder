@@ -1,5 +1,5 @@
 "use client"
-import React from "react";
+import React, { useEffect } from "react";
 import { useRouter } from 'next/navigation'
 import styles from "../styles/auth.module.css"
 import AuthForm from "../components/forms/authForm";
