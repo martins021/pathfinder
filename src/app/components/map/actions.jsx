@@ -5,7 +5,9 @@ import { publishMap } from "@/app/apiRequests/maps";
 import { useToast } from '@chakra-ui/react'
 
 const Actions = ({ algorithm, mapData, mapSize, animationSpeed, session, start, target }) => {
-  const [mapName, setMapName] = useState("");
+  const initialMapName = `${algorithm} ${mapSize.x}x${mapSize.y}`
+  const [mapName, setMapName] = useState(initialMapName.charAt(0).toUpperCase() + initialMapName.slice(1));
+  const nameManuallyChanged = useRef(false);
   const toast = useToast();
   const { register, handleSubmit, formState: { errors } } = useForm();
 
@@ -40,9 +42,11 @@ const Actions = ({ algorithm, mapData, mapSize, animationSpeed, session, start, 
   }
 
   useEffect(() => {
-    const { x, y } = mapSize;
-    const newMapName = `${algorithm} ${x}x${y}`
-    setMapName(newMapName.charAt(0).toUpperCase() + newMapName.slice(1))
+    if(!nameManuallyChanged.current){
+      const { x, y } = mapSize;
+      const newMapName = `${algorithm} ${x}x${y}`
+      setMapName(newMapName.charAt(0).toUpperCase() + newMapName.slice(1))
+    }
   }, [algorithm, mapSize])
 
   return (
@@ -55,6 +59,11 @@ const Actions = ({ algorithm, mapData, mapSize, animationSpeed, session, start, 
                 ...register("mapName", 
                 { required: true, maxLength: 30 }) 
               }
+              onChange={(e) => {
+                setMapName(e.target.value);
+                nameManuallyChanged.current = true;
+              }}
+              value={mapName}
               placeholder="Map name"
               defaultValue={mapName} 
               className="rounded-md p-1.5 bg-customHoverGray focus:outline-none focus:border-customViolet focus:ring-1 focus:ring-customViolet border-2 transition-colors duration-300"

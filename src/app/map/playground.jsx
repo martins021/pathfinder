@@ -18,7 +18,6 @@ const PlayGround = ({
   initialStart = null,
   initialTarget = null
  }) => {
-  console.log("Received data: ", { mapId, initialMapSize, inintialMapData, initialAnimationSpeed, initialAlgorithm });
   const { data: session, status } = useSession();
   const [tool, setTool] = useState('start')
   const [algorithm, setAlgorithm] = useState(initialAlgorithm)
