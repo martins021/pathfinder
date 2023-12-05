@@ -3,31 +3,42 @@ const { NextResponse } = require("next/server");
 
 export async function GET(request) {
   const name = request.nextUrl.searchParams.get("name") || "";
+  const sortingParam = request.nextUrl.searchParams.get("param") || "createdAt";
+  let sortingDirection = request.nextUrl.searchParams.get("direction") || "desc";
   const animationSpeed = request.nextUrl.searchParams.get("animationSpeed")?.split(",")
+  const mapSize = request.nextUrl.searchParams.get("size")?.split(",")
   const algorithm = request.nextUrl.searchParams.get("algorithm")?.split(",")
 
   const page = request.nextUrl.searchParams.get("page") || 1;
   const limit = request.nextUrl.searchParams.get("limit") || 10;
   const skip = (page - 1) * limit;
 
-  console.log(animationSpeed);
+  //  special case because animation value goes from high to low, but label goes from low to high
+  if(sortingParam === "animationSpeed") { 
+    if(sortingDirection === "desc"){
+      sortingDirection = "asc"
+    } else {
+      sortingDirection = "desc"
+    }
+  }
 
   const query = {
-    name: name ? { 
-      contains: name, 
-      mode: "insensitive" 
-      } : {},
-    animationSpeed: animationSpeed ? { 
-      in: animationSpeed.map(speed => Number(speed)) 
-    } : {},
-    algorithm: algorithm ? { 
-      in: algorithm
-    } : {}
+    name: name ? { contains: name, mode: "insensitive" } : {},
+    animationSpeed: animationSpeed ? { in: animationSpeed.map(speed => Number(speed)) } : {},
+    algorithm: algorithm ? { in: algorithm } : {},
+    size: mapSize ? { in: mapSize.map(size => Number(size)) } : {}
   }
+
+  const sorters = [
+    {
+      [sortingParam]: sortingDirection
+    }
+  ]
 
   try {
     const maps = await prisma.map.findMany({
       where: query,
+      orderBy: sorters,
       skip: Number(skip),
       take: Number(limit),
     });

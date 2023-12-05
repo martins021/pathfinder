@@ -13,7 +13,7 @@ const Actions = ({ algorithm, mapData, mapSize, animationSpeed, session }) => {
         name: mapName,
         mapData,
         animationSpeed,
-        size: `${mapSize.x}x${mapSize.y}`,
+        size: mapSize.x,
         algorithm,
         authorId: session?.user?.id
       }

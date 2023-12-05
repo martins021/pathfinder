@@ -31,7 +31,7 @@ model Map {
   name           String   @db.VarChar(255)
   mapData        Json?
   animationSpeed Decimal? @db.Decimal(5,4)
-  size           String?  
+  size           Int?  
   algorithm      String?  @db.VarChar(255)
   author         User     @relation(fields: [authorId], references: [id])
   authorId       String

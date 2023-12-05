@@ -124,14 +124,37 @@ export const algorithmOptions = [
     label: "Dijkstra",
     value: "dijkstra"
   },
-  {
-    label: "A*",
-    value: "aStar"
-  },
+  // {
+  //   label: "A*",
+  //   value: "aStar"
+  // },
   // {
   //   label: "Bellman-Ford",
   //   value: "bellmanFord"
   // }
+]
+
+export const sortingOptions = [
+  {
+    label: "Creation date",
+    value: "createdAt"
+  },
+  {
+    label: "Name",
+    value: "name"
+  },
+  {
+    label: "Algorithm",
+    value: "algorithm"
+  },
+  {
+    label: "Animation speed",
+    value: "animationSpeed"
+  },
+  {
+    label: "Map size",
+    value: "size"
+  }
 ]
 
 export const elevationColors = [

@@ -1,6 +1,10 @@
 "use client"
 import React from "react";
-import { algorithmOptions, animationSpeedOptions } from "@/lib/configs";
+import { algorithmOptions, animationSpeedOptions, sizeOptions } from "@/lib/configs";
+import { 
+  Input, 
+  Divider, 
+} from '@chakra-ui/react'
 
 const Filters = ({ filters, setFilters }) => {
   const onNameChange = (e) => {
@@ -31,44 +35,67 @@ const Filters = ({ filters, setFilters }) => {
   }
 
   return(
-    <div className="flex-col space-y-4 text-customWhite">
+    <div className="flex-col space-y-4 text-customWhite mr-6" >
       <div>
-        Map name
-        <input 
-          style={{ color: "black" }}
+        <p className="mb-2 font-semibold">Map name</p>
+        <Input 
           value={filters.name ?? ""} 
           onChange={onNameChange} 
         />
       </div>
+
+      <Divider />
       <div className="flex flex-col">
-        Animation speed
-        {animationSpeedOptions.map((opt, i) => (
-          <span key={i}>
-            <input 
-              type="checkbox" 
-              name="animationSpeed" 
-              id={`animationSpeed_${opt.value}`} 
-              value={opt.value} 
-              onChange={(e) => onCheckBoxGroupChange(e, "animationSpeed")} 
-            /> 
-            <label>{opt.label}</label>
-          </span>
-        ))}
-      </div>
-      <div className="flex flex-col">
-        Algorithm
+        <p className="mb-2 font-semibold">Algorithm</p>
         {algorithmOptions.map((opt, i) => (
           <span key={i}>
             <input 
+              className="w-4 h-4 cursor-pointer mr-2"
               type="checkbox" 
               name="algorithm" 
               id={`algorithm_${opt.value}`} 
               value={opt.value} 
               onChange={(e) => onCheckBoxGroupChange(e, "algorithm")} 
             /> 
-            <label>{opt.label}</label>
+            <label className="font-light">{opt.label}</label>
           </span>
         ))}
+      </div>
+
+      <Divider />
+      <div className="flex flex-col">
+        <p className="mb-2 font-semibold">Animation speed</p>
+          {animationSpeedOptions.map((opt, i) => (
+            <div key={i}>
+              <input 
+                className="w-4 h-4 cursor-pointer mr-2"
+                type="checkbox" 
+                name="animationSpeed" 
+                id={`animationSpeed_${opt.value}`} 
+                value={opt.value} 
+                onChange={(e) => onCheckBoxGroupChange(e, "animationSpeed")} 
+              /> 
+              <label className="font-light">{opt.label}</label>
+            </div>
+          ))}
+      </div>
+
+      <Divider />
+      <div className="flex flex-col">
+        <p className="mb-2 font-semibold">Map size</p>
+          {sizeOptions.map((opt, i) => (
+            <div key={i}>
+              <input 
+                className="w-4 h-4 cursor-pointer mr-2"
+                type="checkbox" 
+                name="size" 
+                id={`size${opt.value}`} 
+                value={opt.value} 
+                onChange={(e) => onCheckBoxGroupChange(e, "size")} 
+              /> 
+              <label className="font-light">{opt.label}</label>
+            </div>
+          ))}
       </div>
     </div>
   )
