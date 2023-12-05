@@ -1,7 +1,7 @@
 "use client"
 const { default: PlayGround } = require("../playground");
 import { fetchMap } from '@/app/apiRequests/map';
-import Loading from '@/app/maps/loading';
+import Loading from '@/app/components/loading';
 import { usePathname } from 'next/navigation'
 import React, { useEffect, useState } from "react";
 

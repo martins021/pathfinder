@@ -5,7 +5,7 @@ import { useRouter, useSearchParams, usePathname } from 'next/navigation'
 import { fetchMaps } from "../apiRequests/maps";
 import MapContainer from "./mapContainer";
 import Filters from "../components/forms/filters";
-import Loading from "./loading";
+import Loading from "../components/loading";
 import Sorters from "../components/forms/sorters";
 
 const Maps = ({ userId = null }) => {
@@ -29,8 +29,8 @@ const Maps = ({ userId = null }) => {
   }, [searchParams])
 
   useEffect(() => {
-    let extraFilters = {};
-    if(userId) extraFilters = { authorId: userId };
+    let extraFilters = { currentUserId: session?.user?.id };
+    if(userId) extraFilters = { ...extraFilters, authorId: userId };
     const params = new URLSearchParams({ 
       ...filters, 
       ...sorters,
@@ -67,6 +67,7 @@ const Maps = ({ userId = null }) => {
                     algorithm={map.algorithm}
                     speed={map.animationSpeed}
                     size={map.size}
+                    liked={map.liked}
                     createdAt={map.createdAt}
                   />
                 ))}

@@ -1,12 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import dayjs from "dayjs"
 import { useRouter } from 'next/navigation'
-
+import { useSession } from "next-auth/react";
 import { algorithmOptions, animationSpeedOptions, sizeOptions } from "@/lib/configs";
+import { StarIcon } from '@chakra-ui/icons'
+import { modifyMapLike } from "../apiRequests/like";
 
-const MapContainer = ({ mapId, name, algorithm, speed, size, author, createdAt }) => {
+const MapContainer = ({ mapId, name, algorithm, speed, size, author, createdAt, liked = false }) => {
+  const [currentLiked, setCurrentLiked] = useState(liked)
+  const { data: session } = useSession();
   const router = useRouter();
-
+  const handleLikeClick = async (e) => {
+    e.stopPropagation()
+    const resp = await modifyMapLike(mapId, session?.user?.id)
+    console.log(resp);
+    if(resp?.status === "success") {
+      setCurrentLiked(!currentLiked)
+    }
+  }
+  
   return (
     <div 
       className="bg-customWhite rounded-lg p-4 cursor-pointer transition-transform duration-300 hover:scale-105"
@@ -20,7 +32,7 @@ const MapContainer = ({ mapId, name, algorithm, speed, size, author, createdAt }
           {name}
         </div>
         <div className="row-start-1 row-end-2 col-start-5 col-end-7">
-          <div className="w-min m-auto bg-customYellow p-2 pl-8 pr-8 text-center rounded-md font-semibold">
+          <div className="w-min m-auto bg-customYellow p-2 pl-6 pr-6 text-center rounded-md font-semibold">
             {algorithmOptions.find(opt => opt.value === algorithm)?.label}
           </div>
         </div>
@@ -30,8 +42,14 @@ const MapContainer = ({ mapId, name, algorithm, speed, size, author, createdAt }
         <div className="row-start-2 row-end-3 col-start-4 col-end-7 font-semibold">
           Map size: {sizeOptions.find(opt => opt.value === size)?.label}
         </div>
-        <div className="row-start-3 row-end-4 col-start-1 col-end-7">
+        <div className="row-start-3 row-end-4 col-start-1 col-end-6">
           {dayjs(createdAt).format("DD.MM.YYYY HH:mm")}
+        </div>
+        <div className="row-start-3 row-end-4 col-start-6 col-end-7">
+          { currentLiked ? 
+            <StarIcon onClick={handleLikeClick} className="transition-transform duration-300 hover:scale-110" color="yellow.400" /> : 
+            <StarIcon onClick={handleLikeClick} className="transition-transform duration-300 hover:scale-110" color="gray.400" 
+          />}
         </div>
       </div>
     </div>

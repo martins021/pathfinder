@@ -5,6 +5,7 @@ const { NextResponse } = require("next/server");
 export async function GET(request) {
   const name = request.nextUrl.searchParams.get("name") || "";
   const authorId = request.nextUrl.searchParams.get("authorId");
+  const currentUserId = request.nextUrl.searchParams.get("currentUserId");
   const sortingParam = request.nextUrl.searchParams.get("param") || "createdAt";
   let sortingDirection = request.nextUrl.searchParams.get("direction") || "desc";
   const animationSpeed = request.nextUrl.searchParams.get("animationSpeed")?.split(",")
@@ -14,6 +15,8 @@ export async function GET(request) {
   const page = request.nextUrl.searchParams.get("page") || 1;
   const limit = request.nextUrl.searchParams.get("limit") || 10;
   const skip = (page - 1) * limit;
+
+  console.log({currentUserId});
 
   //  special case because animation value goes from high to low, but label goes from low to high
   if(sortingParam === "animationSpeed") { 
@@ -45,11 +48,25 @@ export async function GET(request) {
       skip: Number(skip),
       take: Number(limit),
     });
+
+    const likes = await prisma.like.findMany({
+      where: {
+        authorId: currentUserId
+      }
+    })
+
+    const finalData = maps.map(map => {
+      const like = likes.find(like => like.mapId === map.id)
+      return {
+        ...map,
+        liked: !!like
+      }
+    })
   
     let jsonResp = {
       status: "success",
-      data: maps,
-      total: maps.length
+      data: finalData,
+      total: finalData.length
     }
   
     return NextResponse.json(jsonResp);
