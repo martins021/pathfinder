@@ -29,6 +29,13 @@ const Actions = ({ algorithm, mapData, mapSize, animationSpeed, session, start, 
         duration: 6000,
         isClosable: true,
       })
+    } else {
+      toast({
+        description: "Map published successfully",
+        status: 'success',
+        duration: 6000,
+        isClosable: true,
+      })
     }
   }
 
@@ -56,7 +63,7 @@ const Actions = ({ algorithm, mapData, mapSize, animationSpeed, session, start, 
             { errors.mapName?.type === 'maxLength' &&  <p className="text-customRed">Name is too long</p> }
           </div>
           <div>
-            <input type="submit" value="Save" className="bg-mainBtn pl-4 pr-4 p-1.5 text-customWhite rounded-md cursor-pointer" />
+            <input type="submit" value="Publish" className="bg-customYellow pl-4 pr-4 p-1.5 text-customBlack rounded-md cursor-pointer" />
             <p></p>
           </div>
         </div>

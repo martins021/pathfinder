@@ -4,6 +4,7 @@ const { NextResponse } = require("next/server");
 
 export async function GET(request) {
   const name = request.nextUrl.searchParams.get("name") || "";
+  const authorId = request.nextUrl.searchParams.get("authorId");
   const sortingParam = request.nextUrl.searchParams.get("param") || "createdAt";
   let sortingDirection = request.nextUrl.searchParams.get("direction") || "desc";
   const animationSpeed = request.nextUrl.searchParams.get("animationSpeed")?.split(",")
@@ -24,6 +25,7 @@ export async function GET(request) {
   }
 
   const query = {
+    authorId: authorId ? { equals: authorId } : {},
     name: name ? { contains: name, mode: "insensitive" } : {},
     animationSpeed: animationSpeed ? { in: animationSpeed.map(speed => Number(speed)) } : {},
     algorithm: algorithm ? { in: algorithm } : {},

@@ -26,7 +26,7 @@ const Navbar = () => {
                 </Link>
               </li>
               {status === "authenticated" && <li>
-                <Link href="/maps?filters=my" className={`${pathname === '/maps/mymaps' ? 'font-bold' : ''}`}>
+                <Link href="/maps/mymaps" className={`${pathname === '/maps/mymaps' ? 'font-bold' : ''}`}>
                   <p>My maps</p>
                 </Link>
               </li>}
