@@ -2,8 +2,9 @@ import React, { useContext, useEffect, useState } from "react";
 import { animationSpeedOptions } from "@/lib/configs";
 import CustomSlider from "../sliders/slider";
 
-const SpeedController = ({ setAnimationSpeed, animationInProgress }) => {
-  const [speedValue, setSpeedValue] = useState(3)
+const SpeedController = ({ initialAnimationSpeed, setAnimationSpeed, animationInProgress }) => {
+  const speedLabel = animationSpeedOptions.find(opt => opt.value === initialAnimationSpeed).label
+  const [speedValue, setSpeedValue] = useState(speedLabel)
 
   const handleSpeedChange = (value) => {
     setSpeedValue(value);
@@ -17,7 +18,7 @@ const SpeedController = ({ setAnimationSpeed, animationInProgress }) => {
       <div className="col-span-4">
         <CustomSlider 
           disabled={animationInProgress}
-          defaultValue={3} 
+          defaultValue={speedLabel} 
           min={1} 
           max={5} 
           step={1} 

@@ -2,25 +2,33 @@
 import React, { useRef, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { publishMap } from "@/app/apiRequests/maps";
+import { useToast } from '@chakra-ui/react'
 
-const Actions = ({ algorithm, mapData, mapSize, animationSpeed, session }) => {
+const Actions = ({ algorithm, mapData, mapSize, animationSpeed, session, start, target }) => {
   const [mapName, setMapName] = useState("");
+  const toast = useToast();
   const { register, handleSubmit, formState: { errors } } = useForm();
 
   const handlePublish = async () => {
-    try {
-      const dataToSave = {
-        name: mapName,
-        mapData,
-        animationSpeed,
-        size: mapSize.x,
-        algorithm,
-        authorId: session?.user?.id
-      }
-      console.log({ dataToSave });
-      await publishMap(dataToSave);
-    } catch (error) {
-      console.log("ERROR SAVING: ", error);
+    const dataToSave = {
+      name: mapName,
+      mapData,
+      animationSpeed,
+      size: mapSize.x,
+      algorithm,
+      start,
+      target,
+      authorId: session?.user?.id
+    }
+
+    const resp = await publishMap(dataToSave);
+    if(resp.error){
+      toast({
+        description: resp.error,
+        status: 'error',
+        duration: 6000,
+        isClosable: true,
+      })
     }
   }
 

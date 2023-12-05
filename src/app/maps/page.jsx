@@ -58,6 +58,7 @@ const MyMaps = ({ ref }) => {
                 {data?.map(map => (
                   <MapContainer
                     key={map.id}
+                    mapId={map.id}
                     name={map.name}
                     algorithm={map.algorithm}
                     speed={map.animationSpeed}

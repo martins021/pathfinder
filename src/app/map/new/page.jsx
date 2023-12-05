@@ -1,7 +1,7 @@
 const { default: PlayGround } = require("../playground");
 
 const NewMap = () => (
-  <PlayGround />
+  <PlayGround mapId={"new"} />
 );
 
 export default NewMap;

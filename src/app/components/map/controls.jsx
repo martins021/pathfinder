@@ -17,7 +17,9 @@ const Controls = ({
   setBrushSize,
   setBrushMode,
   brushMode,
-  animationInProgress
+  animationInProgress,
+  initialAnimationSpeed,
+  initialMapSize
 }) => {
 
   return (
@@ -25,10 +27,12 @@ const Controls = ({
       <SpeedController 
         setAnimationSpeed={setAnimationSpeed}
         animationInProgress={animationInProgress}
+        initialAnimationSpeed={initialAnimationSpeed}
       />
       <SizeController 
           mapSize={mapSize}
           setMapSize={setMapSize}
+          initialMapSize={initialMapSize}
       />
       {tool === "terrain" && <BrushController 
         setBrushSize={setBrushSize}

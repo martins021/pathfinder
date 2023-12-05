@@ -3,8 +3,9 @@ import styles from "../../styles/sizeController.module.css"
 import { sizeOptions } from "@/lib/configs";
 import CustomSlider from "../sliders/slider";
 
-const SizeController = ({ mapSize, setMapSize }) => {
-  const [sizeValue, setSizeValue] = useState(5)
+const SizeController = ({ initialMapSize, mapSize, setMapSize }) => {
+  const sizeLabel = sizeOptions.find(opt => opt.value === initialMapSize.x).label
+  const [sizeValue, setSizeValue] = useState(sizeLabel)
   const [x, setX] = useState(mapSize.x)
   const [y, setY] = useState(mapSize.y)
 
@@ -28,7 +29,7 @@ const SizeController = ({ mapSize, setMapSize }) => {
         <p className="col-span-1 text-customWhite text-sm text-center mr-2">Size</p>
         <div className="col-span-4">
           <CustomSlider 
-            defaultValue={5} 
+            defaultValue={sizeLabel} 
             min={1} 
             max={9} 
             step={1} 

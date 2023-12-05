@@ -9,20 +9,28 @@ import { useSession } from "next-auth/react";
 import { launchBfs, launchDfs, launchDijkstra } from "../apiRequests/algorithms";
 import { useToast } from '@chakra-ui/react'
 
-
-const PlayGround = () => {
+const PlayGround = ({ 
+  mapId,
+  initialMapSize = { x: 40, y: 23 },
+  inintialMapData = [],
+  initialAnimationSpeed = 0.03,
+  initialAlgorithm = "bfs",
+  initialStart = null,
+  initialTarget = null
+ }) => {
+  console.log("Received data: ", { mapId, initialMapSize, inintialMapData, initialAnimationSpeed, initialAlgorithm });
   const { data: session, status } = useSession();
   const [tool, setTool] = useState('start')
-  const [algorithm, setAlgorithm] = useState("bfs")
+  const [algorithm, setAlgorithm] = useState(initialAlgorithm)
   const [result, setResult] = useState({}) // result of the algorithm
-  const [mapSize, setMapSize] = useState({ x: 40 , y: 23 });
-  const [mapData, setMapData] = useState([]);
-  const [start, setStart] = useState(null); // start node
-  const [target, setTarget] = useState(null); // target node
-  const [animationSpeed, setAnimationSpeed] = useState(0.03)
+  const [mapSize, setMapSize] = useState(initialMapSize);
+  const [mapData, setMapData] = useState(inintialMapData);
+  const [start, setStart] = useState(initialStart); // start node
+  const [target, setTarget] = useState(initialTarget); // target node
+  const [animationSpeed, setAnimationSpeed] = useState(initialAnimationSpeed)
   const [animate, setAnimate] = useState(false) // indicates if the animation is running
   const [brushSize, setBrushSize] = useState(3)
-  const [brushMode, setBrushMode] = useState(1)
+  const [brushMode, setBrushMode] = useState(1);
   const animationId = useRef(0) // used to cancel animation 
   const toast = useToast();
 
@@ -97,7 +105,9 @@ const PlayGround = () => {
   }
 
   useEffect(() => {
-    createMap()
+    if(mapId === "new"){
+      createMap()
+    }
   }, [mapSize])
   
   return (
@@ -121,6 +131,8 @@ const PlayGround = () => {
             mapSize={mapSize}
             animationSpeed={animationSpeed}
             session={session}
+            start={start}
+            target={target}
           />}
         </div>
         <div className={styles.launchBtn}>
@@ -163,6 +175,8 @@ const PlayGround = () => {
             brushMode={brushMode}
             setBrushMode={setBrushMode}
             animationInProgress={animate}
+            initialAnimationSpeed={initialAnimationSpeed}
+            initialMapSize={initialMapSize}
           />
         </div>
         <div className={styles.algorithmsTile}>

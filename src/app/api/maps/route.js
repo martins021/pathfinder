@@ -1,3 +1,4 @@
+import { validateStartAndTargetNodes } from "@/app/helpers";
 const { default: prisma } = require("@/lib/database");
 const { NextResponse } = require("next/server");
 
@@ -70,10 +71,12 @@ export async function POST(request) {
   try {
     const json = await request.json();
     console.log({ json });
+    validateStartAndTargetNodes(json.start, json.target);
+
     const map = await prisma.map.create({ 
       data: json 
     })
-    console.log({map});
+
     let jsonResp = {
       status: "success",
       data: map
@@ -87,16 +90,6 @@ export async function POST(request) {
     })
   } catch (error) {
     console.log("Error saving map: ", error);
-    let errorResp = {
-      status: "error",
-      message: error.message
-    }
-
-    return new NextResponse(JSON.stringify(errorResp), {
-      status: 500,
-      headers: {
-        "Content-Type": "application/json"
-      }
-    })
+    return NextResponse.json({ error: error.message }, { status: error.status || 500 })
   }
 }

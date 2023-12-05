@@ -1,10 +1,17 @@
 import React from "react";
 import dayjs from "dayjs"
+import { useRouter } from 'next/navigation'
+
 import { algorithmOptions, animationSpeedOptions, sizeOptions } from "@/lib/configs";
 
-const MapContainer = ({ id, name, algorithm, speed, size, author, createdAt }) => {
+const MapContainer = ({ mapId, name, algorithm, speed, size, author, createdAt }) => {
+  const router = useRouter();
+
   return (
-    <div className="bg-customWhite rounded-lg p-4 cursor-pointer transition-transform duration-300 hover:scale-105">
+    <div 
+      className="bg-customWhite rounded-lg p-4 cursor-pointer transition-transform duration-300 hover:scale-105"
+      onClick={() => router.push(`/map/${mapId}`)}
+    >
       <div className="grid grid-cols-6 grid-rows-3">
         {/* <div className="row-start-1 row-end-4 col-start-1 col-end-7">
           Photo
