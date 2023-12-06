@@ -1,7 +1,6 @@
 const baseUrl = process.env.BASE_URL
 
 export async function fetchMaps(params) {
-  console.log(params);
   const res = await fetch(`http://localhost:3000/api/maps?${params}`)
   const data = await res.json()
 

@@ -9,7 +9,7 @@ import Loading from "../components/loading";
 import Sorters from "../components/forms/sorters";
 
 const Maps = ({ userId = null }) => {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const [ data, setData ] = useState()
   const [ loading, setLoading ] = useState(false)
   const [filters, setFilters] = useState({});
@@ -17,7 +17,7 @@ const Maps = ({ userId = null }) => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-    
+
   useEffect(() => {
     const getData = async () => {
       setLoading(true);
@@ -29,6 +29,7 @@ const Maps = ({ userId = null }) => {
   }, [searchParams])
 
   useEffect(() => {
+    if(status !== "authenticated" || !session?.user?.id || !userId) return;
     let extraFilters = { currentUserId: session?.user?.id };
     if(userId) extraFilters = { ...extraFilters, authorId: userId };
     const params = new URLSearchParams({ 
@@ -41,7 +42,9 @@ const Maps = ({ userId = null }) => {
 
   return (
     <div className="pt-4 p-12">
-      <h1 className="text-customWhite pb-4 font-bold text-xl">
+      {status !== "authenticated" ? 
+      (<Loading />) : 
+      (<><h1 className="text-customWhite pb-4 font-bold text-xl">
         {userId ? "Your published maps" : "Published maps" }
       </h1>
 
@@ -80,7 +83,7 @@ const Maps = ({ userId = null }) => {
               There are no saved maps
             </div>
           )}
-      </div>
+      </div></>)}
     </div>
   )
 }
