@@ -6,7 +6,7 @@ import { algorithmOptions, animationSpeedOptions, sizeOptions } from "@/lib/conf
 import { StarIcon } from '@chakra-ui/icons'
 import { modifyMapLike } from "../apiRequests/like";
 
-const MapContainer = ({ mapId, name, algorithm, speed, size, author, createdAt, liked = false }) => {
+const MapContainer = ({ mapId, name, algorithm, speed, size, author, createdAt, liked = false, authorUserName }) => {
   const [currentLiked, setCurrentLiked] = useState(liked)
   const { data: session } = useSession();
   const router = useRouter();
@@ -28,8 +28,11 @@ const MapContainer = ({ mapId, name, algorithm, speed, size, author, createdAt, 
         {/* <div className="row-start-1 row-end-4 col-start-1 col-end-7">
           Photo
         </div> */}
-        <div className="row-start-1 row-end-2 col-start-1 col-end-5 font-bold text-xl">
-          {name}
+        <div className="row-start-1 row-end-2 col-start-1 col-end-5">
+          <div className="font-bold text-xl">{name}</div>
+          <div>
+            <span className="text-customGray">by {authorUserName}</span>
+          </div>
         </div>
         <div className="row-start-1 row-end-2 col-start-5 col-end-7">
           <div className="w-min m-auto bg-customYellow p-2 pl-6 pr-6 text-center rounded-md font-semibold">

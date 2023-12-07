@@ -16,6 +16,8 @@ export async function GET(request) {
   const limit = request.nextUrl.searchParams.get("limit") || 10;
   const skip = (page - 1) * limit;
 
+  if(!currentUserId) throw new Error("currentUserId is required")
+
   console.log({currentUserId});
 
   //  special case because animation value goes from high to low, but label goes from low to high
@@ -89,7 +91,6 @@ export async function GET(request) {
 export async function POST(request) {
   try {
     const json = await request.json();
-    console.log({ json });
     validateStartAndTargetNodes(json.start, json.target);
 
     const map = await prisma.map.create({ 

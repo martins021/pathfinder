@@ -39,6 +39,7 @@ model Map {
   author         User     @relation(fields: [authorId], references: [id])
   likes          Like[]
   authorId       String
+  authorUserName String?
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 }

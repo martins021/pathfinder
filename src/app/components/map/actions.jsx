@@ -20,7 +20,8 @@ const Actions = ({ algorithm, mapData, mapSize, animationSpeed, session, start, 
       algorithm,
       start,
       target,
-      authorId: session?.user?.id
+      authorId: session?.user?.id,
+      authorUserName: session?.user?.name
     }
 
     const resp = await publishMap(dataToSave);
@@ -65,7 +66,6 @@ const Actions = ({ algorithm, mapData, mapSize, animationSpeed, session, start, 
               }}
               value={mapName}
               placeholder="Map name"
-              defaultValue={mapName} 
               className="rounded-md p-1.5 bg-customHoverGray focus:outline-none focus:border-customViolet focus:ring-1 focus:ring-customViolet border-2 transition-colors duration-300"
             />
             { errors.mapName?.type === 'required' && <p className="text-customRed">This field is required</p> }

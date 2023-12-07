@@ -29,7 +29,7 @@ const Maps = ({ userId = null }) => {
   }, [searchParams])
 
   useEffect(() => {
-    if(status !== "authenticated" || !session?.user?.id || !userId) return;
+    if(status !== "authenticated" || !session?.user?.id) return;
     let extraFilters = { currentUserId: session?.user?.id };
     if(userId) extraFilters = { ...extraFilters, authorId: userId };
     const params = new URLSearchParams({ 
@@ -72,6 +72,7 @@ const Maps = ({ userId = null }) => {
                     size={map.size}
                     liked={map.liked}
                     createdAt={map.createdAt}
+                    authorUserName={map.authorUserName}
                   />
                 ))}
               </div>
