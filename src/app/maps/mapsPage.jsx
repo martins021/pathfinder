@@ -8,7 +8,7 @@ import Filters from "../components/forms/filters";
 import Loading from "../components/loading";
 import Sorters from "../components/forms/sorters";
 
-const Maps = ({ userId = null }) => {
+const Maps = ({ myMaps = false }) => {
   const { data: session, status } = useSession();
   const [ data, setData ] = useState()
   const [ loading, setLoading ] = useState(false)
@@ -25,13 +25,17 @@ const Maps = ({ userId = null }) => {
       setLoading(false);
       setData(data);
     }
-    getData();
+
+    if(searchParams.toString()){
+      getData();
+    }
   }, [searchParams])
 
   useEffect(() => {
     if(status !== "authenticated" || !session?.user?.id) return;
+
     let extraFilters = { currentUserId: session?.user?.id };
-    if(userId) extraFilters = { ...extraFilters, authorId: userId };
+    if(myMaps) extraFilters = { ...extraFilters, authorId: session?.user?.id };
     const params = new URLSearchParams({ 
       ...filters, 
       ...sorters,
@@ -45,7 +49,7 @@ const Maps = ({ userId = null }) => {
       {status !== "authenticated" ? 
       (<Loading />) : 
       (<><h1 className="text-customWhite pb-4 font-bold text-xl">
-        {userId ? "Your published maps" : "Published maps" }
+        {myMaps ? "Your published maps" : "Published maps" }
       </h1>
 
       <div className="grid grid-cols-6">
