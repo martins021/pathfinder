@@ -48,7 +48,7 @@ const Filters = ({ filters, setFilters }) => {
       <div className="flex flex-col">
         <p className="mb-2 font-semibold">Algorithm</p>
         {algorithmOptions.map((opt, i) => (
-          <span key={i}>
+          <span key={i} className="p-2">
             <input 
               className="w-4 h-4 cursor-pointer mr-2"
               type="checkbox" 
@@ -63,10 +63,10 @@ const Filters = ({ filters, setFilters }) => {
       </div>
 
       <Divider />
-      <div className="flex flex-col">
-        <p className="mb-2 font-semibold">Animation speed</p>
+      <p className="mb-2 font-semibold">Animation speed</p>
+      <div className="flex flex-row flex-wrap">
           {animationSpeedOptions.map((opt, i) => (
-            <div key={i}>
+            <div key={i} class="w-1/3 p-2">
               <input 
                 className="w-4 h-4 cursor-pointer mr-2"
                 type="checkbox" 
@@ -81,10 +81,10 @@ const Filters = ({ filters, setFilters }) => {
       </div>
 
       <Divider />
-      <div className="flex flex-col">
-        <p className="mb-2 font-semibold">Map size</p>
+      <p className="mb-2 font-semibold">Map size</p>
+      <div className="flex flex-row flex-wrap">
           {sizeOptions.map((opt, i) => (
-            <div key={i}>
+            <div key={i} class="w-1/3 p-2">
               <input 
                 className="w-4 h-4 cursor-pointer mr-2"
                 type="checkbox" 

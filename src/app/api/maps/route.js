@@ -13,8 +13,7 @@ export async function GET(request) {
   const algorithm = request.nextUrl.searchParams.get("algorithm")?.split(",")
 
   const page = request.nextUrl.searchParams.get("page") || 1;
-  const limit = request.nextUrl.searchParams.get("limit") || 10;
-  const skip = (page - 1) * limit;
+  const batchSize = 10;
 
   if(!currentUserId) throw new Error("currentUserId is required")
 
@@ -47,8 +46,11 @@ export async function GET(request) {
     const maps = await prisma.map.findMany({
       where: query,
       orderBy: sorters,
-      skip: Number(skip),
-      take: Number(limit),
+      take: Number(page) * batchSize,
+    });
+
+    const mapsCount = await prisma.map.count({
+      where: query
     });
 
     const likes = await prisma.like.findMany({
@@ -68,7 +70,7 @@ export async function GET(request) {
     let jsonResp = {
       status: "success",
       data: finalData,
-      total: finalData.length
+      total: mapsCount
     }
   
     return NextResponse.json(jsonResp);

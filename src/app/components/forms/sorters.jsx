@@ -20,9 +20,9 @@ const Sorters = ({sorters, setSorters}) => {
   }
 
   return (
-    <div className="text-customWhite m-7">
+    <div className="text-customWhite mb-6">
       <div className="flex flex-row gap-2 justify-start">
-        <h1 className="text-xl" style={{ width: 85 }}>Sort by: </h1>
+        <h1 className="text-xl" style={{ width: "10vw" }}>Sort by: </h1>
         <div 
           className="cursor-pointer" 
           onClick={handleDirectionChange}

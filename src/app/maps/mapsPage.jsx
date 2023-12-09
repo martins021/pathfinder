@@ -1,7 +1,8 @@
 "use client"
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter, useSearchParams, usePathname } from 'next/navigation'
+import { Button } from '@chakra-ui/react'
 import { fetchMaps } from "../apiRequests/maps";
 import MapContainer from "./mapContainer";
 import Filters from "../components/forms/filters";
@@ -12,18 +13,22 @@ const Maps = ({ myMaps = false }) => {
   const { data: session, status } = useSession();
   const [ data, setData ] = useState()
   const [ loading, setLoading ] = useState(false)
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(null);
   const [filters, setFilters] = useState({});
   const [sorters, setSorters] = useState({ param: "createdAt", direction: "desc" });
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const prevFilters = useRef(filters);
 
   useEffect(() => {
     const getData = async () => {
       setLoading(true);
       const data = await fetchMaps(searchParams.toString());
       setLoading(false);
-      setData(data);
+      setTotal(data?.total);
+      setData(data?.data);
     }
 
     if(searchParams.toString()){
@@ -34,15 +39,20 @@ const Maps = ({ myMaps = false }) => {
   useEffect(() => {
     if(status !== "authenticated" || !session?.user?.id) return;
 
+    if(JSON.stringify(prevFilters.current) !== JSON.stringify(filters)){
+      setPage(1);
+      prevFilters.current = filters;
+    }
     let extraFilters = { currentUserId: session?.user?.id };
     if(myMaps) extraFilters = { ...extraFilters, authorId: session?.user?.id };
     const params = new URLSearchParams({ 
       ...filters, 
       ...sorters,
-      ...extraFilters
+      ...extraFilters,
+      page
     });  
     router.replace(pathname + "?" + params.toString());
-  }, [filters, sorters])
+  }, [filters, sorters, page, status, session?.user?.id, myMaps, router, pathname])
 
   return (
     <div className="pt-4 p-12">
@@ -61,10 +71,15 @@ const Maps = ({ myMaps = false }) => {
           (<Loading />) : 
           ( data && data.length ? 
             (<div className="col-start-2 col-end-7">
-              <Sorters 
-                sorters={sorters} 
-                setSorters={setSorters} 
-              />
+              <div className="flex justify-between">
+                <Sorters 
+                  sorters={sorters} 
+                  setSorters={setSorters} 
+                />
+                <h3 className="text-customWhite">
+                  Showing {data.length} / {total} maps
+                </h3>
+              </div>
               <div className="grid grid-cols-4 gap-6 ">
                 {data?.map(map => (
                   <MapContainer
@@ -80,8 +95,13 @@ const Maps = ({ myMaps = false }) => {
                   />
                 ))}
               </div>
-              <div className="flex justify-center">
-                load more
+              <div className="flex justify-center p-4">
+                { data.length !== total && <Button 
+                  className="text-customWhite hover:text-customBlack" 
+                  colorScheme='gray' 
+                  variant='outline'
+                  onClick={() => setPage(page + 1)}
+                >Load more</Button>}
               </div>
             </div>) : 
             <div className="text-customWhite">
