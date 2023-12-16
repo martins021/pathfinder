@@ -22,7 +22,7 @@ const Navbar = () => {
               </li>
               <li>
                 <Link href="/maps" className={`${pathname === '/maps' ? 'font-bold' : ''}`}>
-                  <p>Explore</p>
+                  <p>Published maps</p>
                 </Link>
               </li>
               {status === "authenticated" && <li>

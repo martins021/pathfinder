@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import styles from "../styles/main.module.css"
 import Controls from "../components/map/controls";
 import Map from "../components/map/map";
@@ -9,6 +9,8 @@ import { useSession } from "next-auth/react";
 import { launchBfs, launchDfs, launchDijkstra } from "../apiRequests/algorithms";
 import { useToast } from '@chakra-ui/react'
 import CommentForm from "../components/forms/newComment";
+import CommentSection from "../components/commentSection";
+import { getComments } from "../apiRequests/comment";
 
 const PlayGround = ({ 
   mapId,
@@ -31,6 +33,10 @@ const PlayGround = ({
   const [animate, setAnimate] = useState(false) // indicates if the animation is running
   const [brushSize, setBrushSize] = useState(3)
   const [brushMode, setBrushMode] = useState(1);
+  const [comments, setComments] = useState([])
+  const [skipComments, setSkipComments] = useState(0)
+  const [totalComments, setTotalComments] = useState(0)
+  const [loadingComments, setLoadingComments] = useState(false)
   const animationId = useRef(0) // used to cancel animation 
   const toast = useToast();
 
@@ -109,10 +115,31 @@ const PlayGround = ({
       createMap()
     }
   }, [mapSize])
+
+  const fetchComments = useCallback(
+    async () => {
+      setLoadingComments(true)
+      const resp = await getComments(mapId, skipComments)
+      setComments(prev => [...prev, ...resp.data])
+      setTotalComments(resp.total)
+      setSkipComments(prev => prev + resp.data.length)
+      setLoadingComments(false)
+    }, [mapId, skipComments]
+  ) 
   
   return (
     <>
-      {session && mapId && mapId !== "new" && <CommentForm mapId={mapId} userId={session?.user?.id} />}
+      {session && mapId && mapId !== "new" && 
+      <CommentForm 
+        mapId={mapId} 
+        userId={session?.user?.id}
+        userName={session?.user?.name} 
+        comments={comments}
+        setComments={setComments}
+        setSkipComments={setSkipComments}
+        setTotalComments={setTotalComments}
+      />}
+      
       <div className={styles.mainGrid} >
         <div className={styles.actionsTile}>
           {status === "authenticated" && <Actions 
@@ -186,6 +213,15 @@ const PlayGround = ({
           />
         </div>
       </div>
+
+      {session && mapId && mapId !== "new" && 
+      <CommentSection 
+        comments={comments}
+        fetchComments={fetchComments}
+        loading={loadingComments}
+        totalComments={totalComments}
+      />}
+
     </>
   )
 }

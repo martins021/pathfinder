@@ -5,13 +5,13 @@ import { useForm } from "react-hook-form"
 import { postComment } from "@/app/apiRequests/comment";
 import { useToast } from '@chakra-ui/react'
 
-const CommentForm = ({ mapId, userId }) => {
+const CommentForm = ({ mapId, userId, userName, setComments, setSkipComments, setTotalComments }) => {
   const [comment, setComment] = useState("");
   const { register, handleSubmit } = useForm();
   const toast = useToast();
 
   const submitComment = async ({ comment }) => {
-    const resp = await postComment(userId, mapId, comment)
+    const resp = await postComment(userId, userName, mapId, comment)
     
     if(resp.error){
       toast({
@@ -27,8 +27,19 @@ const CommentForm = ({ mapId, userId }) => {
         duration: 6000,
         isClosable: true,
       })
+      setComments(prev => [resp.data, ...prev])
+      setSkipComments(prev => prev + 1)
+      setTotalComments(prev => prev + 1)
     }
   }
+
+  const handleCommentsClick = () => {
+    const screenHeight = window.innerHeight;
+    window.scrollTo({
+      top: window.pageYOffset + screenHeight,
+      behavior: 'smooth'
+    });
+  };
 
   return(
     <div className="flex justify-between m-2 mr-6 text-customWhite">
@@ -53,6 +64,7 @@ const CommentForm = ({ mapId, userId }) => {
       </form>
       <Button
         className="border-2 border-customWhite text-customWhite rounded-md cursor-pointer hover:text-customBlack transition-all duration-200"
+        onClick={handleCommentsClick}
       >
         Comments
       </Button>

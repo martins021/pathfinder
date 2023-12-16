@@ -56,11 +56,12 @@ model Like {
 }
 
 model Comment {
-  id        String @id @default(cuid())
-  content   String
-  map       Map    @relation(fields: [mapId], references: [id])
-  mapId     String
-  author    User   @relation(fields: [authorId], references: [id])
-  authorId  String
-  createdAt DateTime @default(now())
+  id         String @id @default(cuid())
+  content    String
+  authorName String?
+  map        Map    @relation(fields: [mapId], references: [id])
+  mapId      String
+  author     User   @relation(fields: [authorId], references: [id])
+  authorId   String
+  createdAt  DateTime @default(now())
 }
