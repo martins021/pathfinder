@@ -66,7 +66,7 @@ const Filters = ({ filters, setFilters }) => {
       <p className="mb-2 font-semibold">Animation speed</p>
       <div className="flex flex-row flex-wrap">
           {animationSpeedOptions.map((opt, i) => (
-            <div key={i} class="w-1/3 p-2">
+            <div key={i} className="w-1/3 p-2">
               <input 
                 className="w-4 h-4 cursor-pointer mr-2"
                 type="checkbox" 
@@ -84,7 +84,7 @@ const Filters = ({ filters, setFilters }) => {
       <p className="mb-2 font-semibold">Map size</p>
       <div className="flex flex-row flex-wrap">
           {sizeOptions.map((opt, i) => (
-            <div key={i} class="w-1/3 p-2">
+            <div key={i} className="w-1/3 p-2">
               <input 
                 className="w-4 h-4 cursor-pointer mr-2"
                 type="checkbox" 

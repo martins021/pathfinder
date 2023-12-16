@@ -8,6 +8,7 @@ import AlgorithmMenu from "../components/map/algorithmMenu";
 import { useSession } from "next-auth/react";
 import { launchBfs, launchDfs, launchDijkstra } from "../apiRequests/algorithms";
 import { useToast } from '@chakra-ui/react'
+import CommentForm from "../components/forms/newComment";
 
 const PlayGround = ({ 
   mapId,
@@ -111,16 +112,7 @@ const PlayGround = ({
   
   return (
     <>
-      <div className="text-customWhite p-2">
-        {Object.keys(result).length ?
-          <div className="flex gap-4">
-            <p>{result.name}:</p>
-            <p>Visited nodes: {result.visitedNodes?.length}</p>
-            <p>Path length: {result.path?.length}</p>
-            <p>Visited precentage: {result.precentageVisited?.toFixed(2)}%</p>
-          </div>
-        : <p>Launch an algorithm to see visualization</p>}
-      </div>
+      {session && mapId && mapId !== "new" && <CommentForm mapId={mapId} userId={session?.user?.id} />}
       <div className={styles.mainGrid} >
         <div className={styles.actionsTile}>
           {status === "authenticated" && <Actions 
@@ -177,6 +169,15 @@ const PlayGround = ({
             initialAnimationSpeed={initialAnimationSpeed}
             initialMapSize={initialMapSize}
           />
+        </div>
+        <div className={styles.results}>
+          {Object.keys(result).length ?
+            <div className="flex flex-col gap-4">
+              <p>Visited nodes: {result.visitedNodes?.length}</p>
+              <p>Path length: {result.path?.length}</p>
+              <p>Visited precentage: {result.precentageVisited?.toFixed(2)}%</p>
+            </div>
+          : <p>Launch an algorithm to see visualization</p>}
         </div>
         <div className={styles.algorithmsTile}>
           <AlgorithmMenu 

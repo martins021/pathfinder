@@ -30,11 +30,6 @@ const Navbar = () => {
                   <p>My maps</p>
                 </Link>
               </li>}
-              <li>
-                <Link href="/about" className={`${pathname === '/about' ? 'font-bold' : ''}`}>
-                  <p>About</p>
-                </Link>
-              </li>
             </ul>
             <CredentialsComponent />
           </div>

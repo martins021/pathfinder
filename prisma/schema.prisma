@@ -25,6 +25,7 @@ model User {
   sessions      Session[]
   maps          Map[]
   likes         Like[]
+  comments      Comment[]
 }
 
 model Map {
@@ -38,6 +39,7 @@ model Map {
   algorithm      String?  @db.VarChar(255)
   author         User     @relation(fields: [authorId], references: [id])
   likes          Like[]
+  comments       Comment[]
   authorId       String
   authorUserName String?
   createdAt      DateTime @default(now())
@@ -46,6 +48,16 @@ model Map {
 
 model Like {
   id        String @id @default(cuid())
+  map       Map    @relation(fields: [mapId], references: [id])
+  mapId     String
+  author    User   @relation(fields: [authorId], references: [id])
+  authorId  String
+  createdAt DateTime @default(now())
+}
+
+model Comment {
+  id        String @id @default(cuid())
+  content   String
   map       Map    @relation(fields: [mapId], references: [id])
   mapId     String
   author    User   @relation(fields: [authorId], references: [id])
