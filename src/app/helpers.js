@@ -64,15 +64,15 @@ const createPath = (parrents, node) => {
 
 const validateStartAndTargetNodes = (start, target) => {
   if(!start && !target) {
-    const error = new Error("Nav norādītas sākuma un beigu virsotnes");
+    const error = new Error("Start and target nodes not specified");
     error.status = 400;
     throw error;
   } else if(!start) {
-    const error = new Error("Nav norādīta sākuma virsotne");
+    const error = new Error("Start node not specified");
     error.status = 400;
     throw error;
   } else if (!target) {
-    const error = new Error("Nav norādīta beigu virsotne");
+    const error = new Error("Target node not specified");
     error.status = 400;
     throw error;
   }

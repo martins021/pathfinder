@@ -15,7 +15,7 @@ export async function POST(request){
       where: { email }
     })
     if(userExists){
-      return new NextResponse("User already exists", { status: 400 })
+      return new NextResponse("User already exists", { status: 400, code: "USER_EXISTS" })
     }
   
     const hashedPswd = await bcrypt.hash(password, 10);
@@ -30,6 +30,6 @@ export async function POST(request){
     return NextResponse.json(newUser);
   } catch (error) {
     console.log("Error registering user: ", error);
-    return new NextResponse("An error occured while registering user", { status: 500 })
+    return new NextResponse("An unknown error occured. Try again later.", { status: 500 })
   }
 }

@@ -11,7 +11,7 @@ const Navbar = () => {
   
   return (
     <>
-      <div className="w-full pt-3 pb-3 bg-customYellow sticky top-0">
+      <div className="w-full pt-3 pb-3 bg-customYellow sticky top-0" style={{ zIndex: 1 }}>
         <div className="container mx-auto max-w-[1920px] px-8 h-full">
           <div className="flex justify-between items-center h-full">
             <ul className="hidden md:flex gap-x-8 text-customBlack">
