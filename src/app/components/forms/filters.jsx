@@ -6,7 +6,7 @@ import {
   Divider, 
 } from '@chakra-ui/react'
 
-const Filters = ({ filters, setFilters }) => {
+const Filters = ({ filters, setFilters, authenticated }) => {
   const onNameChange = (e) => {
     if(!e.target.value) {
       const copy = structuredClone(filters);
@@ -43,6 +43,17 @@ const Filters = ({ filters, setFilters }) => {
           onChange={onNameChange} 
         />
       </div>
+
+      {authenticated && <><Divider />
+      <input 
+        className="w-4 h-4 cursor-pointer mr-2"
+        type="checkbox" 
+        name="favourite"  
+        value={"favourite"} 
+        onChange={(e) => setFilters({ ...filters, favourite: e.target.checked })} 
+      /> 
+      <label className="font-light">Favourite</label></>}
+
 
       <Divider />
       <div className="flex flex-col">

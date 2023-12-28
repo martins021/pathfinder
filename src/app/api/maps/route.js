@@ -5,7 +5,7 @@ const { NextResponse } = require("next/server");
 export async function GET(request) {
   const name = request.nextUrl.searchParams.get("name") || "";
   const authorId = request.nextUrl.searchParams.get("authorId");
-  const currentUserId = request.nextUrl.searchParams.get("currentUserId");
+  const currentUserId = request.nextUrl.searchParams.get("currentUserId") || null;
   const sortingParam = request.nextUrl.searchParams.get("param") || "createdAt";
   let sortingDirection = request.nextUrl.searchParams.get("direction") || "desc";
   const animationSpeed = request.nextUrl.searchParams.get("animationSpeed")?.split(",")
@@ -14,10 +14,6 @@ export async function GET(request) {
 
   const page = request.nextUrl.searchParams.get("page") || 1;
   const batchSize = 10;
-
-  if(!currentUserId) throw new Error("currentUserId is required")
-
-  console.log({currentUserId});
 
   //  special case because animation value goes from high to low, but label goes from low to high
   if(sortingParam === "animationSpeed") { 
@@ -45,27 +41,45 @@ export async function GET(request) {
   try {
     const maps = await prisma.map.findMany({
       where: query,
+      include: {
+        likes: true,
+      },
       orderBy: sorters,
       take: Number(page) * batchSize,
     });
 
-    const mapsCount = await prisma.map.count({
+
+    let finalData = maps
+    let mapsCount = await prisma.map.count({
       where: query
     });
 
-    const likes = await prisma.like.findMany({
-      where: {
-        authorId: currentUserId
-      }
-    })
+    if(currentUserId){
+      const favourite = request.nextUrl.searchParams.get("favourite") === "true";
+      
+      const withLikedAttr = maps.map(map => {
+        return {
+          ...map,
+          liked: map.likes.some(like => like.authorId === currentUserId)
+        }
+      })
 
-    const finalData = maps.map(map => {
-      const like = likes.find(like => like.mapId === map.id)
-      return {
-        ...map,
-        liked: !!like
+      if(favourite){
+        finalData = withLikedAttr.filter(map => map.liked)
+        mapsCount = await prisma.map.count({
+          where: {
+            ...query,
+            likes: {
+              some: {
+                authorId: currentUserId
+              }
+            }
+          }
+        });
+      } else { 
+        finalData = withLikedAttr
       }
-    })
+    }
   
     let jsonResp = {
       status: "success",

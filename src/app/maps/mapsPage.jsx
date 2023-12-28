@@ -37,13 +37,14 @@ const Maps = ({ myMaps = false }) => {
   }, [searchParams])
 
   useEffect(() => {
-    if(status !== "authenticated" || !session?.user?.id) return;
-
     if(JSON.stringify(prevFilters.current) !== JSON.stringify(filters)){
       setPage(1);
       prevFilters.current = filters;
     }
-    let extraFilters = { currentUserId: session?.user?.id };
+    let extraFilters = {};
+    if(status === "authenticated" && session?.user?.id){
+      extraFilters = { currentUserId: session?.user?.id }
+    }
     if(myMaps) extraFilters = { ...extraFilters, authorId: session?.user?.id };
     const params = new URLSearchParams({ 
       ...filters, 
@@ -56,7 +57,7 @@ const Maps = ({ myMaps = false }) => {
 
   return (
     <div className="pt-4 p-12">
-      {status !== "authenticated" ? 
+      {myMaps && status !== "authenticated" ? 
       (<Loading />) : 
       (<><h1 className="text-customWhite pb-4 font-bold text-xl">
         {myMaps ? "Your published maps" : "Published maps" }
@@ -64,7 +65,11 @@ const Maps = ({ myMaps = false }) => {
 
       <div className="grid grid-cols-6">
         <div className="col-start-1 col-end-2">
-          <Filters filters={filters} setFilters={setFilters} />
+          <Filters 
+            filters={filters} 
+            setFilters={setFilters}
+            authenticated={status === "authenticated"} 
+          />
         </div>
 
         {loading ? 
@@ -92,6 +97,7 @@ const Maps = ({ myMaps = false }) => {
                     liked={map.liked}
                     createdAt={map.createdAt}
                     authorUserName={map.authorUserName}
+                    authenticated={status === "authenticated"}
                   />
                 ))}
               </div>

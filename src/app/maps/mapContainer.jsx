@@ -6,7 +6,18 @@ import { algorithmOptions, animationSpeedOptions, sizeOptions } from "@/lib/conf
 import { StarIcon } from '@chakra-ui/icons'
 import { modifyMapLike } from "../apiRequests/like";
 
-const MapContainer = ({ mapId, name, algorithm, speed, size, author, createdAt, liked = false, authorUserName }) => {
+const MapContainer = ({ 
+  mapId, 
+  name, 
+  algorithm, 
+  speed, 
+  size, 
+  author, 
+  createdAt, 
+  liked = false, 
+  authorUserName,
+  authenticated
+}) => {
   const [currentLiked, setCurrentLiked] = useState(liked)
   const { data: session } = useSession();
   const router = useRouter();
@@ -48,12 +59,12 @@ const MapContainer = ({ mapId, name, algorithm, speed, size, author, createdAt, 
         <div className="row-start-3 row-end-4 col-start-1 col-end-6">
           {dayjs(createdAt).format("DD.MM.YYYY HH:mm")}
         </div>
-        <div className="row-start-3 row-end-4 col-start-6 col-end-7">
+        {authenticated && <div className="row-start-3 row-end-4 col-start-6 col-end-7">
           { currentLiked ? 
             <StarIcon onClick={handleLikeClick} className="transition-transform duration-300 hover:scale-110" color="yellow.400" /> : 
             <StarIcon onClick={handleLikeClick} className="transition-transform duration-300 hover:scale-110" color="gray.400" 
           />}
-        </div>
+        </div>}
       </div>
     </div>
   )
