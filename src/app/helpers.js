@@ -9,6 +9,10 @@ const getWeight = (nodeTo, nodeFrom) => {
 }
 
 const createAdjacencyList = (data, colCount, rowCount, weighted = false) => {
+  if(!data || !Array.isArray(data) || !colCount || !rowCount) {
+    throw new Error("Invalid data");
+  }
+
   const adjList = data.map((node, i) => {
     const neighbors = []; // holds indices of neighboring nodes
     if(node.state === "wall") return neighbors; // wall nodes have no neighbors
