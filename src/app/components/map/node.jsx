@@ -30,6 +30,7 @@ const Node = ({ i, prevCellState, cellState, delay, speed, onClick, onMouseLeave
       "--animationInitialBackgroundColor": elevationColors[elevation + 100],
       backgroundColor: cellState === "wall" ? "rgb(53, 53, 53)" : elevationColors[elevation + 100]
     }}
+    data-testid="map-node"
   ></div>
 );
 

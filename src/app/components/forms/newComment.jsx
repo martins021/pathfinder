@@ -7,7 +7,7 @@ import { useToast } from '@chakra-ui/react'
 
 const CommentForm = ({ mapId, userId, userName, setComments, setSkipComments, setTotalComments }) => {
   const [comment, setComment] = useState("");
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, formState: { errors } } = useForm();
   const toast = useToast();
 
   const submitComment = async ({ comment }) => {
@@ -48,9 +48,10 @@ const CommentForm = ({ mapId, userId, userName, setComments, setSkipComments, se
         className="flex gap-4"
       >
         <Input 
-          { ...register("comment") }
+          { ...register("comment", { maxLength: 255 }) }
           placeholder="Comment"
-          onChange={(e) => setComment(e.target.value)}
+          onChange={(e) => setComment(e.target.value.trim())}
+          data-testid="comment-input"
         />
         <Input 
           disabled={!comment}
@@ -61,6 +62,7 @@ const CommentForm = ({ mapId, userId, userName, setComments, setSkipComments, se
             cursor: !comment ? "not-allowed" : "pointer" 
           }} 
         />
+        { errors.comment?.type === 'maxLength' &&  <p className="text-customRed">Comment is too long</p> }
       </form>
       <Button
         className="border-2 border-customWhite text-customWhite rounded-md cursor-pointer hover:text-customBlack transition-all duration-200"

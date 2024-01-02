@@ -7,7 +7,7 @@ import { Input, Box } from '@chakra-ui/react'
 
 
 const AuthForm = ({ submitText, onSubmit, referrer = "register" }) => {
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, formState: { errors } } = useForm();
   const pathname = usePathname();
 
   return(
@@ -15,22 +15,27 @@ const AuthForm = ({ submitText, onSubmit, referrer = "register" }) => {
       <form onSubmit={handleSubmit(onSubmit)} className={styles.authForm}>
         {!pathname.includes("login") && 
         <>
-          <label>
+          <label htmlFor="username">
             Username:
           </label>
-          <Input { ...register("username") } />
+          <Input id="username" { ...register("username", { required: true, maxLength: 255 }) } />
+          { errors.username?.type === 'required' && <p className="text-customRed -mt-3">Username is required</p> }
+          { errors.username?.type === 'maxLength' &&  <p className="text-customRed -mt-3">Username is too long</p> }
         </>
         }
 
-        <label>
+        <label htmlFor="email">
           E-mail:
         </label>
-        <Input type="email" { ...register("email") } />
+        <Input id="email" type="email" { ...register("email", { required: true, maxLength: 255 }) } />
+        { errors.email?.type === 'required' && <p className="text-customRed -mt-3">Email is required</p> }
+        { errors.email?.type === 'maxLength' &&  <p className="text-customRed -mt-3">Email is too long</p> }
 
-        <label>
+        <label htmlFor="password">
           Password:
         </label>
-        <Input type="password" { ...register("password") } />
+        <Input id="password" type="password" { ...register("password", { required: true }) } />
+        { errors.password?.type === 'required' && <p className="text-customRed -mt-3">Password is required</p> }
 
         <Input type="submit" value={submitText} style={{ marginTop: 20 }} className={styles.submitBtn} />
       </form>

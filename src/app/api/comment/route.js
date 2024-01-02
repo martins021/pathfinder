@@ -1,4 +1,4 @@
-const { default: prisma } = require("@/lib/database");
+const { default: prisma } = require("../../../lib/database");
 const { NextResponse } = require("next/server");
 
 export async function POST(request) {

@@ -1,10 +1,10 @@
-const { default: prisma } = require("@/lib/database");
+const { default: prisma } = require("../../../lib/database");
 const { NextResponse } = require("next/server");
 
 export async function GET(request) {
   const id = request.nextUrl.searchParams.get("id");
   if(!id) {
-    return NextResponse.json({ error: "Nav norādīts kartes id" }, { status: 400 })
+    return NextResponse.json({ error: "Missing parameters" }, { status: 400 })
   }
 
   try {
@@ -15,7 +15,7 @@ export async function GET(request) {
     });
 
     if(!map) {
-      return NextResponse.json({ error: "Karte ar šādu id neeksistē" }, { status: 404 })
+      return NextResponse.json({ error: "Map with this id doesn't exist" }, { status: 404 })
     }
 
     return NextResponse.json(map);

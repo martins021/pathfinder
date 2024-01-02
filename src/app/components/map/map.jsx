@@ -130,7 +130,7 @@ const Map = ({
           setState = true;
           break;
         case "start":
-          if (node.state !== "target") {
+          if (node.state !== "target" && node.state !== "wall") {
             mapData.map(node => node.state === "start" ? node.state = node.prevState : null)
             const mapDataCopy = [...mapData];
             mapDataCopy[index].prevState = mapDataCopy[index].state;
@@ -140,7 +140,7 @@ const Map = ({
           }
           break;
         case "target":
-          if (node.state !== "start") {
+          if (node.state !== "start" && node.state !== "wall") {
             mapData.map(node => node.state === "target" ? node.state = node.prevState : null)
             const mapDataCopy = [...mapData];
             mapDataCopy[index].prevState = mapDataCopy[index].state;
@@ -181,7 +181,7 @@ const Map = ({
   const nonMutableNodes = ["start", "target", "wall"];
 
   return (
-    <div id="map" className={styles.main} style={gridStyle}>
+    <div id="map" data-testid="map-grid" className={styles.main} style={gridStyle}>
       {mapData.map((cell, i) => {
 
         return (
