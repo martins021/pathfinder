@@ -20,7 +20,7 @@ jest.mock('next/server', () => ({
 }));
 
 describe("Fail to create map", () => {
-  it('should fail to create new map if start or target is missing', async () => {
+  it('should fail to create new map if start node is missing (KAM-3-T-2)', async () => {
     const testData = {
       name: "WITH START & TARGET",
       mapData: [{ x: 0, y: 0, elev: 1, state: "empty", prevState: "empty" }],
@@ -35,9 +35,10 @@ describe("Fail to create map", () => {
     const result = await POST({ json: () => testData });
     expect(result.data.error).toEqual("Start node not specified")
     expect(result.options.status).toEqual(400)
+    expect(prisma.map.create).not.toHaveBeenCalled()
   });
 
-  it('should fail to create new map if database method fails', async () => {
+  it('should fail to create new map if database method fails (KAM-3-T-3)', async () => {
     const testData = {
       name: "WITH START & TARGET",
       mapData: [{ x: 0, y: 0, elev: 1, state: "empty", prevState: "empty" }],

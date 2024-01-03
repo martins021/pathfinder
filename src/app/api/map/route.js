@@ -4,7 +4,7 @@ const { NextResponse } = require("next/server");
 export async function GET(request) {
   const id = request.nextUrl.searchParams.get("id");
   if(!id) {
-    return NextResponse.json({ error: "Missing parameters" }, { status: 400 })
+    return NextResponse.json({ error: "Failed to get map data: missing map id" }, { status: 400 })
   }
 
   try {
@@ -21,6 +21,6 @@ export async function GET(request) {
     return NextResponse.json(map);
   } catch (error) {
     console.log("Error getting map: ", error);
-    return NextResponse.json({ error: error.message }, { status: error.status || 500 })
+    return NextResponse.json({ error: "Unexpected error getting map data" }, { status: error.status || 500 })
   }
 }

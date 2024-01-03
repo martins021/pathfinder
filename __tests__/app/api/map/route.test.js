@@ -18,7 +18,7 @@ jest.mock('next/server', () => ({
 }));
 
 describe("Fetch map data", () => {
-  it('should fetch map data', async () => {
+  it('should fetch map data (KAM-2-T-1)', async () => {
     const mockSearchParams = new URLSearchParams({
       id: "123"
     });
@@ -41,7 +41,7 @@ describe("Fetch map data", () => {
 });
 
 describe("Fail to fetch map data", () => {
-  it('should fail to fetch map data due to missing map id', async () => {
+  it('should fail to fetch map data due to missing map id (KAM-2-T-2)', async () => {
     const mockSearchParams = new URLSearchParams({});
 
     prisma.map.findUnique.mockResolvedValue({
@@ -58,7 +58,7 @@ describe("Fail to fetch map data", () => {
     expect(result.options.status).toEqual(400)
   });
 
-  it('should fail to fetch map data because map with this received id does not exist', async () => {
+  it('should fail to fetch map data because map with this received id does not exist (KAM-2-T-3)', async () => {
     const mockSearchParams = new URLSearchParams({
       id: "123"
     });
@@ -74,7 +74,7 @@ describe("Fail to fetch map data", () => {
     expect(result.options.status).toEqual(404)
   });
 
-  it('should fail to fetch map data due to failed database operation', async () => {
+  it('should fail to fetch map data due to failed database operation (KAM-2-T-4)', async () => {
     const mockSearchParams = new URLSearchParams({
       id: "123"
     });

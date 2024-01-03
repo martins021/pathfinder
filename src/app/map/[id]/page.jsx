@@ -21,7 +21,7 @@ const Map = () => {
     const data = await fetchMap(mapId);
     if(data.error){
       toast({
-        title: "Error fetching map data",
+        title: data.error,
         description: "Redirecting to map gallery",
         status: "error",
         duration: 5000,

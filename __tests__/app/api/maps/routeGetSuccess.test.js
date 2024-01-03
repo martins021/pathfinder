@@ -36,7 +36,7 @@ jest.mock('next/server', () => ({
   }
 }));
 
-describe("Get maps with liked", () => {
+describe("Get maps with liked (KAM-1-T-8)", () => {
   it('should get published maps', async () => {
     const mockSearchParams = new URLSearchParams({ 
       param: 'createdAt',

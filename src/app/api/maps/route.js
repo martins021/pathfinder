@@ -92,7 +92,7 @@ export async function GET(request) {
     console.log("Error getting maps: ", error);
     let errorResp = {
       status: "error",
-      message: error.message
+      message: "An error occurred while fetching maps"
     }
 
     return new NextResponse(JSON.stringify(errorResp), {

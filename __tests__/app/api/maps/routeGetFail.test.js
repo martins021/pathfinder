@@ -41,7 +41,7 @@ jest.mock('next/server', () => {
 });
 
 describe("Fail to get maps", () => {
-  it('should fail to get published maps', async () => {
+  it('should fail to get published maps (KAM-1-T-9)', async () => {
     const mockSearchParams = new URLSearchParams({ 
       param: 'createdAt',
       direction: 'desc',
@@ -59,7 +59,7 @@ describe("Fail to get maps", () => {
 
     expect(result.body).toBe(JSON.stringify({
       status:"error",
-      message: "Find many method failed"
+      message: "An error occurred while fetching maps"
     }))
     expect(result.status).toBe(500);
     expect(result.headers).toEqual({ "Content-Type": "application/json" });

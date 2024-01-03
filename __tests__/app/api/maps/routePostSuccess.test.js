@@ -24,7 +24,7 @@ jest.mock('next/server', () => {
 });
 
 describe("Create map", () => {
-  it('should create new map with correct data', async () => {
+  it('should create new map with correct data (KAM-3-T-1)', async () => {
     const testData = {
       name: "WITH START & TARGET",
       mapData: [{ x: 0, y: 0, elev: 1, state: "empty", prevState: "empty" }],
