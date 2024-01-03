@@ -8,6 +8,7 @@ import MapContainer from "./mapContainer";
 import Filters from "../components/forms/filters";
 import Loading from "../components/loading";
 import Sorters from "../components/forms/sorters";
+import { useToast } from '@chakra-ui/react'
 
 const Maps = ({ myMaps = false }) => {
   const { data: session, status } = useSession();
@@ -21,11 +22,21 @@ const Maps = ({ myMaps = false }) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const prevFilters = useRef(filters);
+  const toast = useToast();
 
   useEffect(() => {
     const getData = async () => {
       setLoading(true);
       const data = await fetchMaps(searchParams.toString());
+      console.log(data);
+      if(data?.status === "error"){
+        toast({
+          description: "An error occured while fetching maps",
+          status: 'error',
+          duration: 6000,
+          isClosable: true,
+        })
+      }
       setLoading(false);
       setTotal(data?.total);
       setData(data?.data);

@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { algorithmOptions, animationSpeedOptions, sizeOptions } from "@/lib/configs";
 import { StarIcon } from '@chakra-ui/icons'
 import { modifyMapLike } from "../apiRequests/like";
+import { useToast } from '@chakra-ui/react'
 
 const MapContainer = ({ 
   mapId, 
@@ -20,6 +21,7 @@ const MapContainer = ({
 }) => {
   const [currentLiked, setCurrentLiked] = useState(liked)
   const { data: session } = useSession();
+  const toast = useToast();
   const router = useRouter();
   const handleLikeClick = async (e) => {
     e.stopPropagation()
@@ -27,6 +29,13 @@ const MapContainer = ({
     console.log(resp);
     if(resp?.status === "success") {
       setCurrentLiked(!currentLiked)
+    } else if(resp?.error){
+      toast({
+        title: "Error occured changing like status",
+        status: 'error',
+        duration: 6000,
+        isClosable: true,
+      })
     }
   }
   

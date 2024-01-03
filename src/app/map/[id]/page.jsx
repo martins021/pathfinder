@@ -2,12 +2,15 @@
 const { default: PlayGround } = require("../playground");
 import { fetchMap } from '@/app/apiRequests/map';
 import Loading from '@/app/components/loading';
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import React, { useEffect, useState } from "react";
+import { useToast } from '@chakra-ui/react'
 
 const Map = () => {
   const pathname = usePathname();
+  const router = useRouter();
   const [loading, setLoading] = useState(true);
+  const toast = useToast();
 
   const mapId = pathname.split("/")[2];
   const [initialData, setInitialData] = useState({});
@@ -16,6 +19,21 @@ const Map = () => {
     setLoading(true);
 
     const data = await fetchMap(mapId);
+    if(data.error){
+      toast({
+        title: "Error fetching map data",
+        description: "Redirecting to map gallery",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      })
+
+      setTimeout(() => {
+        router.push('/maps');
+      }, 5000);
+      
+      return;
+    }
     const calculatedMapSizeY = Math.round((9 / 16) * data.size);
     setInitialData({
       mapId,

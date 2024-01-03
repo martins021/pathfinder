@@ -13,7 +13,7 @@ import CommentSection from "../components/commentSection";
 import { getComments } from "../apiRequests/comment";
 
 const PlayGround = ({ 
-  mapId,
+  mapId = "new",
   initialMapSize = { x: 40, y: 23 },
   inintialMapData = [],
   initialAnimationSpeed = 0.03,
@@ -120,9 +120,18 @@ const PlayGround = ({
     async () => {
       setLoadingComments(true)
       const resp = await getComments(mapId, skipComments)
-      setComments(prev => [...prev, ...resp.data])
-      setTotalComments(resp.total)
-      setSkipComments(prev => prev + resp.data.length)
+      if(!resp || resp.error){
+        toast({
+          title: "Failed to fetch comments",
+          status: 'error',
+          duration: 6000,
+          isClosable: true,
+        })
+      } else {
+        setComments(prev => [...prev, ...resp.data])
+        setTotalComments(resp.total)
+        setSkipComments(prev => prev + resp.data.length)
+      }
       setLoadingComments(false)
     }, [mapId, skipComments]
   ) 
