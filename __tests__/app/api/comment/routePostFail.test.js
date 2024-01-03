@@ -21,7 +21,7 @@ jest.mock('next/server', () => ({
 }));
 
 describe("Fail to post comment", () => {
-  it('should fail to post comment if missing parameters', async () => {
+  it('should fail to post comment if missing parameters (KOM-1-T-5)', async () => {
     const payload = {
       comment: "Test comment",
       mapId: "abc",
@@ -33,7 +33,7 @@ describe("Fail to post comment", () => {
     expect(result.options.status).toEqual(400)
   });
 
-  it('should fail to post comment if database operation fails', async () => {
+  it('should fail to post comment if database operation fails (KOM-1-T-6)', async () => {
     const payload = {
       comment: "Test comment",
       mapId: "abc",

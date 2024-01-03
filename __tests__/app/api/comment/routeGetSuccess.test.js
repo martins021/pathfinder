@@ -20,7 +20,7 @@ jest.mock('next/server', () => ({
 }));
 
 describe("Get comments", () => {
-  it('should get comments', async () => {
+  it('should get comments (KOM-2-T-1)', async () => {
     const mockSearchParams = new URLSearchParams({ 
       mapId: 'abc',
       skip: '0',

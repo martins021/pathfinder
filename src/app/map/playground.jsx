@@ -122,7 +122,7 @@ const PlayGround = ({
       const resp = await getComments(mapId, skipComments)
       if(!resp || resp.error){
         toast({
-          title: "Failed to fetch comments",
+          title: "Failed to get comments",
           status: 'error',
           duration: 6000,
           isClosable: true,

@@ -27,7 +27,7 @@ jest.mock('next/server', () => {
 });
 
 describe("Post comment", () => {
-  it('should post comment successfully', async () => {
+  it('should post comment successfully (KOM-1-T-4)', async () => {
     const payload = {
       comment: "Test comment",
       mapId: "abc",

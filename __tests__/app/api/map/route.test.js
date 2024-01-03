@@ -54,7 +54,7 @@ describe("Fail to fetch map data", () => {
       }
     });
 
-    expect(result.data.error).toEqual("Missing parameters")
+    expect(result.data.error).toEqual("Failed to get map data: missing map id")
     expect(result.options.status).toEqual(400)
   });
 
@@ -86,7 +86,7 @@ describe("Fail to fetch map data", () => {
       }
     });
 
-    expect(result.data.error).toEqual("findUnique method failed")
+    expect(result.data.error).toEqual("Unexpected error getting map data")
     expect(result.options.status).toEqual(500)
   });
 });

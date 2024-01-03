@@ -21,7 +21,7 @@ jest.mock('next/server', () => ({
 }));
 
 describe("Fail to get comments", () => {
-  it('should fail to get comments if missing map id', async () => {
+  it('should fail to get comments if missing map id (KOM-2-T-2)', async () => {
     const mockSearchParams = new URLSearchParams({ 
       skip: '0',
     });
@@ -36,7 +36,7 @@ describe("Fail to get comments", () => {
     expect(result.options.status).toEqual(400)
   });
 
-  it('should fail to get comments if findMany method fails', async () => {
+  it('should fail to get comments if findMany method fails (KOM-2-T-3)', async () => {
     const mockSearchParams = new URLSearchParams({ 
       mapId: 'abc',
       skip: '0',
