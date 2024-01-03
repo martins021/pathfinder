@@ -40,6 +40,6 @@ export async function POST(request) {
     })  
   } catch (error) {
     console.log("Error changing map like: ", error);
-    return NextResponse.json({ error: "Failed to change map like" }, { status: 500 })
+    return NextResponse.json({ error: "Error occured changing like status" }, { status: 500 })
   }
 }

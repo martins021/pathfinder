@@ -32,7 +32,7 @@ jest.mock('next/server', () => {
 });
 
 describe("Change like status", () => {
-  it('should add like to a map', async () => {
+  it('should add like to a map (PM-1-T-1)', async () => {
     const mockSearchParams = new URLSearchParams({ 
       id: "123",
       userId: "456",
@@ -52,7 +52,7 @@ describe("Change like status", () => {
     expect(result.headers).toEqual({ "Content-Type": "application/json" });
   });
 
-  it('should remove like from map', async () => {
+  it('should remove like from map (PM-1-T-2)', async () => {
     const mockSearchParams = new URLSearchParams({ 
       id: "123",
       userId: "456",

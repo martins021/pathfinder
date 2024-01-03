@@ -18,7 +18,7 @@ jest.mock('next/server', () => ({
 }));
 
 describe("Fail to change like status", () => {
-  it('should fail to add like to a map due to missing user id', async () => {
+  it('should fail to add like to a map due to missing user id (PM-1-T-3)', async () => {
     const mockSearchParams = new URLSearchParams({ 
       id: "123",
     });
@@ -33,7 +33,7 @@ describe("Fail to change like status", () => {
     expect(result.options.status).toEqual(400)
   });
 
-  it('should fail to add like to a map due to failed database operation', async () => {
+  it('should fail to add like to a map due to failed database operation (PM-1-T-4)', async () => {
     const mockSearchParams = new URLSearchParams({ 
       id: "123",
       userId: "456",
@@ -47,7 +47,7 @@ describe("Fail to change like status", () => {
       }
     });
 
-    expect(result.data.error).toEqual("Failed to change map like")
+    expect(result.data.error).toEqual("Error occured changing like status")
     expect(result.options.status).toEqual(500)
   });
 })
