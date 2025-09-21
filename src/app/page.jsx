@@ -1,11 +1,12 @@
 "use client"
-import React, { useEffect, useState, useRef } from "react";
-import styles from "../styles/main.module.css"
-import Controls from "../components/map/controls";
-import Map from "../components/map/map";
-import AlgorithmMenu from "../components/map/algorithmMenu";
-import { launchBfs, launchDfs, launchDijkstra } from "../apiRequests/algorithms";
+import { useEffect, useState, useRef } from "react";
+import styles from "./styles/main.module.css"
+import Controls from "./components/map/controls";
+import Map from "./components/map/map";
+import AlgorithmMenu from "./components/map/algorithmMenu";
+import { launchBfs, launchDfs, launchDijkstra } from "./apiRequests/algorithms";
 import { useToast } from '@chakra-ui/react'
+import LaunchBtn from "./components/buttons/launchBtn";
 
 const PlayGround = ({ 
   mapId = "new",
@@ -110,13 +111,10 @@ const PlayGround = ({
     <>   
       <div className={styles.mainGrid} >
         <div className={styles.launchBtn}>
-          <button 
-            onClick={launchAlgorithm} 
-            className="text-black bg-customWhite rounded-lg text-sm p-3 pl-10 pr-10 font-bold 
-                      hover:bg-customRed hover:text-customWhite transition-all duration-300"
-          >
-            Launch
-          </button>
+          <LaunchBtn
+            onClick={launchAlgorithm}
+            title="Launch"
+          />
         </div>
         <div className={styles.mapTile}>
           <Map 
