@@ -10,9 +10,6 @@
 .mapTile {
     grid-area: 1 / 1 / 16 / 5;
 }
-.actionsTile {
-    grid-area: 1 / 5 / 2 / 6;
-}
 .launchBtn {
   margin: auto;
   grid-area: 2 / 5 / 3 / 6;

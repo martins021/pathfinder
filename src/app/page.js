@@ -12,7 +12,7 @@ export default function Home() {
         <Heading as="h1" size="xl" className={styles.title}>
           Pathfinding Algorithm Visualizer
         </Heading>
-        <Link href="/map/new" className={styles.createMapDiv}>
+        <Link href="/playground" className={styles.createMapDiv}>
           Create a new map
         </Link>
       </div>

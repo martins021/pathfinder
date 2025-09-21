@@ -1,16 +1,11 @@
 "use client"
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styles from "../styles/main.module.css"
 import Controls from "../components/map/controls";
 import Map from "../components/map/map";
-import Actions from "../components/map/actions";
 import AlgorithmMenu from "../components/map/algorithmMenu";
-import { useSession } from "next-auth/react";
 import { launchBfs, launchDfs, launchDijkstra } from "../apiRequests/algorithms";
 import { useToast } from '@chakra-ui/react'
-import CommentForm from "../components/forms/newComment";
-import CommentSection from "../components/commentSection";
-import { getComments } from "../apiRequests/comment";
 
 const PlayGround = ({ 
   mapId = "new",
@@ -21,7 +16,6 @@ const PlayGround = ({
   initialStart = null,
   initialTarget = null
  }) => {
-  const { data: session, status } = useSession();
   const [tool, setTool] = useState('start')
   const [algorithm, setAlgorithm] = useState(initialAlgorithm)
   const [result, setResult] = useState({}) // result of the algorithm
@@ -33,10 +27,6 @@ const PlayGround = ({
   const [animate, setAnimate] = useState(false) // indicates if the animation is running
   const [brushSize, setBrushSize] = useState(3)
   const [brushMode, setBrushMode] = useState(1);
-  const [comments, setComments] = useState([])
-  const [skipComments, setSkipComments] = useState(0)
-  const [totalComments, setTotalComments] = useState(0)
-  const [loadingComments, setLoadingComments] = useState(false)
   const animationId = useRef(0) // used to cancel animation 
   const toast = useToast();
 
@@ -116,52 +106,9 @@ const PlayGround = ({
     }
   }, [mapSize])
 
-  const fetchComments = useCallback(
-    async () => {
-      setLoadingComments(true)
-      const resp = await getComments(mapId, skipComments)
-      if(!resp || resp.error){
-        toast({
-          title: "Failed to get comments",
-          status: 'error',
-          duration: 6000,
-          isClosable: true,
-        })
-      } else {
-        setComments(prev => [...prev, ...resp.data])
-        setTotalComments(resp.total)
-        setSkipComments(prev => prev + resp.data.length)
-      }
-      setLoadingComments(false)
-    }, [mapId, skipComments]
-  ) 
-  
   return (
-    <>
-      {session && mapId && mapId !== "new" && 
-      <CommentForm 
-        mapId={mapId} 
-        userId={session?.user?.id}
-        userName={session?.user?.name} 
-        comments={comments}
-        setComments={setComments}
-        setSkipComments={setSkipComments}
-        setTotalComments={setTotalComments}
-      />}
-      
+    <>   
       <div className={styles.mainGrid} >
-        <div className={styles.actionsTile}>
-          {status === "authenticated" && <Actions 
-            algorithm={algorithm}
-            mapData={mapData}
-            setMapData={setMapData}
-            mapSize={mapSize}
-            animationSpeed={animationSpeed}
-            session={session}
-            start={start}
-            target={target}
-          />}
-        </div>
         <div className={styles.launchBtn}>
           <button 
             onClick={launchAlgorithm} 
@@ -222,15 +169,6 @@ const PlayGround = ({
           />
         </div>
       </div>
-
-      {session && mapId && mapId !== "new" && 
-      <CommentSection 
-        comments={comments}
-        fetchComments={fetchComments}
-        loading={loadingComments}
-        totalComments={totalComments}
-      />}
-
     </>
   )
 }

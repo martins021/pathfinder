@@ -3,7 +3,6 @@ import {
   createPath,
   validateStartAndTargetNodes
 } from "@/app/helpers";
-const { default: prisma } = require("@/lib/database");
 const { NextResponse } = require("next/server");
 
 

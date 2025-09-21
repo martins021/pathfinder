@@ -1,6 +1,5 @@
 'use client'
 
-import UserProvider from '@/context/userContext'
 import { CacheProvider } from '@chakra-ui/next-js'
 import { ChakraProvider, extendTheme } from '@chakra-ui/react'
 
@@ -18,9 +17,7 @@ export function Providers({ children }) {
   return (
     <CacheProvider>
       <ChakraProvider theme={customTheme}>
-        <UserProvider>
           {children}
-        </UserProvider>
       </ChakraProvider>
     </CacheProvider>
   )
