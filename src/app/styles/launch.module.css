@@ -1,0 +1,40 @@
+.card {
+  width: 100%;
+}
+.card .inner {
+  padding: 1em 1.5em;
+  background: rgb(144, 122, 0);
+  color: white;
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.2em;
+}
+.launchBtn {
+  position: relative;
+}
+.launchBtn svg {
+  position: absolute;
+}
+.launchBtn .line {
+  --speed: 5s;
+  --outline-width: 4px;
+  stroke-dasharray: 150;
+  stroke-width: var(--outline-width);
+  fill: transparent;
+  stroke: rgb(255,215,0);
+  animation: svgAnimation var(--speed) linear infinite;
+}
+.launchBtn .line:hover {
+  cursor: pointer;
+}
+
+@keyframes svgAnimation {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: 300;
+  }
+}
+
+

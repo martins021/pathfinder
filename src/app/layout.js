@@ -14,7 +14,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={inter.className}>
         <Providers>
-          <main className="mx-auto max-w-[1920px] min-h-screen px-4">
+          <main className="mx-auto max-w-[1920px] h-screen p-4">
             {children}
           </main>
         </Providers>

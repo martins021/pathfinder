@@ -1,12 +1,25 @@
-const LaunchBtn = ({ onClick, title, selected }) => {
+import styles from "../../styles/launch.module.css"
+
+const LaunchBtn = ({ onClick }) => {
   return(
-    <button 
-      onClick={onClick} 
-      className="text-black bg-customWhite rounded-lg text-sm p-3 pl-10 pr-10 font-bold 
-        hover:bg-customRed hover:text-customWhite transition-all duration-300"
+    <div 
+      className={`${styles.card} ${styles.launchBtn}`}
+      onClick={onClick}
     >
-      {title}
-    </button>
+      <svg height="100%" width="100%" xmlns="http://www.w3.org/2000/svg">
+        <rect
+          // rx="8"
+          // ry="8"
+          className={styles.line}
+          height="100%"
+          width="100%"
+          stroke-linejoin="round"
+        />
+      </svg>
+      <div className={styles.inner}>
+        <h3>Launch</h3>
+      </div>
+    </div>
   )
 };
 

@@ -1,6 +1,7 @@
 import React from "react";
 import AlgorithmBtn from "../buttons/algorithmBtn";
-import { algorithmOptions } from "@/lib/configs";
+import { toolOptions } from "@/lib/configs";
+import { Title } from "../atoms/title";
 
 const menuStyle ={
   display: "grid",
@@ -8,19 +9,22 @@ const menuStyle ={
   gap: ".5vw",
 }
 
-const AlgorithmMenu = ({ algorithm, setAlgorithm }) => {
+const ToolMenu = ({ tool, onChange }) => {
   return (
-    <div style={menuStyle}>
-      {algorithmOptions.map(option => (
-        <AlgorithmBtn 
-          key={option.value}
-          onClick={() => setAlgorithm(option.value)} 
-          title={option.label}
-          selected={algorithm === option.value}
-        />    
-      ))}
-    </div>
+    <>
+      <Title text="Toolbox" />
+      <div style={menuStyle}>
+        {toolOptions.map(option => (
+          <AlgorithmBtn 
+            key={option.value}
+            onClick={() => onChange({ type: "tool", value: option.value })} 
+            title={option.label}
+            selected={tool === option.value}
+          />    
+        ))}
+      </div>
+    </>
   );
 }
 
-export default AlgorithmMenu;
+export default ToolMenu;

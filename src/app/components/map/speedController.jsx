@@ -2,19 +2,21 @@ import React, { useContext, useEffect, useState } from "react";
 import { animationSpeedOptions } from "@/lib/configs";
 import CustomSlider from "../sliders/slider";
 
-const SpeedController = ({ initialAnimationSpeed, setAnimationSpeed, animationInProgress }) => {
-  const speedLabel = animationSpeedOptions.find(opt => opt.value === initialAnimationSpeed).label
+const SpeedController = ({ animationInProgress, onChange }) => {
+  const speedLabel = animationSpeedOptions.find(opt => opt.value === 0.03).label
   const [speedValue, setSpeedValue] = useState(speedLabel)
 
   const handleSpeedChange = (value) => {
     setSpeedValue(value);
     const newSpeed = animationSpeedOptions.find(opt => opt.label === value).value
-    setAnimationSpeed(newSpeed)
+    onChange({ type: "animationSpeed", value: newSpeed });
   }
 
   return (
     <div className="grid grid-cols-5" style={{ width: "100%" }}>
-      <p className="col-span-1 text-customWhite text-sm text-center mr-2">Speed</p>
+      <p className="col-span-1 text-customWhite text-sm text-center mr-2">
+        Speed
+      </p>
       <div className="col-span-4">
         <CustomSlider 
           disabled={animationInProgress}

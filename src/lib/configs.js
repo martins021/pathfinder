@@ -1,3 +1,13 @@
+export const initialSettings = {
+  nodeSize: 35,
+  size: {},
+  algorithm: "bfs",
+  tool: "start",
+  animationSpeed: 0.03,
+  brushSize: 3,
+  brushMode: 1
+};
+
 export const animationSpeedOptions = [
   {
     label: 1,
@@ -18,68 +28,6 @@ export const animationSpeedOptions = [
   {
     label: 5,
     value: 0.0048
-  }
-]
-
-export const sizeOptions = [
-  {
-    label: 1,
-    value: 20
-  },
-  {
-    label: 2,
-    value: 25
-  },
-  {
-    label: 3,
-    value: 30
-  },
-  {
-    label: 4,
-    value: 35
-  },
-  {
-    label: 5,
-    value: 40
-  },
-  {
-    label: 6,
-    value: 45
-  },
-  {
-    label: 7,
-    value: 50
-  },
-  {
-    label: 8,
-    value: 55
-  },
-  {
-    label: 9,
-    value: 60
-  }
-]
-
-export const brushSizeOptions = [
-  {
-    label: 1,
-    value: 1
-  },
-  {
-    label: 2,
-    value: 2
-  },
-  {
-    label: 3,
-    value: 3
-  },
-  {
-    label: 4,
-    value: 4
-  },
-  {
-    label: 5,
-    value: 5
   }
 ]
 
@@ -114,15 +62,18 @@ export const toolOptions = [
 export const algorithmOptions = [
   {
     label: "BFS",
-    value: "bfs"
+    value: "bfs",
+    description: "Searches outward evenly; finds nearest solution first."
   },
   {
     label: "DFS",
-    value: "dfs"
+    value: "dfs",
+    description: "Explores as far as possible along each branch before backtracking."
   },
   {
     label: "Dijkstra",
-    value: "dijkstra"
+    value: "dijkstra",
+    description: "Finds the shortest path between nodes when travel costs vary."
   },
   // {
   //   label: "A*",

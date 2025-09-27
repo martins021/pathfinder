@@ -1,3 +1,38 @@
+const getMapSize = (NODE_SIZE) => {
+  const h = document.getElementById("map").offsetHeight
+  const w = document.getElementById("map").offsetWidth
+
+  const width = Math.floor(w / NODE_SIZE)
+  const height = Math.floor(h / NODE_SIZE)
+  
+  return { x: width, y: height }
+}
+
+export const settingsReducer = (state, action) => {
+  const { type, value } = action;
+  switch (type) {
+    case "size":
+      const newMapSize = getMapSize(value)
+      return { 
+        ...state, 
+        nodeSize: value,
+        size: newMapSize 
+      }
+    case "algorithm":
+      return { ...state, algorithm: value }
+    case "tool":
+      return { ...state, tool: value }
+    case "animationSpeed":
+      return { ...state, animationSpeed: value }
+    case "brushSize":
+      return { ...state, brushSize: value }
+    case "brushMode":
+      return { ...state, brushMode: value }
+    default:
+      return state
+  }
+}
+
 const getWeight = (nodeTo, nodeFrom) => {
   if(nodeFrom > nodeTo){ // going from higher elevation to lower
     return 200 + 15 * (Math.abs(nodeTo - nodeFrom) + 1);
@@ -8,7 +43,7 @@ const getWeight = (nodeTo, nodeFrom) => {
   }
 }
 
-const createAdjacencyList = (data, colCount, rowCount, weighted = false) => {
+export const createAdjacencyList = (data, colCount, rowCount, weighted = false) => {
   if(!data || !Array.isArray(data) || !colCount || !rowCount) {
     throw new Error("Invalid data");
   }
@@ -61,12 +96,12 @@ const createAdjacencyList = (data, colCount, rowCount, weighted = false) => {
   return adjList;
 }
 
-const createPath = (parrents, node) => {
+export const createPath = (parrents, node) => {
   if(parrents[node] === null) return [node]; // ja nākamā virsotne ir null, tad tas ir sākums
   return createPath(parrents, parrents[node]).concat(node);
 }
 
-const validateStartAndTargetNodes = (start, target) => {
+export const validateStartAndTargetNodes = (start, target) => {
   if(!start && !target) {
     const error = new Error("Start and target nodes not specified");
     error.status = 400;
@@ -80,10 +115,4 @@ const validateStartAndTargetNodes = (start, target) => {
     error.status = 400;
     throw error;
   }
-}
-
-export {
-  createAdjacencyList,
-  createPath,
-  validateStartAndTargetNodes
 }

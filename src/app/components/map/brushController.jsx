@@ -1,23 +1,17 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useState } from "react";
 import CustomSlider from "../sliders/slider";
 import { Switch } from '@chakra-ui/react'
-import { brushSizeOptions } from "@/lib/configs";
 
-const BrushController = ({ setBrushSize, setBrushMode, brushMode }) => {
+const BrushController = ({ onChange, brushMode }) => {
   const [brushSizeValue, setBrushSizeValue] = useState(3)
 
   const handleSpeedChange = (value) => {
     setBrushSizeValue(value);
-    const newSize = brushSizeOptions.find(opt => opt.label === value).value
-    setBrushSize(newSize)
+    onChange({ type: "brushSize", value });
   }
 
   const onSwitchChange = (val) => {
-    if(val.target.checked){
-      setBrushMode(1)
-    } else {
-      setBrushMode(-1)
-    }
+    onChange({ type: "brushMode", value: val.target.checked ? 1 : -1 });
   }
 
   return (
