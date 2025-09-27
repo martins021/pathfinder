@@ -108,7 +108,7 @@ const PlayGround = () => {
         tool={tool}
         result={result} 
         mapData={mapData}
-        mapSize={size}
+        size={size}
         brushSize={brushSize}
         brushMode={brushMode}
         animationSpeed={animationSpeed}

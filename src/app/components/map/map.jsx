@@ -7,7 +7,7 @@ const Map = ({
   tool,
   result: { path, visitedNodes },
   mapData,
-  mapSize,
+  size,
   setMapData,
   setStart,
   setTarget,
@@ -22,13 +22,10 @@ const Map = ({
   const MIN_ELEVATION = -100
   const MAX_ELEVATION = 99
 
-  const gridStyle = useMemo(
-    () => ({
-      gridTemplateRows: `repeat(${mapSize.y}, 1fr)`,
-      gridTemplateColumns: `repeat(${mapSize.x}, 1fr)`,
-    }),
-    [mapSize]
-  );
+  const gridStyle = useMemo(() => ({
+    gridTemplateRows: `repeat(${size.y}, 1fr)`,
+    gridTemplateColumns: `repeat(${size.x}, 1fr)`,
+  }), [size]);
 
   const animatePath = (withVisited, delay, originalAnimationId) => {
     const updatedMapData = withVisited.map((node, i) => {
@@ -76,8 +73,8 @@ const Map = ({
   }, [visitedNodes])
 
   const handleSetTerrain = (index) => {
-    const mapSizeX = mapSize.x; // horizontal map size
-    const mapSizeY = mapSize.y; // vertical map size
+    const mapSizeX = size.x; // horizontal map size
+    const mapSizeY = size.y; // vertical map size
     const squareBrushSize = brushSize * 2 - 1;
 
     const brushNodes = [] // 2d array containing all nodes in brush area
@@ -183,7 +180,6 @@ const Map = ({
   return (
     <div id="map" data-testid="map-grid" className={styles.main} style={gridStyle}>
       {mapData.map((cell, i) => {
-
         return (
           <Node
             key={i}

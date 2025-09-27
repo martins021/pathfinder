@@ -1,13 +1,15 @@
-.card {
-  width: 100%;
-}
 .card .inner {
   padding: 1em 1.5em;
-  background: rgb(144, 122, 0);
-  color: white;
+  background: rgb(255,215,0);
+  color: black;
   text-align: center;
   font-weight: bold;
   font-size: 1.2em;
+  transition: all 0.3s ease;
+}
+.card:hover .inner {
+  background: rgb(144, 122, 0);
+  color: white;
 }
 .launchBtn {
   position: relative;
@@ -16,16 +18,17 @@
   position: absolute;
 }
 .launchBtn .line {
-  --speed: 5s;
+  fill: transparent;
+}
+.launchBtn .line:hover {
+  cursor: pointer;  
+  --speed: 2s;
   --outline-width: 4px;
-  stroke-dasharray: 150;
+  stroke-dasharray: 200;
   stroke-width: var(--outline-width);
   fill: transparent;
   stroke: rgb(255,215,0);
   animation: svgAnimation var(--speed) linear infinite;
-}
-.launchBtn .line:hover {
-  cursor: pointer;
 }
 
 @keyframes svgAnimation {
@@ -33,7 +36,7 @@
     stroke-dashoffset: 0;
   }
   to {
-    stroke-dashoffset: 300;
+    stroke-dashoffset: 400;
   }
 }
 

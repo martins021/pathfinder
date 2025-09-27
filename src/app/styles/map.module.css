@@ -14,7 +14,7 @@
 .cell {
   box-sizing: border-box;
   border-radius: .4em;
-  border: 2px solid rgb(0, 0, 0);
+  border: 2px solid #353535;
   cursor: pointer;
 }
 .cell:hover {

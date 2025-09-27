@@ -8,8 +8,6 @@ const LaunchBtn = ({ onClick }) => {
     >
       <svg height="100%" width="100%" xmlns="http://www.w3.org/2000/svg">
         <rect
-          // rx="8"
-          // ry="8"
           className={styles.line}
           height="100%"
           width="100%"
