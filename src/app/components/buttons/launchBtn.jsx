@@ -11,7 +11,6 @@ const LaunchBtn = ({ onClick }) => {
           className={styles.line}
           height="100%"
           width="100%"
-          stroke-linejoin="round"
         />
       </svg>
       <div className={styles.inner}>

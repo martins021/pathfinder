@@ -2,6 +2,7 @@
 import React, { useMemo, useState, useCallback, memo, useEffect } from "react";
 import styles from "../../styles/map.module.css";
 import Node from "./node";
+import { TimeLine } from "../sliders/timeline";
 
 const Map = ({
   tool,
@@ -178,25 +179,31 @@ const Map = ({
   const nonMutableNodes = ["start", "target", "wall"];
 
   return (
-    <div id="map" data-testid="map-grid" className={styles.main} style={gridStyle}>
-      {mapData.map((cell, i) => {
-        return (
-          <Node
-            key={i}
-            i={i}
-            delay={cell.animationDelay}
-            speed={animationSpeed}
-            prevCellState={cell.prevState}
-            cellState={cell.state}
-            onClick={() => !animate ? handleNodeAction(cell, i) : null}
-            onMouseLeave={() =>
-              (isMouseDown && !animate) ? handleNodeAction(cell, i) : null
-            }
-            elevation={cell.elev}
-          />
-        );
-      })}
-    </div>
+    <>
+      <div id="map" data-testid="map-grid" className={styles.main} style={gridStyle}>
+        {mapData.map((cell, i) => {
+          return (
+            <Node
+              key={i}
+              i={i}
+              delay={cell.animationDelay}
+              speed={animationSpeed}
+              prevCellState={cell.prevState}
+              cellState={cell.state}
+              onClick={() => !animate ? handleNodeAction(cell, i) : null}
+              onMouseLeave={() =>
+                (isMouseDown && !animate) ? handleNodeAction(cell, i) : null
+              }
+              elevation={cell.elev}
+            />
+          );
+        })}
+      </div>
+      <TimeLine 
+        visitedNodes={visitedNodes}
+        path={path}
+      />
+    </>
   );
 };
 

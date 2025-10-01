@@ -1,0 +1,46 @@
+.playButton{
+  cursor: pointer;
+}
+.container{
+  grid-area: 5 / 1 / 7 / 6;
+  width: 100%;
+  margin: auto;
+  border-radius: .4em;
+  display: flex;
+  flex-direction: row;
+  gap: 1em;
+  align-items: center;
+  justify-content: center;
+}
+.barContainer, .bar {
+  border-radius: 9999px;
+  height: 10px;
+}
+.barContainer{
+  width: 100%;
+  background-color: #f0f0f0;
+}
+.bar {
+  width: 0%;
+  background-color: rgb(255,215,0);
+  position: relative;
+}
+.thumb {
+  height: 20px;
+  width: 20px;
+  right: -10px;
+  top: -50%;
+  background-color: rgb(255,215,0);
+  border-radius: 50%; 
+  position: absolute;
+}
+.barContainer:hover {
+  cursor: pointer;
+  filter: brightness(85%);
+  transform: scaleY(1.2);
+  transition: transform 0.2s ease-in-out;
+}
+.barContainer:hover .thumb {
+  transform: scale(1.3) scaleY(calc(1 / 1.2)); 
+  transition: transform 0.2s ease-in-out;
+}
