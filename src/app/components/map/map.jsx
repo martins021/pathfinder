@@ -15,11 +15,16 @@ const Map = ({
   animationSpeed,
   brushSize,
   brushMode,
-  setAnimate,
-  animate,
-  animationId
 }) => {
   const [isMouseDown, setIsMouseDown] = useState(false);
+  const nodesToAnimate = useMemo(() => {
+    if(!visitedNodes || !path) return [];
+    const result = [];
+    visitedNodes.map(node => result.push({ animationType: 'visited', node }));
+    path.map(node => result.push({ animationType: 'path', node }));
+    return result;
+  }, [visitedNodes, path]);
+
   const MIN_ELEVATION = -100
   const MAX_ELEVATION = 99
 
@@ -27,51 +32,6 @@ const Map = ({
     gridTemplateRows: `repeat(${size.y}, 1fr)`,
     gridTemplateColumns: `repeat(${size.x}, 1fr)`,
   }), [size]);
-
-  const animatePath = (withVisited, delay, originalAnimationId) => {
-    const updatedMapData = withVisited.map((node, i) => {
-      if (path?.includes(i) && !nonMutableNodes.includes(node.state)) {
-        return ({
-          ...node,
-          state: "path",
-          animationDelay: path.indexOf(i)
-        })
-      } 
-      return node;
-    })
-    setAnimate(true)
-    setTimeout(() => {
-      if(animationId.current === originalAnimationId){
-        setMapData(updatedMapData)
-      }
-      setAnimate(false)
-    }, delay)
-  }
-
-  const animateVisitedNodes = useCallback(
-    () => {
-      if(mapData.length){
-        const lastVisitedNode = visitedNodes?.length - 1;
-        const updatedMapData = mapData.map((node, i) => {
-          if (visitedNodes?.includes(i) && !nonMutableNodes.includes(node.state)) {
-            return ({
-              ...node,
-              state: "visited",
-              animationDelay: visitedNodes.indexOf(i)
-            })
-          }
-          return node;
-        })
-
-        setMapData(updatedMapData);
-        animatePath(updatedMapData, lastVisitedNode * animationSpeed * 1000, animationId.current)
-      }
-    }, [visitedNodes, path, setMapData, animationSpeed]
-  )
-
-  useEffect(() => {
-    animateVisitedNodes();
-  }, [visitedNodes])
 
   const handleSetTerrain = (index) => {
     const mapSizeX = size.x; // horizontal map size
@@ -175,6 +135,24 @@ const Map = ({
     mapElement?.addEventListener("mouseup", () => setIsMouseDown(false));
   }, [])
 
+  const animateNode = (step, prevStep) => {
+    // console.log("Animating node: ", nodeId, type)
+    if(!nodesToAnimate) return;
+
+    const mapDataCopy = [...mapData]
+    const fwd = step >= prevStep;
+    const sliceOfNodesToAnimate = fwd 
+      ? nodesToAnimate.slice(prevStep, step + 1)
+      : nodesToAnimate.slice(step, prevStep + 1)
+
+    sliceOfNodesToAnimate?.map(({ node, animationType }) => {
+      const nodeToModify = mapDataCopy[node];
+      if(!nodeToModify || nonMutableNodes.includes(nodeToModify.state)) return;
+      nodeToModify.prevState = nodeToModify.state;
+      nodeToModify.state = fwd ? animationType : "empty"
+      setMapData(mapDataCopy);      
+    })
+  }
 
   const nonMutableNodes = ["start", "target", "wall"];
 
@@ -190,9 +168,9 @@ const Map = ({
               speed={animationSpeed}
               prevCellState={cell.prevState}
               cellState={cell.state}
-              onClick={() => !animate ? handleNodeAction(cell, i) : null}
+              onClick={() => handleNodeAction(cell, i)}
               onMouseLeave={() =>
-                (isMouseDown && !animate) ? handleNodeAction(cell, i) : null
+                (isMouseDown) ? handleNodeAction(cell, i) : null
               }
               elevation={cell.elev}
             />
@@ -200,8 +178,9 @@ const Map = ({
         })}
       </div>
       <TimeLine 
-        visitedNodes={visitedNodes}
-        path={path}
+        duration={nodesToAnimate.length}
+        setMapData={setMapData}
+        onChange={animateNode}
       />
     </>
   );

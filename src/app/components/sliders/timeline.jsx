@@ -2,25 +2,36 @@ import { useRef, useEffect, useMemo, useState } from "react";
 import styles from "../../styles/timeline.module.css";
 import { FaPlay, FaPause } from "react-icons/fa6";
 
-export const TimeLine = ({ visitedNodes, path }) => {
+export const TimeLine = ({ duration, onChange }) => {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [elapsed, setElapsed] = useState(0);
+  const [step, setStep] = useState(0); // current step in the animation
+  const prevStep = useRef(0);
   const barContainerRef = useRef(null);
+  const progressRef = useRef(null);
   const afIdRef = useRef(null);
 
-  const duration = useMemo(() => {
-    if(!visitedNodes || !path) return [];
-    const result = [];
-    visitedNodes.map(node => result.push({ type: 'visited', node }));
-    path.map(node => result.push({ type: 'path', node }));
-    return result.length;
-  }, [visitedNodes, path]);
+  useEffect(() => {
+    onChange(step, prevStep.current);
+    prevStep.current = step
+  }, [step]);
+
+  const updateProgressBar = (elapsedTime) => { // elapsedTime in seconds
+    const progress = elapsedTime * 100 / duration // percentage of duration
+    if(progress > 100) setIsPlaying(false);
+    if(!progressRef.current) return;
+    progressRef.current.style.width = `${Math.min(progress, 100)}%`;
+
+    const ix = Math.ceil(duration * progress / 100);
+    setStep(ix);
+  }
 
   useEffect(() => {
+    if(!barContainerRef.current) return;
     let mouseDown = false;
     
     const onMouseChange = (e) => {
-      mouseDown = e.type === "mousedown" ? true : false;
+      mouseDown = e.type === "mousedown";
+      setIsPlaying(e.type !== "mousedown");
       updateThumbPos(e); // update also if mouse is just pressed and not moved
     }
 
@@ -29,21 +40,15 @@ export const TimeLine = ({ visitedNodes, path }) => {
     const updateThumbPos = (e) => {
       if(!mouseDown) return;
       const rect = barContainerRef.current.getBoundingClientRect();
-      const clickX = e.clientX - rect.left; // x position within the progress bar
+      // x position within the progress bar (clamp from 0 to bar width)
+      const clickX = Math.min(rect.width, Math.max(0, e.clientX - rect.left));
       const posToWidthRatio = clickX / rect.width; // ratio of click position to total width of the bar
-      const newElapsed = posToWidthRatio * duration; // new position is the ratio of total duration
-      const progressBar = document.getElementById("bar");
-      progressBar.style.width = `${Math.min(newElapsed * 100 / duration, 100)}%`;
-
-      setElapsed(newElapsed * 1000); // convert to milliseconds
+      updateProgressBar(posToWidthRatio * duration); // new position is the ratio of total duration
     }
 
-    if(barContainerRef?.current){
-      barContainerRef.current.addEventListener("mousedown", onMouseChange)
-      document.addEventListener("mouseup", onMouseChange)
-      document.addEventListener("mousemove", onMouseMove)
-    }
-
+    barContainerRef.current.addEventListener("mousedown", onMouseChange)
+    document.addEventListener("mouseup", onMouseChange)
+    document.addEventListener("mousemove", onMouseMove)
     return () => {
       barContainerRef.current.removeEventListener("mousedown", onMouseChange)
       document.removeEventListener("mouseup", onMouseChange)
@@ -54,19 +59,12 @@ export const TimeLine = ({ visitedNodes, path }) => {
   useEffect(() => {
     if(!isPlaying) return;
     const t0 = performance.now();
-    const progressBar = document.getElementById("bar");
+    const elapsedAtStart = step * 1000; // elapsed time in ms at the start of playing
 
     const animateProgressBar = () => {
       if(!isPlaying) return;
-      const delta = performance.now() - t0 + elapsed; // time passed from t0 plus previously elapsed time
-      const seconds = delta / 1000; // seconds elapsed
-      const timeStamp = seconds * 100 / duration; // percentage of duration
-      
-      if(timeStamp > 100){
-        setIsPlaying(false);
-      }
-
-      progressBar.style.width = `${Math.min(timeStamp, 100)}%`;
+      const delta = (performance.now() - t0 + elapsedAtStart) / 1000; // time passed from t0 plus previously elapsed time in seconds
+      updateProgressBar(delta);
       afIdRef.current = requestAnimationFrame(animateProgressBar);
     }
     afIdRef.current = requestAnimationFrame(animateProgressBar);
@@ -74,12 +72,11 @@ export const TimeLine = ({ visitedNodes, path }) => {
     return () => {
       if(afIdRef.current) cancelAnimationFrame(afIdRef.current);
       afIdRef.current = null;
-      setElapsed((prev) => prev + (performance.now() - t0));
     }
    }, [isPlaying]);
 
   return (
-    <div className={styles.container}>
+    duration > 1 && <div className={styles.container}>
       <div 
         className={styles.playButton} 
         onClick={() => setIsPlaying(!isPlaying)}
@@ -94,7 +91,7 @@ export const TimeLine = ({ visitedNodes, path }) => {
         className={styles.barContainer}
       >
         <div
-          id="bar"
+          ref={progressRef}
           className={styles.bar}
           aria-valuemin={0}
           aria-valuemax={duration}

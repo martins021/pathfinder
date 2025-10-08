@@ -16,8 +16,6 @@ const PlayGround = () => {
   const [mapData, setMapData] = useState([]);
   const [start, setStart] = useState(null); // start node
   const [target, setTarget] = useState(null); // target node
-  const [animate, setAnimate] = useState(false) // indicates if the animation is running
-  const animationId = useRef(0) // used to cancel animation 
   const toast = useToast();
 
   const createMap = () => {
@@ -26,8 +24,6 @@ const PlayGround = () => {
     const targetX = Math.floor(size.x / 3 * 2) + 1;
     const targetY = Math.floor(size.y / 2);
 
-    setAnimate(false)
-    animationId.current += 1
     const data = []
     for (let y = 0; y < size.y; y++) {
       for (let x = 0; x < size.x; x++) {
@@ -46,8 +42,6 @@ const PlayGround = () => {
   }
 
   const clearPath = () => {
-    setAnimate(false)
-    animationId.current += 1
     const withoutPath = mapData.map(node => {
       if(node.state === 'visited' || node.state === 'path'){
         return ({
@@ -63,7 +57,6 @@ const PlayGround = () => {
 
   const launchAlgorithm = async () => {
     clearPath();
-    animationId.current += 1
     let resp;
     switch (algorithm) {
       case "dfs":
@@ -112,19 +105,15 @@ const PlayGround = () => {
         brushSize={brushSize}
         brushMode={brushMode}
         animationSpeed={animationSpeed}
-        animate={animate}
-        animationId={animationId}
         setMapData={setMapData}
         setStart={setStart}
         setTarget={setTarget}
         clearPath={clearPath}
-        setAnimate={setAnimate}
       />
       <Controls 
         dispatch={dispatch}
         tool={tool} 
         algorithm={algorithm}
-        animationInProgress={animate}
         createMap={createMap}
         clearPath={clearPath}
         brushMode={brushMode}

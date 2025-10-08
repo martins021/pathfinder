@@ -19,19 +19,24 @@ const createAnimationTerrainColor = (color) => {
   return color.replace('rgb', 'rgba').replace(')', `, 0.5)`);
 }
 
-const Node = ({ i, prevCellState, cellState, delay, speed, onClick, onMouseLeave, elevation }) => (
-  <div
-    className={createClassname(cellState, prevCellState)}
-    onClick={onClick}
-    onMouseLeave={onMouseLeave}
-    style={{ 
-      "--delay": delay ? `${delay * speed}s` : `0s`, 
-      "--animationFinalBackgroundColor": createAnimationTerrainColor(elevationColors[elevation + 100]),
-      "--animationInitialBackgroundColor": elevationColors[elevation + 100],
-      backgroundColor: cellState === "wall" ? "rgb(53, 53, 53)" : elevationColors[elevation + 100]
-    }}
-    data-testid="map-node"
-  ></div>
-);
+const Node = ({ i, prevCellState, cellState, delay, speed, onClick, onMouseLeave, elevation }) => {
+  delay = delay ? delay * speed : i / 1000;
+  return (
+    <div
+      className={createClassname(cellState, prevCellState)}
+      onClick={onClick}
+      onMouseLeave={onMouseLeave}
+      style={{ 
+        "--delay": `${delay}s`, 
+        "--animationFinalBackgroundColor": createAnimationTerrainColor(elevationColors[elevation + 100]),
+        "--animationInitialBackgroundColor": elevationColors[elevation + 100],
+        backgroundColor: "rgb(53, 53, 53)",
+        "--baseBackgroundColor": cellState === "wall" ? "rgb(53, 53, 53)" : elevationColors[elevation + 100],
+        fontSize: 12
+      }}
+      data-testid="map-node"
+    >{i}</div>
+  )
+};
 
 export default memo(Node);

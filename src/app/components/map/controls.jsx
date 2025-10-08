@@ -13,7 +13,6 @@ const Controls = ({
   createMap, 
   clearPath,
   brushMode,
-  animationInProgress,
   launchAlgorithm,
   algorithm,
 }) => {
@@ -26,10 +25,7 @@ const Controls = ({
       <div
         className="flex flex-col gap-8 mb-4 mt-4"
       >
-        <SpeedController
-          onChange={dispatch}
-          animationInProgress={animationInProgress}
-        />
+        <SpeedController onChange={dispatch} />
         <SizeController 
           onChange={dispatch} 
         />
