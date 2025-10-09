@@ -1,32 +1,44 @@
 import { useRef, useEffect, useMemo, useState } from "react";
 import styles from "../../styles/timeline.module.css";
 import { FaPlay, FaPause } from "react-icons/fa6";
+import { speedOptions } from "@/lib/configs";
 
 export const TimeLine = ({ duration, onChange }) => {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [step, setStep] = useState(0); // current step in the animation
+  const [speed, setSpeed] = useState(20); // speed multiplier
+  const [elapsed, setElapsed] = useState(0); // current elapsed time in the animation
   const prevStep = useRef(0);
   const barContainerRef = useRef(null);
   const progressRef = useRef(null);
   const afIdRef = useRef(null);
 
-  useEffect(() => {
-    onChange(step, prevStep.current);
-    prevStep.current = step
-  }, [step]);
+  const formatTime = (seconds) => {
+    const wholeMins = Math.floor(seconds / speed / 60)
+    const rem = Math.floor(seconds / speed % 60)
+    return `${wholeMins < 10 ? "0" : ""}${wholeMins}:${rem < 10 ? "0" : ""}${rem}`
+  }
 
-  const updateProgressBar = (elapsedTime) => { // elapsedTime in seconds
-    const progress = elapsedTime * 100 / duration // percentage of duration
-    if(progress > 100) setIsPlaying(false);
-    if(!progressRef.current) return;
-    progressRef.current.style.width = `${Math.min(progress, 100)}%`;
-
-    const ix = Math.ceil(duration * progress / 100);
-    setStep(ix);
+  const changeSpeed = () => {
+    const currentIx = speedOptions.findIndex(o => o.value === speed)
+    const nextIx = currentIx === 4 ? 0 : currentIx + 1; 
+    setSpeed(speedOptions[nextIx].value)
   }
 
   useEffect(() => {
-    if(!barContainerRef.current) return;
+    const step = Math.floor(elapsed);
+    onChange(step, prevStep.current);
+    prevStep.current = step
+  }, [elapsed]);
+
+  const updateProgressBar = (timeElapsed) => { // timeElapsed in seconds
+    const progress = timeElapsed / duration // percentage of duration
+    if(progress > 1) setIsPlaying(false);
+    if(!progressRef.current) return;
+    progressRef.current.style.width = `${Math.min(progress * 100, 100)}%`;
+    setElapsed(timeElapsed);
+  }
+
+  useEffect(() => {
     let mouseDown = false;
     
     const onMouseChange = (e) => {
@@ -46,24 +58,31 @@ export const TimeLine = ({ duration, onChange }) => {
       updateProgressBar(posToWidthRatio * duration); // new position is the ratio of total duration
     }
 
-    barContainerRef.current.addEventListener("mousedown", onMouseChange)
+    const spacebarUp = (e) => {
+      if(e.code === "Space") setIsPlaying(!isPlaying);
+    }
+
+    barContainerRef.current?.addEventListener("mousedown", onMouseChange)
     document.addEventListener("mouseup", onMouseChange)
     document.addEventListener("mousemove", onMouseMove)
+    window.addEventListener("keyup", spacebarUp);
+
     return () => {
-      barContainerRef.current.removeEventListener("mousedown", onMouseChange)
+      barContainerRef.current?.removeEventListener("mousedown", onMouseChange)
       document.removeEventListener("mouseup", onMouseChange)
       document.removeEventListener("mousemove", onMouseMove)
+      window.removeEventListener("keyup", spacebarUp);
     }
-  }, [duration])
+  }, [duration, isPlaying]);
 
   useEffect(() => {
     if(!isPlaying) return;
     const t0 = performance.now();
-    const elapsedAtStart = step * 1000; // elapsed time in ms at the start of playing
+    const elapsedAtStart = elapsed * 1000; // elapsed time in ms at the start of playing
 
     const animateProgressBar = () => {
       if(!isPlaying) return;
-      const delta = (performance.now() - t0 + elapsedAtStart) / 1000; // time passed from t0 plus previously elapsed time in seconds
+      const delta = ((performance.now() - t0) * speed + elapsedAtStart) / 1000; // time passed from t0 plus previously elapsed time in seconds
       updateProgressBar(delta);
       afIdRef.current = requestAnimationFrame(animateProgressBar);
     }
@@ -73,10 +92,11 @@ export const TimeLine = ({ duration, onChange }) => {
       if(afIdRef.current) cancelAnimationFrame(afIdRef.current);
       afIdRef.current = null;
     }
-   }, [isPlaying]);
+   }, [isPlaying, speed]);
 
   return (
-    duration > 1 && <div className={styles.container}>
+    duration > 1 && 
+    <div className={styles.container}>
       <div 
         className={styles.playButton} 
         onClick={() => setIsPlaying(!isPlaying)}
@@ -85,6 +105,12 @@ export const TimeLine = ({ duration, onChange }) => {
           ? <FaPause color="white" size={32}/> 
           : <FaPlay color="white" size={32}/>
         }
+      </div>
+      <div 
+        className={styles.speedControl}
+        onClick={changeSpeed}
+      >
+        {speedOptions.find(o => o.value === speed).label}
       </div>
       <div 
         ref={barContainerRef}
@@ -103,6 +129,9 @@ export const TimeLine = ({ duration, onChange }) => {
           >
           </div>
         </div>
+      </div>
+      <div className={styles.timeRender}>
+        {formatTime(elapsed)} / {formatTime(duration)}
       </div>
     </div>
   )

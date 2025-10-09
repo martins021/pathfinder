@@ -10,7 +10,7 @@ import { initialSettings } from "@/lib/configs";
 
 const PlayGround = () => {
   const [settings, dispatch] = useReducer(settingsReducer, initialSettings);
-  const { nodeSize, size, algorithm, tool, animationSpeed, brushSize, brushMode } = settings;
+  const { nodeSize, size, algorithm, tool, brushSize, brushMode } = settings;
 
   const [result, setResult] = useState({}) // result of the algorithm
   const [mapData, setMapData] = useState([]);
@@ -104,7 +104,6 @@ const PlayGround = () => {
         size={size}
         brushSize={brushSize}
         brushMode={brushMode}
-        animationSpeed={animationSpeed}
         setMapData={setMapData}
         setStart={setStart}
         setTarget={setTarget}

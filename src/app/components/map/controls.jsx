@@ -1,7 +1,6 @@
 "use client"
 import SizeController from "./sizeController";
 import AlgorithmSelect from "../dropdowns/algorithms";
-import SpeedController from "./speedController";
 import BrushController from "./brushController";
 import LaunchBtn from "../buttons/launchBtn";
 import ToolMenu from "./algorithmMenu";
@@ -25,10 +24,7 @@ const Controls = ({
       <div
         className="flex flex-col gap-8 mb-4 mt-4"
       >
-        <SpeedController onChange={dispatch} />
-        <SizeController 
-          onChange={dispatch} 
-        />
+        <SizeController onChange={dispatch} />
         {tool === "terrain" && 
         <BrushController 
           onChange={dispatch}

@@ -12,7 +12,6 @@ const Map = ({
   setMapData,
   setStart,
   setTarget,
-  animationSpeed,
   brushSize,
   brushMode,
 }) => {
@@ -165,7 +164,6 @@ const Map = ({
               key={i}
               i={i}
               delay={cell.animationDelay}
-              speed={animationSpeed}
               prevCellState={cell.prevState}
               cellState={cell.state}
               onClick={() => handleNodeAction(cell, i)}

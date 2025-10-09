@@ -22,8 +22,6 @@ export const settingsReducer = (state, action) => {
       return { ...state, algorithm: value }
     case "tool":
       return { ...state, tool: value }
-    case "animationSpeed":
-      return { ...state, animationSpeed: value }
     case "brushSize":
       return { ...state, brushSize: value }
     case "brushMode":

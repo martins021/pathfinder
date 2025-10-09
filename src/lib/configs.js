@@ -3,32 +3,16 @@ export const initialSettings = {
   size: {},
   algorithm: "bfs",
   tool: "start",
-  animationSpeed: 0.03,
   brushSize: 3,
   brushMode: 1
 };
 
-export const animationSpeedOptions = [
-  {
-    label: 1,
-    value: 0.0768
-  },
-  {
-    label: 2,
-    value: 0.048
-  },
-  {
-    label: 3,
-    value: 0.03
-  },
-  {
-    label: 4,
-    value: 0.012
-  },
-  {
-    label: 5,
-    value: 0.0048
-  }
+export const speedOptions = [
+  { label: "0.25x", value: 5 },
+  { label: "0.5x", value: 10 },
+  { label: "1x", value: 20 },
+  { label: "2x", value: 40 },
+  { label: "4x", value: 80 },
 ]
 
 export const toolOptions = [
@@ -83,29 +67,6 @@ export const algorithmOptions = [
   //   label: "Bellman-Ford",
   //   value: "bellmanFord"
   // }
-]
-
-export const sortingOptions = [
-  {
-    label: "Creation date",
-    value: "createdAt"
-  },
-  {
-    label: "Name",
-    value: "name"
-  },
-  {
-    label: "Algorithm",
-    value: "algorithm"
-  },
-  {
-    label: "Animation speed",
-    value: "animationSpeed"
-  },
-  {
-    label: "Map size",
-    value: "size"
-  }
 ]
 
 export const elevationColors = [

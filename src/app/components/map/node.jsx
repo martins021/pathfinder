@@ -19,8 +19,8 @@ const createAnimationTerrainColor = (color) => {
   return color.replace('rgb', 'rgba').replace(')', `, 0.5)`);
 }
 
-const Node = ({ i, prevCellState, cellState, delay, speed, onClick, onMouseLeave, elevation }) => {
-  delay = delay ? delay * speed : i / 1000;
+const Node = ({ i, prevCellState, cellState, delay, onClick, onMouseLeave, elevation }) => {
+  delay = delay ? delay : i / 1000;
   return (
     <div
       className={createClassname(cellState, prevCellState)}
