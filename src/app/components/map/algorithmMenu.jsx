@@ -2,6 +2,8 @@ import React from "react";
 import AlgorithmBtn from "../buttons/algorithmBtn";
 import { toolOptions } from "@/lib/configs";
 import { Title } from "../atoms/title";
+import SizeController from "./sizeController";
+import BrushController from "./brushController";
 
 const menuStyle ={
   display: "grid",
@@ -9,7 +11,7 @@ const menuStyle ={
   gap: ".5vw",
 }
 
-const ToolMenu = ({ tool, onChange }) => {
+const ToolMenu = ({ tool, onChange, brushMode }) => {
   return (
     <>
       <Title text="Toolbox" />
@@ -22,6 +24,12 @@ const ToolMenu = ({ tool, onChange }) => {
             selected={tool === option.value}
           />    
         ))}
+      </div>
+      <div className="flex flex-col gap-8 mb-4 mt-4">
+        <SizeController onChange={onChange} />
+        {tool === "terrain" && 
+          <BrushController onChange={onChange} brushMode={brushMode} />
+        }
       </div>
     </>
   );

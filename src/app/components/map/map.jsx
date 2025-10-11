@@ -175,11 +175,13 @@ const Map = ({
           );
         })}
       </div>
-      <TimeLine 
-        duration={nodesToAnimate.length}
-        setMapData={setMapData}
-        onChange={animateNode}
-      />
+      <div className={styles.mainTimeline}>
+        <TimeLine 
+          duration={nodesToAnimate.length}
+          setMapData={setMapData}
+          onChange={animateNode}
+        />
+      </div>
     </>
   );
 };

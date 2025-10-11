@@ -11,6 +11,7 @@ export const TimeLine = ({ duration, onChange }) => {
   const barContainerRef = useRef(null);
   const progressRef = useRef(null);
   const afIdRef = useRef(null);
+  const autoStopped = useRef(false); // if time was auto stopped by reaching the end, on next play start from beginning
 
   const formatTime = (seconds) => {
     const wholeMins = Math.floor(seconds / speed / 60)
@@ -32,7 +33,12 @@ export const TimeLine = ({ duration, onChange }) => {
 
   const updateProgressBar = (timeElapsed) => { // timeElapsed in seconds
     const progress = timeElapsed / duration // percentage of duration
-    if(progress > 1) setIsPlaying(false);
+    if(progress > 1) {
+      setIsPlaying(false);
+      autoStopped.current = true;
+    } else {
+      autoStopped.current = false;
+    }
     if(!progressRef.current) return;
     progressRef.current.style.width = `${Math.min(progress * 100, 100)}%`;
     setElapsed(timeElapsed);
@@ -78,7 +84,7 @@ export const TimeLine = ({ duration, onChange }) => {
   useEffect(() => {
     if(!isPlaying) return;
     const t0 = performance.now();
-    const elapsedAtStart = elapsed * 1000; // elapsed time in ms at the start of playing
+    const elapsedAtStart = autoStopped.current ? 0 :elapsed * 1000; // elapsed time in ms at the start of playing
 
     const animateProgressBar = () => {
       if(!isPlaying) return;

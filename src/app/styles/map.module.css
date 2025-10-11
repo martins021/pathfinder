@@ -3,14 +3,27 @@
     height: 100%;
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: repeat(6, 1fr);
+    grid-template-rows: repeat(11, 1fr);
     gap: 1em;
 }
 .main {
   width: 100%;
   height: 100%;
   display: grid;
-  grid-area: 1 / 1 / 5 / 5;
+  grid-area: 1 / 1 / 11 / 5;
+}
+.mainControls {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5em;
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+  grid-area: 1 / 5 / 11 / 6;
+}
+.mainTimeline{
+  width: 100%;
+  grid-area: 11 / 1 / 12 / 6;
+  margin: auto;
 }
 .cell {
   box-sizing: border-box;

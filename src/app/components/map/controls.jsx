@@ -1,10 +1,8 @@
 "use client"
-import SizeController from "./sizeController";
 import AlgorithmSelect from "../dropdowns/algorithms";
-import BrushController from "./brushController";
 import LaunchBtn from "../buttons/launchBtn";
 import ToolMenu from "./algorithmMenu";
-import { Title } from "../atoms/title";
+import styles from "../../styles/map.module.css";
 
 const Controls = ({ 
   dispatch,
@@ -17,20 +15,8 @@ const Controls = ({
 }) => {
 
   return (
-    <div className="flex flex-col gap-6 mt-6">
+    <div className={styles.mainControls}>
       <LaunchBtn onClick={launchAlgorithm} />
-
-      <Title text="Map Controls" />
-      <div
-        className="flex flex-col gap-8 mb-4 mt-4"
-      >
-        <SizeController onChange={dispatch} />
-        {tool === "terrain" && 
-        <BrushController 
-          onChange={dispatch}
-          brushMode={brushMode}
-        />}
-      </div>
 
       <div className="flex justify-between flex-row gap-2">
         <button 
@@ -55,6 +41,7 @@ const Controls = ({
       <ToolMenu 
         onChange={dispatch} 
         tool={tool} 
+        brushMode={brushMode}
       />
     </div>
   );
