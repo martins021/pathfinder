@@ -77,42 +77,37 @@ const Map = ({
   const handleNodeAction = useCallback(
     (node, index) => {
       let setState = false;
+      const { state } = node
       switch (tool) {
         case "empty":
-          if (node.state === "start") {
+          if (state === "start") {
             setStart(null);
-          } else if (node.state === "target") {
+          } else if (state === "target") {
             setTarget(null);
           }
           setState = true;
           break;
         case "start":
-          if (node.state !== "target" && node.state !== "wall") {
-            mapData.map(node => node.state === "start" ? node.state = node.prevState : null)
-            const mapDataCopy = [...mapData];
-            mapDataCopy[index].prevState = mapDataCopy[index].state;
-            mapDataCopy[index].state = tool;
-            setMapData(mapDataCopy);      
+          if (state !== "target" && state !== "wall") {
+            mapData.map(n => n.state === "start" && (n.state = n.prevState));
+            setState = true;
             setStart(index);
           }
           break;
         case "target":
-          if (node.state !== "start" && node.state !== "wall") {
-            mapData.map(node => node.state === "target" ? node.state = node.prevState : null)
-            const mapDataCopy = [...mapData];
-            mapDataCopy[index].prevState = mapDataCopy[index].state;
-            mapDataCopy[index].state = tool;
-            setMapData(mapDataCopy);      
+          if (state !== "start" && state !== "wall") {
+            mapData.map(n => n.state === "target" && (n.state = n.prevState));
+            setState = true;
             setTarget(index);
           }
           break;
         case "wall":
-          if (node.state !== "start" && node.state !== "target") {
+          if (state !== "start" && state !== "target") {
             setState = true;
           }
           break;
         case "terrain":
-          if(node.state === "empty" || node.state === "terrain" || node.state === "visited" || node.state === "path"){
+          if(state === "empty" || state === "terrain" || state === "visited" || state === "path"){
             handleSetTerrain(index)
           }
           break;
@@ -163,7 +158,6 @@ const Map = ({
             <Node
               key={i}
               i={i}
-              delay={cell.animationDelay}
               prevCellState={cell.prevState}
               cellState={cell.state}
               onClick={() => handleNodeAction(cell, i)}
