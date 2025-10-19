@@ -49,24 +49,6 @@
   animation-duration: 4s;
   animation-fill-mode: both;
 }
-.empty {
-  background-color: rgb(229, 229, 229);
-}
-.wall {
-  background-color: rgb(53, 53, 53);
-}
-.start {
-  transform: scale(1.4);
-  transition: transform 0.2s ease-in-out;
-  border: 4px solid rgb(60, 110, 113);
-  border-radius: 8px;
-}
-.target {
-  transform: scale(1.4);
-  transition: transform 0.2s ease-in-out;
-  border: 4px solid rgb(164, 22, 26);
-  border-radius: 8px;
-}
 
 @keyframes cellAppear {
   0% {
