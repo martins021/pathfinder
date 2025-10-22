@@ -3,7 +3,7 @@ import styles from "../../styles/timeline.module.css";
 import { FaPlay, FaPause } from "react-icons/fa6";
 import { speedOptions } from "@/lib/configs";
 
-export const TimeLine = ({ duration, onChange }) => {
+const TimeLine = ({ disabled, duration, onChange }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [speed, setSpeed] = useState(20); // speed multiplier
   const [elapsed, setElapsed] = useState(0); // current elapsed time in the animation
@@ -45,6 +45,7 @@ export const TimeLine = ({ duration, onChange }) => {
   }
 
   useEffect(() => {
+    if(disabled) return;
     let mouseDown = false;
     
     const onMouseChange = (e) => {
@@ -101,11 +102,10 @@ export const TimeLine = ({ duration, onChange }) => {
    }, [isPlaying, speed]);
 
   return (
-    duration > 1 && 
-    <div className={styles.container}>
+    <div className={`${styles.container} ${disabled ? styles.disabled : ""}`}>
       <div 
         className={styles.playButton} 
-        onClick={() => setIsPlaying(!isPlaying)}
+        onClick={() => !disabled && setIsPlaying(!isPlaying)}
       >
         {isPlaying 
           ? <FaPause color="white" size={32}/> 
@@ -116,7 +116,7 @@ export const TimeLine = ({ duration, onChange }) => {
         className={styles.speedControl}
         onClick={changeSpeed}
       >
-        {speedOptions.find(o => o.value === speed).label}
+        {speedOptions.find(o => disabled ? o.value === 20 : o.value === speed).label}
       </div>
       <div 
         ref={barContainerRef}
@@ -137,8 +137,10 @@ export const TimeLine = ({ duration, onChange }) => {
         </div>
       </div>
       <div className={styles.timeRender}>
-        {formatTime(elapsed)} / {formatTime(duration)}
+        {disabled ? "00:00 / 00:00" : `${formatTime(elapsed)} / ${formatTime(duration)}`}
       </div>
     </div>
   )
 }
+
+export default TimeLine;

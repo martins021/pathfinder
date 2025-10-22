@@ -12,6 +12,14 @@
   align-items: center;
   justify-content: center;
 }
+.container.disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+.container.disabled * {
+  cursor: not-allowed !important;
+}
+
 .barContainer, .bar {
   border-radius: 9999px;
   height: 10px;

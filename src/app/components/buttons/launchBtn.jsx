@@ -1,6 +1,7 @@
 import styles from "../../styles/launch.module.css"
+import { Spinner } from '@chakra-ui/react'
 
-const LaunchBtn = ({ onClick }) => {
+const LaunchBtn = ({ searching, onClick }) => {
   return(
     <div 
       className={`${styles.card} ${styles.launchBtn}`}
@@ -14,7 +15,7 @@ const LaunchBtn = ({ onClick }) => {
         />
       </svg>
       <div className={styles.inner}>
-        <h3>Launch</h3>
+        {searching ? <Spinner /> : <h3>Launch</h3>}
       </div>
     </div>
   )

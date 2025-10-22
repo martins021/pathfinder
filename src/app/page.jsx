@@ -3,7 +3,6 @@ import { useEffect, useState, useRef, useLayoutEffect, useReducer } from "react"
 import styles from "./styles/map.module.css"
 import Controls from "./components/map/controls";
 import Map from "./components/map/map";
-import { launchBfs, launchDfs, launchDijkstra } from "./apiRequests/algorithms";
 import { useToast } from '@chakra-ui/react'
 import { settingsReducer } from "./helpers";
 import { initialSettings } from "@/lib/configs";
@@ -16,6 +15,7 @@ const PlayGround = () => {
   const [mapData, setMapData] = useState([]);
   const [start, setStart] = useState(null); // start node
   const [target, setTarget] = useState(null); // target node
+  const [searching, setSearching] = useState(false); // algorithm running
   const toast = useToast();
 
   const createMap = () => {
@@ -41,13 +41,10 @@ const PlayGround = () => {
     setTarget(targetY * size.x + targetX);
   }
 
-  const clearPath = () => {
+  const resetNodes = (nodesToReset) => {
     const withoutPath = mapData.map(node => {
-      if(node.state === 'visited' || node.state === 'path'){
-        return ({
-          ...node, 
-          state: 'empty'
-        });
+      if(nodesToReset.includes(node.state)){
+        node.state = 'empty';
       } 
       return node;
     })
@@ -55,32 +52,27 @@ const PlayGround = () => {
     setMapData(withoutPath);
   }
 
+  const apiReq = async (data, size, start, target) => {
+    const res = await fetch(`/api/algorithms/${algorithm}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ data, size, start, target })
+    })
+    return await res.json()
+  }
+
   const launchAlgorithm = async () => {
-    clearPath();
-    let resp;
-    switch (algorithm) {
-      case "dfs":
-        resp = await launchDfs(mapData, size, start, target);
-        break;
-      case "bfs":
-        resp = await launchBfs(mapData, size, start, target);
-        break;
-      case "dijkstra":
-        resp = await launchDijkstra(mapData, size, start, target);
-        break;
-      default:
-        break;
+    try {
+      setSearching(true)
+      resetNodes(["visited", "path"]);
+      const data = await apiReq(mapData, size, start, target)
+      if(data.error) throw new Error(data.error);
+      setResult(data)
+    } catch (err) {
+      toast({ description: err, status: 'error', isClosable: true })
+    } finally {
+      setSearching(false)
     }
-    
-    if(resp.error){
-      toast({
-        description: resp.error,
-        status: 'error',
-        duration: 6000,
-        isClosable: true,
-      })
-    }
-    setResult(resp)
   }
 
   useEffect(() => {
@@ -107,26 +99,18 @@ const PlayGround = () => {
         setMapData={setMapData}
         setStart={setStart}
         setTarget={setTarget}
-        clearPath={clearPath}
       />
       <Controls 
+        searching={searching}
         dispatch={dispatch}
         tool={tool} 
         algorithm={algorithm}
         createMap={createMap}
-        clearPath={clearPath}
+        resetNodes={resetNodes}
         brushMode={brushMode}
         launchAlgorithm={launchAlgorithm}
+        result={result}
       />
-      {/* <div className={styles.results}>
-        {Object.keys(result).length ?
-          <div className="flex flex-col gap-4">
-            <p>Visited nodes: {result.visitedNodes?.length}</p>
-            <p>Path length: {result.path?.length}</p>
-            <p>Visited precentage: {result.precentageVisited?.toFixed(2)}%</p>
-          </div>
-        : <p>Launch an algorithm to see visualization</p>}
-      </div> */}
     </div>
   )
 }

@@ -2,7 +2,7 @@
 import React, { useMemo, useState, useCallback, memo, useEffect } from "react";
 import styles from "../../styles/map.module.css";
 import Node from "./node";
-import { TimeLine } from "../sliders/timeline";
+import TimeLine from "../sliders/timeline";
 
 const Map = ({
   tool,
@@ -130,7 +130,6 @@ const Map = ({
   }, [])
 
   const animateNode = (step, prevStep) => {
-    // console.log("Animating node: ", nodeId, type)
     if(!nodesToAnimate) return;
 
     const mapDataCopy = [...mapData]
@@ -171,6 +170,7 @@ const Map = ({
       </div>
       <div className={styles.mainTimeline}>
         <TimeLine 
+          disabled={nodesToAnimate.length === 0}
           duration={nodesToAnimate.length}
           setMapData={setMapData}
           onChange={animateNode}
