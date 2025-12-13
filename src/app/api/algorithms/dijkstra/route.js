@@ -1,14 +1,14 @@
 const { 
   createAdjacencyList, 
   createPath,
-  validateStartAndTargetNodes
+  getStartAndTargetNodes
 } = require("@/app/helpers");
 const { NextResponse } = require("next/server");
 
 const POST = async (request) => {
   try {
-    const {data, size, start, target} = await request.json();
-    validateStartAndTargetNodes(start, target);
+    const {data, size} = await request.json();
+    const { start, target } = getStartAndTargetNodes(data);
 
     const adjacencyList = createAdjacencyList(data, size.x, size.y, true);
     const nodeCount = adjacencyList.length;

@@ -14,6 +14,7 @@ const createAnimationTerrainColor = (color) => {
 }
 
 const Node = ({ i, prevCellState, cellState, onClick, onMouseLeave, elevation }) => {
+  // console.log(i);
   const bckGroundColor = baseColors.get(cellState) || elevationColors[elevation + 100];
   return (
     <div
@@ -21,6 +22,7 @@ const Node = ({ i, prevCellState, cellState, onClick, onMouseLeave, elevation })
       onClick={onClick}
       onMouseLeave={onMouseLeave}
       style={{ 
+        fontSize: 8,
         backgroundColor: "rgb(53, 53, 53)", // pre-animation color
         "--delay": `${i / 1000}s`, 
         "--baseBackgroundColor": bckGroundColor,
@@ -28,7 +30,7 @@ const Node = ({ i, prevCellState, cellState, onClick, onMouseLeave, elevation })
         "--animationInitialBackgroundColor": elevationColors[elevation + 100],
       }}
       data-testid="map-node"
-    ></div>
+    >{i}</div>
   )
 };
 

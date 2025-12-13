@@ -99,7 +99,10 @@ export const createPath = (parrents, node) => {
   return createPath(parrents, parrents[node]).concat(node);
 }
 
-export const validateStartAndTargetNodes = (start, target) => {
+export const getStartAndTargetNodes = (data) => {
+  const start = data.findIndex(node => node.state === 'start');
+  const target = data.findIndex(node => node.state === 'target');
+
   if(!start && !target) {
     const error = new Error("Start and target nodes not specified");
     error.status = 400;
@@ -113,4 +116,6 @@ export const validateStartAndTargetNodes = (start, target) => {
     error.status = 400;
     throw error;
   }
+
+  return { start, target };
 }
