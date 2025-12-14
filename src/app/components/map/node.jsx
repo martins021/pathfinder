@@ -15,7 +15,7 @@ const createAnimationTerrainColor = (color) => {
 
 const Node = React.memo(({ i, cellState, elevation }) => {
   // console.log(i);
-  const bckGroundColor = baseColors.get(cellState) || elevationColors[elevation + 100];
+  const bckGroundColor = baseColors.get(cellState) || elevationColors[elevation];
   return (
     <div
       data-idx={i}
@@ -25,8 +25,8 @@ const Node = React.memo(({ i, cellState, elevation }) => {
         backgroundColor: "rgb(53, 53, 53)", // pre-animation color
         "--delay": `${i / 1000}s`, 
         "--baseBackgroundColor": bckGroundColor,
-        "--animationFinalBackgroundColor": createAnimationTerrainColor(elevationColors[elevation + 100]),
-        "--animationInitialBackgroundColor": elevationColors[elevation + 100],
+        "--animationFinalBackgroundColor": createAnimationTerrainColor(elevationColors[elevation]),
+        "--animationInitialBackgroundColor": elevationColors[elevation],
       }}
     >{i}</div>
   )

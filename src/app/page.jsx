@@ -7,7 +7,7 @@ import { useToast } from '@chakra-ui/react'
 import { settingsReducer } from "./helpers";
 import { initialSettings } from "@/lib/configs";
 
-const MIN_ELEVATION = -100
+const MIN_ELEVATION = 0
 const MAX_ELEVATION = 99
 
 const PlayGround = () => {
@@ -61,47 +61,46 @@ const PlayGround = () => {
     }
   } 
 
-  const handleNodeAction = useCallback( 
-    (index) => {
-      const node = mapData[index];
-      if(!node) return;
-      let setState = false;
-      const { state } = node;
+  const handleNodeAction = (index) => {
+    const node = mapData[index];
+    if(!node) return;
+    let setState = false;
+    const { state } = node;
 
-      switch (tool) {
-        case "empty":
-          setState = true;
-          break;
-        case "start":
-          if (state !== "target" && state !== "wall") setState = true;
-          break;
-        case "target":
-          if (state !== "start" && state !== "wall") setState = true;
-          break;
-        case "wall":
-          if (state !== "start" && state !== "target") setState = true;
-          break;
-        case "terrain":
-          if(state === "empty" || state === "terrain" || state === "visited" || state === "path"){
-            handleSetTerrain(index)
-          }
-          break;
-      }
+    switch (tool) {
+      case "empty":
+        setState = true;
+        break;
+      case "start":
+        if (state !== "target" && state !== "wall") setState = true;
+        break;
+      case "target":
+        if (state !== "start" && state !== "wall") setState = true;
+        break;
+      case "wall":
+        if (state !== "start" && state !== "target") setState = true;
+        break;
+      case "terrain":
+        if(state === "empty" || state === "terrain" || state === "visited" || state === "path"){
+          handleSetTerrain(index)
+        }
+        break;
+    }
 
-      if (setState) {
-        setMapData(prev => {
-          const copy = prev.slice();
-          if(tool === "start" || tool === "target"){
-            copy.map(n => {
-              if(n.state === tool) n.state = n.prevState;
-              return n;
-            })
-          }
-          copy[index] = {...copy[index], state: tool, prevState: copy[index].state };
-          return copy;
-        })
-      }
-    }, [tool]);
+    if (setState) {
+      setMapData(prev => {
+        const copy = prev.slice();
+        if(tool === "start" || tool === "target"){
+          copy.map(n => {
+            if(n.state === tool) n.state = n.prevState;
+            return n;
+          })
+        }
+        copy[index] = {...copy[index], state: tool, prevState: copy[index].state };
+        return copy;
+      })
+    }
+  }
 
   const createMap = () => {
     const startX = Math.floor(size.x / 3);
@@ -113,11 +112,11 @@ const PlayGround = () => {
     for (let y = 0; y < size.y; y++) {
       for (let x = 0; x < size.x; x++) {
         if(x % size.x === startX && y % size.y   === startY){
-          data.push({ x, y, state: "start", prevState: "empty", elev: 1 })
+          data.push({ x, y, state: "start", prevState: "empty", elev: 0 })
         } else if(x % size.x === targetX && y % size.y === targetY){
-          data.push({ x, y, state: "target", prevState: "empty", elev: 1 })
+          data.push({ x, y, state: "target", prevState: "empty", elev: 0 })
         } else {
-          data.push({ x, y, state: "empty", prevState: "empty", elev: 1 })
+          data.push({ x, y, state: "empty", prevState: "empty", elev: 0 })
         }
       }
     }
