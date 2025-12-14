@@ -11,7 +11,6 @@ const Map = ({
   gridStyle,
   setMapData,
 }) => {
-  const [isMouseDown, setIsMouseDown] = useState(false);
   const nodesToAnimate = useMemo(() => {
     if(!visitedNodes || !path) return [];
     const result = [];
@@ -19,12 +18,6 @@ const Map = ({
     path.map(node => result.push({ animationType: 'path', node }));
     return result;
   }, [visitedNodes, path]);
-
-  useEffect(() => {
-    const mapElement = document.getElementById("map");
-    mapElement?.addEventListener("mousedown", () => setIsMouseDown(true));
-    mapElement?.addEventListener("mouseup", () => setIsMouseDown(false));
-  }, [])
 
   const animateNode = (step, prevStep) => {
     if(!nodesToAnimate) return;
@@ -48,22 +41,26 @@ const Map = ({
 
   return (
     <>
-      <div id="map" data-testid="map-grid" className={styles.main} style={gridStyle}>
-        {mapData.map((cell, i) => {
-          return (
+      <div 
+        id="map" 
+        data-testid="map-grid" 
+        className={styles.main} 
+        style={gridStyle}
+        onMouseEnter={e => {
+          if(e.nativeEvent.buttons !== 1) return;
+          const el = e.target.closest("[data-idx]");
+          if (!el) return;
+          handleNodeAction(Number(el.dataset.idx));
+        }}
+      >
+        {mapData.map((cell, i) => (
             <Node
               key={i}
               i={i}
-              prevCellState={cell.prevState}
               cellState={cell.state}
-              onClick={() => handleNodeAction(cell, i)}
-              onMouseLeave={() =>
-                (isMouseDown) ? handleNodeAction(cell, i) : null
-              }
               elevation={cell.elev}
             />
-          );
-        })}
+        ))}
       </div>
       <div className={styles.mainTimeline}>
         <TimeLine 

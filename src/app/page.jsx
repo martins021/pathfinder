@@ -62,9 +62,12 @@ const PlayGround = () => {
   } 
 
   const handleNodeAction = useCallback( 
-    (node, index) => {
+    (index) => {
+      const node = mapData[index];
+      if(!node) return;
       let setState = false;
-      const { state } = node
+      const { state } = node;
+
       switch (tool) {
         case "empty":
           setState = true;

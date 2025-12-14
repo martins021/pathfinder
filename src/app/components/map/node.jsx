@@ -13,14 +13,13 @@ const createAnimationTerrainColor = (color) => {
   return color.replace('rgb', 'rgba').replace(')', `, 0.5)`);
 }
 
-const Node = ({ i, prevCellState, cellState, onClick, onMouseLeave, elevation }) => {
+const Node = React.memo(({ i, cellState, elevation }) => {
   // console.log(i);
   const bckGroundColor = baseColors.get(cellState) || elevationColors[elevation + 100];
   return (
     <div
+      data-idx={i}
       className={`${styles["cell"]} ${styles[cellState]}`}
-      onClick={onClick}
-      onMouseLeave={onMouseLeave}
       style={{ 
         fontSize: 8,
         backgroundColor: "rgb(53, 53, 53)", // pre-animation color
@@ -32,6 +31,6 @@ const Node = ({ i, prevCellState, cellState, onClick, onMouseLeave, elevation })
       data-testid="map-node"
     >{i}</div>
   )
-};
+});
 
-export default memo(Node);
+export default Node;
