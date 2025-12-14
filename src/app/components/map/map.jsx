@@ -1,5 +1,5 @@
 "use client";
-import React, { useMemo, useState, useCallback, memo, useEffect } from "react";
+import React, { useMemo, useState, useCallback, memo, useEffect, useRef } from "react";
 import styles from "../../styles/map.module.css";
 import Node from "./node";
 import TimeLine from "../sliders/timeline";
@@ -11,6 +11,26 @@ const Map = ({
   gridStyle,
   setMapData,
 }) => {
+  const isDownRef = useRef(false);
+
+  useEffect(() => {
+    const onDown = (e) => {
+      if (e.button === 0) isDownRef.current = true; // left button pressed
+    };
+    const onUp = () => isDownRef.current = false;
+    const onBlur = () => isDownRef.current = false;
+
+    document.addEventListener("pointerdown", onDown, true);
+    document.addEventListener("pointerup", onUp, true);
+    window.addEventListener("blur", onBlur);
+
+    return () => {
+      document.removeEventListener("pointerdown", onDown, true);
+      document.removeEventListener("pointerup", onUp, true);
+      window.removeEventListener("blur", onBlur);
+    };
+  }, []);
+
   const nodesToAnimate = useMemo(() => {
     if(!visitedNodes || !path) return [];
     const result = [];
@@ -39,18 +59,22 @@ const Map = ({
 
   const nonMutableNodes = ["start", "target", "wall"];
 
+  const getNodeAndModify = (e) => {
+    const el = e.target.closest("[data-idx]");
+    if (!el) return;
+    handleNodeAction(Number(el.dataset.idx));
+  }
+
   return (
     <>
       <div 
         id="map" 
-        data-testid="map-grid" 
         className={styles.main} 
         style={gridStyle}
-        onMouseEnter={e => {
-          if(e.nativeEvent.buttons !== 1) return;
-          const el = e.target.closest("[data-idx]");
-          if (!el) return;
-          handleNodeAction(Number(el.dataset.idx));
+        onClick={e => getNodeAndModify(e)}
+        onPointerOver={e => {
+          if (!isDownRef.current) return;
+          getNodeAndModify(e);
         }}
       >
         {mapData.map((cell, i) => (
