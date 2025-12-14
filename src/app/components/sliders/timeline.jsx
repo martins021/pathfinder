@@ -50,7 +50,6 @@ const TimeLine = ({ disabled, duration, onChange }) => {
     
     const onMouseChange = (e) => {
       mouseDown = e.type === "mousedown";
-      setIsPlaying(e.type !== "mousedown");
       updateThumbPos(e); // update also if mouse is just pressed and not moved
     }
 
