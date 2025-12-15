@@ -1,5 +1,4 @@
 import styles from "../../styles/launch.module.css"
-import { Spinner } from '@chakra-ui/react'
 
 const LaunchBtn = ({ searching, onClick }) => {
   return(
@@ -15,7 +14,7 @@ const LaunchBtn = ({ searching, onClick }) => {
         />
       </svg>
       <div className={styles.inner}>
-        {searching ? <Spinner /> : <h3>Launch</h3>}
+        {searching ? <h3>Searching...</h3> : <h3>Launch</h3>}
       </div>
     </div>
   )

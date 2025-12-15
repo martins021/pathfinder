@@ -3,6 +3,7 @@ import AlgorithmSelect from "../dropdowns/algorithms";
 import LaunchBtn from "../buttons/launchBtn";
 import ToolMenu from "./algorithmMenu";
 import styles from "../../styles/map.module.css";
+import { FaTrash, FaBroom } from "react-icons/fa6";
 
 const Controls = ({ 
   searching,
@@ -32,17 +33,19 @@ const Controls = ({
       </div> */}
 
 
-      <div className="flex justify-between flex-row gap-2">
+      <div className={styles[`${result.path?.length ? "resultControlsActive" : "resultControlsHidden"}`]}>
         <button 
           onClick={() => resetNodes(["path"])}
-          className="rounded p-2 pl-7 pr-7 text-md font-semibold bg-customWhite hover:bg-customHoverGray w-full"
+          className="rounded flex items-center gap-2 p-2 pl-7 pr-7 text-md font-semibold bg-customWhite hover:bg-customHoverGray w-full"
         >
+          <FaBroom />
           Clear path
         </button>
         <button 
           onClick={createMap}
-          className="rounded p-2 pl-7 pr-7 text-md font-semibold bg-customWhite hover:bg-customHoverGray w-full"
+          className="rounded flex items-center gap-2 p-2 pl-7 pr-7 text-md font-semibold bg-customWhite hover:bg-customHoverGray w-full"
         >
+          <FaTrash />
           Reset map
         </button>
       </div>

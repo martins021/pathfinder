@@ -22,6 +22,7 @@ const ToolMenu = ({ tool, onChange, brushMode }) => {
             onClick={() => onChange({ type: "tool", value: option.value })} 
             title={option.label}
             selected={tool === option.value}
+            icon={option.icon}
           />    
         ))}
       </div>

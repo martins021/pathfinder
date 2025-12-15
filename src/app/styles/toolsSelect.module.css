@@ -4,12 +4,16 @@
   width: 100%;
 }
 .triggerBtn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   width: 100%;
-  padding: 8px 32px 8px 32px;
+  padding: 16px 32px;
   border-radius: 5px;
   cursor: pointer;
-  background-color: rgb(255, 255, 255);
+  background-color: rgb(255,215,0);
   color: rgb(0, 0, 0);
+  font-weight: 600;
 }
 .triggerBtn:hover {
   border-radius: 5px 5px 0 0;
@@ -26,7 +30,7 @@
   max-height: 200px;
 }
 .dropdown:hover .triggerBtn {
-  background-color: rgb(207, 207, 207);
+  background-color: rgb(144, 122, 0);
 }
 .toolsOption {
   padding: 8px 0 8px 0;

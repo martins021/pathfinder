@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styles from "../../styles/toolsSelect.module.css"
 import { algorithmOptions } from "@/lib/configs";
 import { Title } from "../atoms/title";
+import { FaRoute, FaCaretDown } from "react-icons/fa6";
 
 const AlgorithmSelect = ({ algorithm, onChange }) => {
   const [open, setOpen] = useState(false);
@@ -15,7 +16,9 @@ const AlgorithmSelect = ({ algorithm, onChange }) => {
         onMouseLeave={() => setOpen(false)}
       >
         <button className={styles.triggerBtn}>
+          <FaRoute size={25} />
           {algorithmOptions.find(opt => opt.value === algorithm).label}
+          <FaCaretDown size={25} />
         </button>
         
         {open && <div className={styles.dropdownContent}>

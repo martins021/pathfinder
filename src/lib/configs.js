@@ -1,3 +1,11 @@
+import { 
+  FaLocationDot, 
+  FaFlagCheckered, 
+  FaRoadBarrier,
+  FaMountain,
+  FaEraser
+} from "react-icons/fa6";
+
 export const initialSettings = {
   nodeSize: 35,
   size: {},
@@ -19,29 +27,34 @@ export const toolOptions = [
   {
     label: "Start",
     value: "start",
-    description: "Sets starting node"
+    description: "Sets starting node",
+    icon: <FaLocationDot size={20}/>,
   },
   {
     label: "Target",
     value: "target",
-    description: "Sets target node"
+    description: "Sets target node",
+    icon: <FaFlagCheckered size={20}/>,
   },
   {
     label: "Wall",
     value: "wall",
-    description: "Creates a wall node"
+    description: "Creates a wall node",
+    icon: <FaRoadBarrier size={20}/>,
   },
   {
     label: "Terrain",
     value: "terrain",
-    description: "Creates custom terrain"
+    description: "Creates custom terrain",
+    icon: <FaMountain size={20}/>,
   },
   {
     label: "Clear",
     value: "empty",
-    description: "Sets node to empty"
-  }
-]
+    description: "Sets node to empty",
+    icon: <FaEraser size={20}/>,
+  },
+];
 
 export const algorithmOptions = [
   {

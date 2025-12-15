@@ -50,6 +50,20 @@
   animation-fill-mode: both;
 }
 
+.resultControlsHidden{
+  display: flex;
+  gap: 1.5em;
+  visibility: hidden;
+  margin-top: -.8em;
+}
+
+.resultControlsActive{
+  display: flex;
+  gap: 1.5em;
+  visibility: visible;
+  margin-top: -.8em;
+}
+
 @keyframes cellAppear {
   0% {
     transform: translate(0, 30px);
