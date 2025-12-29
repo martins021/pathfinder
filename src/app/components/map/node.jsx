@@ -21,7 +21,6 @@ const Node = React.memo(({ i, cellState, elevation }) => {
       data-idx={i}
       className={`${styles["cell"]} ${styles[cellState]}`}
       style={{ 
-        fontSize: 8,
         backgroundColor: "rgb(53, 53, 53)", // pre-animation color
         "--delay": `${i / 1000}s`, 
         "--baseBackgroundColor": bckGroundColor,

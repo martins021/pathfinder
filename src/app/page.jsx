@@ -17,6 +17,7 @@ const PlayGround = () => {
   const [mapData, setMapData] = useState([]);
   const [searching, setSearching] = useState(false); // algorithm running
   const reCalc = useRef(true); // whether to recalculate path on next launch
+  const prevAlgorithm = useRef("bfs");
   const toast = useToast();
 
   const handleSetTerrain = (index) => {
@@ -128,10 +129,17 @@ const PlayGround = () => {
   }
 
   const resetNodes = (nodesToReset) => {
-    setMapData(prev => prev.map(node => {
-      if(nodesToReset.includes(node.state)) node.state = 'empty'; 
-      return node;
-    }))
+    if(nodesToReset === "elevation"){
+      setMapData(prev => prev.map(node => {
+        node.elev = 0;
+        return node;
+      }))
+    } else {
+      setMapData(prev => prev.map(node => {
+        if(nodesToReset.includes(node.state)) node.state = 'empty'; 
+        return node;
+      }))
+    }
     reCalc.current = true;
   }
 
@@ -165,8 +173,15 @@ const PlayGround = () => {
     createMap()
   }, [size])
   
-  useEffect(() => { 
-    reCalc.current = true 
+  useEffect(() => {
+    if(prevAlgorithm.current = "dijkstra"){
+      // if we change from dijkstra to other alg, we remove elevation and set tool to start, because terrain tool is only available for dijkstra
+      resetNodes("elevation")
+      dispatch({ type: "tool", value: "start" })
+    } else {
+      reCalc.current = true 
+    }
+    prevAlgorithm.current = algorithm;
   }, [algorithm])
 
   const handleResize = () => dispatch({type: "size", value: nodeSize});

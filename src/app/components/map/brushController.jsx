@@ -16,7 +16,7 @@ const BrushController = ({ onChange, brushMode }) => {
 
   return (
     <>
-      <div className="grid grid-cols-5" style={{ width: "100%" }}>
+      <div className="grid grid-cols-5" style={{ width: "95%" }}>
         <p className="col-span-1 text-customWhite text-sm text-center mr-2">Brush size</p>
         <div className="col-span-4">
           <CustomSlider 

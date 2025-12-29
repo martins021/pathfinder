@@ -24,10 +24,10 @@
   display: none;
   position: absolute;
   background-color: white;
-  z-index: 1;
+  z-index: 2;
   display: block;
   overflow-y: scroll;
-  max-height: 200px;
+  max-height: 250px;
 }
 .dropdown:hover .triggerBtn {
   background-color: rgb(144, 122, 0);

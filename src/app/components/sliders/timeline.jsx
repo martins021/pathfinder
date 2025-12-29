@@ -102,9 +102,13 @@ const TimeLine = ({ duration, onChange, launchAlgorithm, searching }) => {
    }, [isPlaying, speed]);
 
   const onPlayBtnClick = async () => {
-    const newData = await launchAlgorithm();
-    if(newData) setElapsed(0); // start animation from beginning if new data was generated
-    setIsPlaying(!isPlaying);
+    if(isPlaying){
+      setIsPlaying(false);
+    } else {
+      const newData = await launchAlgorithm();
+      if(newData) setElapsed(0); // start animation from beginning if new data was generated
+      setIsPlaying(true);
+    }
   }
 
   return (

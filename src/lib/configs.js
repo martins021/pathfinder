@@ -47,6 +47,7 @@ export const toolOptions = [
     value: "terrain",
     description: "Creates custom terrain",
     icon: <FaMountain size={20}/>,
+    with: ["dijkstra"]
   },
   {
     label: "Clear",

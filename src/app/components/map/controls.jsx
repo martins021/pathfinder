@@ -22,7 +22,8 @@ const Controls = ({
           algorithm={algorithm} 
         />
         <ToolMenu 
-          onChange={dispatch} 
+          onChange={dispatch}
+          algorithm={algorithm} 
           tool={tool} 
           brushMode={brushMode}
         />
