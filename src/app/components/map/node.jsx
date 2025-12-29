@@ -28,7 +28,7 @@ const Node = React.memo(({ i, cellState, elevation }) => {
         "--animationFinalBackgroundColor": createAnimationTerrainColor(elevationColors[elevation]),
         "--animationInitialBackgroundColor": elevationColors[elevation],
       }}
-    >{i}</div>
+    ></div>
   )
 });
 
