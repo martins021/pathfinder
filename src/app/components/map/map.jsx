@@ -8,8 +8,10 @@ const Map = ({
   handleNodeAction,
   result: { path, visitedNodes },
   mapData,
-  gridStyle,
   setMapData,
+  gridStyle,
+  launchAlgorithm,
+  searching
 }) => {
   const isDownRef = useRef(false);
 
@@ -88,9 +90,10 @@ const Map = ({
       </div>
       <div className={styles.mainTimeline}>
         <TimeLine 
-          disabled={nodesToAnimate.length === 0}
           duration={nodesToAnimate.length}
           onChange={animateNode}
+          launchAlgorithm={launchAlgorithm}
+          searching={searching}
         />
       </div>
     </>

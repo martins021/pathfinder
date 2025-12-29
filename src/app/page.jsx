@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useState, useLayoutEffect, useReducer, useCallback, useMemo } from "react";
+import { useEffect, useState, useLayoutEffect, useReducer, useRef, useMemo } from "react";
 import styles from "./styles/map.module.css"
 import Controls from "./components/map/controls";
 import Map from "./components/map/map";
@@ -13,9 +13,9 @@ const MAX_ELEVATION = 99
 const PlayGround = () => {
   const [settings, dispatch] = useReducer(settingsReducer, initialSettings);
   const { nodeSize, size, algorithm, tool, brushSize, brushMode } = settings;
-
   const [result, setResult] = useState({}) // result of the algorithm
   const [mapData, setMapData] = useState([]);
+  const mapChanged = useRef(true);
   const [searching, setSearching] = useState(false); // algorithm running
   const toast = useToast();
 
@@ -35,6 +35,7 @@ const PlayGround = () => {
       brushNodes.push(subArray);
     }
 
+    const mapDataCopy = [...mapData];
     const mainNodeCoords = Math.floor(squareBrushSize / 2); // coordinates within the brush area of the clicked node
     for (let i = 0; i < brushNodes.length; i++) {
       // get row id of the middle element of the current brush area row
@@ -49,16 +50,17 @@ const PlayGround = () => {
 
           // check if node affected by brush is within map borders and all left and right neighbors are in the same row
           if(affectedNodeIndex >= 0 && affectedNodeIndex < mapSizeX * mapSizeY && (affectedNodeIndex / mapSizeX | 0) === middleElementRow){
-            const mapDataCopy = [...mapData];
             const newNodeWeight = mapDataCopy[affectedNodeIndex].elev + (elevToAdd * brushMode)
             if(newNodeWeight <= MAX_ELEVATION && newNodeWeight >= MIN_ELEVATION){
               mapDataCopy[affectedNodeIndex].elev = newNodeWeight
-              setMapData(mapDataCopy);  
             }
           }
         }
       }
     }
+
+    setMapData(mapDataCopy);
+    mapChanged.current = true;
   } 
 
   const handleNodeAction = (index) => {
@@ -87,19 +89,20 @@ const PlayGround = () => {
         break;
     }
 
-    if (setState) {
-      setMapData(prev => {
-        const copy = prev.slice();
-        if(tool === "start" || tool === "target"){
-          copy.map(n => {
-            if(n.state === tool) n.state = n.prevState;
-            return n;
-          })
-        }
-        copy[index] = {...copy[index], state: tool, prevState: copy[index].state };
-        return copy;
-      })
-    }
+    if(!setState) return;
+
+    setMapData(prev => {
+      const copy = prev.slice();
+      if(tool === "start" || tool === "target"){
+        copy.map(n => {
+          if(n.state === tool) n.state = n.prevState;
+          return n;
+        })
+      }
+      copy[index] = {...copy[index], state: tool, prevState: copy[index].state };
+      return copy;
+    })
+    mapChanged.current = true;
   }
 
   const createMap = () => {
@@ -128,6 +131,7 @@ const PlayGround = () => {
       if(nodesToReset.includes(node.state)) node.state = 'empty'; 
       return node;
     }))
+    mapChanged.current = true;
   }
 
   const apiReq = async (data, size) => {
@@ -141,11 +145,14 @@ const PlayGround = () => {
 
   const launchAlgorithm = async () => {
     try {
+      if(!mapChanged.current) return false;
       setSearching(true)
       resetNodes(["visited", "path"]);
       const data = await apiReq(mapData, size)
       if(data.error) throw new Error(data.error);
       setResult(data)
+      mapChanged.current = false;
+      return true;
     } catch (err) {
       toast({ description: err, status: 'error', isClosable: true })
     } finally {
@@ -176,18 +183,18 @@ const PlayGround = () => {
         handleNodeAction={handleNodeAction}
         result={result} 
         mapData={mapData}
-        gridStyle={gridStyle}
         setMapData={setMapData}
+        gridStyle={gridStyle}
+        launchAlgorithm={launchAlgorithm}
+        searching={searching}
       />
       <Controls 
-        searching={searching}
         dispatch={dispatch}
         tool={tool} 
         algorithm={algorithm}
         createMap={createMap}
         resetNodes={resetNodes}
         brushMode={brushMode}
-        launchAlgorithm={launchAlgorithm}
         result={result}
       />
     </div>

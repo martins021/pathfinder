@@ -16,8 +16,6 @@
   display: flex;
   flex-direction: column;
   gap: 1.5em;
-  margin-top: 1.5em;
-  margin-bottom: 1.5em;
   grid-area: 1 / 5 / 11 / 6;
 }
 .mainTimeline{
