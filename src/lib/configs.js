@@ -3,7 +3,7 @@ import {
   FaFlagCheckered, 
   FaRoadBarrier,
   FaMountain,
-  FaEraser
+  FaSquare
 } from "react-icons/fa6";
 
 export const initialSettings = {
@@ -50,10 +50,10 @@ export const toolOptions = [
     with: ["dijkstra"]
   },
   {
-    label: "Clear",
+    label: "Node",
     value: "empty",
     description: "Sets node to empty",
-    icon: <FaEraser size={20}/>,
+    icon: <FaSquare size={20}/>,
   },
 ];
 

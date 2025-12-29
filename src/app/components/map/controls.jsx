@@ -38,10 +38,10 @@ const Controls = ({
         </div> */}
         <div className="flex flex-row gap-4">
           <button 
-            onClick={() => resetNodes(["path"])}
+            onClick={() => resetNodes(["visited", "path"])}
             className="rounded flex items-center gap-2 p-2 pl-7 pr-7 text-md font-semibold bg-customWhite hover:bg-customHoverGray w-full"
           >
-            <FaBroom /> Clear path
+            <FaBroom /> Clear visited
           </button>
           <button 
             onClick={createMap}
