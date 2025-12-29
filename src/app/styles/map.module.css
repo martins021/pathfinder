@@ -15,7 +15,7 @@
 .mainControls {
   display: flex;
   flex-direction: column;
-  gap: 1.5em;
+  justify-content: space-between;
   grid-area: 1 / 5 / 11 / 6;
 }
 .mainTimeline{
@@ -50,6 +50,7 @@
 
 .resultControlsHidden{
   display: flex;
+  flex-direction: column;
   gap: 1.5em;
   visibility: hidden;
   margin-top: -.8em;
@@ -57,9 +58,19 @@
 
 .resultControlsActive{
   display: flex;
+  flex-direction: column;
   gap: 1.5em;
   visibility: visible;
   margin-top: -.8em;
+}
+
+.results {
+  display: flex;
+  flex-direction: column;
+  color: white;
+  border: 2px solid white;
+  padding: .7em;
+  border-radius: .5em;
 }
 
 @keyframes cellAppear {

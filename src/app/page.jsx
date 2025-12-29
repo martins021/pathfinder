@@ -15,8 +15,8 @@ const PlayGround = () => {
   const { nodeSize, size, algorithm, tool, brushSize, brushMode } = settings;
   const [result, setResult] = useState({}) // result of the algorithm
   const [mapData, setMapData] = useState([]);
-  const mapChanged = useRef(true);
   const [searching, setSearching] = useState(false); // algorithm running
+  const reCalc = useRef(true); // whether to recalculate path on next launch
   const toast = useToast();
 
   const handleSetTerrain = (index) => {
@@ -60,7 +60,7 @@ const PlayGround = () => {
     }
 
     setMapData(mapDataCopy);
-    mapChanged.current = true;
+    reCalc.current = true;
   } 
 
   const handleNodeAction = (index) => {
@@ -102,7 +102,7 @@ const PlayGround = () => {
       copy[index] = {...copy[index], state: tool, prevState: copy[index].state };
       return copy;
     })
-    mapChanged.current = true;
+    reCalc.current = true;
   }
 
   const createMap = () => {
@@ -124,6 +124,7 @@ const PlayGround = () => {
       }
     }
     setMapData(data)
+    reCalc.current = true;
   }
 
   const resetNodes = (nodesToReset) => {
@@ -131,7 +132,7 @@ const PlayGround = () => {
       if(nodesToReset.includes(node.state)) node.state = 'empty'; 
       return node;
     }))
-    mapChanged.current = true;
+    reCalc.current = true;
   }
 
   const apiReq = async (data, size) => {
@@ -145,13 +146,13 @@ const PlayGround = () => {
 
   const launchAlgorithm = async () => {
     try {
-      if(!mapChanged.current) return false;
+      if(!reCalc.current) return false;
       setSearching(true)
       resetNodes(["visited", "path"]);
       const data = await apiReq(mapData, size)
       if(data.error) throw new Error(data.error);
       setResult(data)
-      mapChanged.current = false;
+      reCalc.current = false;
       return true;
     } catch (err) {
       toast({ description: err, status: 'error', isClosable: true })
@@ -163,6 +164,10 @@ const PlayGround = () => {
   useEffect(() => {
     createMap()
   }, [size])
+  
+  useEffect(() => { 
+    reCalc.current = true 
+  }, [algorithm])
 
   const handleResize = () => dispatch({type: "size", value: nodeSize});
 

@@ -16,18 +16,25 @@ const Controls = ({
 
   return (
     <div className={styles.mainControls}>
-      <AlgorithmSelect 
-        onChange={dispatch} 
-        algorithm={algorithm} 
-      />
-
-      <ToolMenu 
-        onChange={dispatch} 
-        tool={tool} 
-        brushMode={brushMode}
-      />
+      <div style={{ display: "flex", gap: "1.5em", flexDirection: "column" }}>
+        <AlgorithmSelect 
+          onChange={dispatch} 
+          algorithm={algorithm} 
+        />
+        <ToolMenu 
+          onChange={dispatch} 
+          tool={tool} 
+          brushMode={brushMode}
+        />
+      </div>
 
       <div className={styles[`${result.path?.length ? "resultControlsActive" : "resultControlsHidden"}`]}>
+        {/* <div className={styles.results}>
+          <p className="font-bold">Results:</p>
+          <p>Visited nodes: {result.visitedNodes?.length}</p>
+          <p>Path length: {result.path?.length}</p>
+          <p>Visited precentage: {result.precentageVisited?.toFixed(2)}%</p>
+        </div> */}
         <div className="flex flex-row gap-4">
           <button 
             onClick={() => resetNodes(["path"])}
@@ -42,14 +49,7 @@ const Controls = ({
             <FaTrash /> Reset map
           </button>
         </div>
-
-        <div style={{ color: "white" }} className="flex flex-col">
-          <p>Visited nodes: {result.visitedNodes?.length}</p>
-          <p>Path length: {result.path?.length}</p>
-          <p>Visited precentage: {result.precentageVisited?.toFixed(2)}%</p>
-        </div>
       </div>
-
     </div>
   );
 }
