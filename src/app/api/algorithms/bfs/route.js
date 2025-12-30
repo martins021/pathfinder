@@ -1,7 +1,8 @@
 import { 
   createAdjacencyList, 
   createPath, 
-  getStartAndTargetNodes 
+  getStartAndTargetNodes, 
+  validatePayload
 } from "@/app/helpers";
 const { NextResponse } = require("next/server");
 
@@ -39,6 +40,7 @@ const bfs = (start, target, graph) => {
 const POST = async (request) => {
   try {
     const {data, size} = await request.json();
+    validatePayload(data, size);
     const { start, target } = getStartAndTargetNodes(data);
     const adjacencyList = createAdjacencyList(data, size.x, size.y);
     const { targetFound, path, visitedNodes } = bfs(start, target, adjacencyList)

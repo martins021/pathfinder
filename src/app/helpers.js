@@ -8,6 +8,15 @@ const getMapSize = (NODE_SIZE) => {
   return { x: width, y: height }
 }
 
+export const validatePayload = (data, size) => {
+  if (!data || !Array.isArray(data) || data.length === 0) {
+    throw new Error("Invalid graph data provided");
+  }
+  if (!size || typeof size !== "object" || Object.keys(size).length === 0) {
+    throw new Error("Invalid graph size provided");
+  }
+}
+
 export const settingsReducer = (state, action) => {
   const { type, value } = action;
   switch (type) {

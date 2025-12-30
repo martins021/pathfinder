@@ -163,7 +163,7 @@ const PlayGround = () => {
       reCalc.current = false;
       return true;
     } catch (err) {
-      toast({ description: err, status: 'error', isClosable: true })
+      toast({ description: err.message, status: 'error', isClosable: true })
     } finally {
       setSearching(false)
     }
