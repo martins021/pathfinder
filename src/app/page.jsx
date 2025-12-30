@@ -17,6 +17,8 @@ const PlayGround = () => {
   const [mapData, setMapData] = useState([]);
   const [searching, setSearching] = useState(false); // algorithm running
   const reCalc = useRef(true); // whether to recalculate path on next launch
+  const mapDataRef = useRef([]);
+  const sizeRef = useRef(size);
   const prevAlgorithm = useRef("bfs");
   const toast = useToast();
 
@@ -157,7 +159,7 @@ const PlayGround = () => {
       if(!reCalc.current) return false;
       setSearching(true)
       resetNodes(["visited", "path"]);
-      const data = await apiReq(mapData, size)
+      const data = await apiReq(mapDataRef.current, sizeRef.current);
       if(data.error) throw new Error(data.error);
       setResult(data)
       reCalc.current = false;
@@ -170,7 +172,12 @@ const PlayGround = () => {
   }
 
   useEffect(() => {
-    createMap()
+    mapDataRef.current = mapData;
+  }, [mapData]);
+  
+  useEffect(() => {
+    createMap();
+    sizeRef.current = size;
   }, [size])
   
   useEffect(() => {
