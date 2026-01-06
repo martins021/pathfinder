@@ -1,15 +1,16 @@
 import { 
   createAdjacencyList, 
   createPath,
-  validateStartAndTargetNodes
+  getStartAndTargetNodes,
+  validatePayload
 } from "@/app/helpers";
 const { NextResponse } = require("next/server");
 
-
 const POST = async (request) => {
   try {
-    const {data, size, start, target} = await request.json();
-    validateStartAndTargetNodes(start, target);
+    const {data, size} = await request.json();
+    validatePayload(data, size);
+    const { start, target } = getStartAndTargetNodes(data);
     const adjacencyList = createAdjacencyList(data, size.x, size.y);
     const visitedNodeIDs = [];
     const parrents = new Array(data.length).fill(null)

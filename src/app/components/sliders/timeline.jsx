@@ -2,8 +2,9 @@ import { useRef, useEffect, useMemo, useState } from "react";
 import styles from "../../styles/timeline.module.css";
 import { FaPlay, FaPause } from "react-icons/fa6";
 import { speedOptions } from "@/lib/configs";
+import { Spinner } from '@chakra-ui/react'
 
-const TimeLine = ({ disabled, duration, onChange }) => {
+const TimeLine = ({ duration, onChange, launchAlgorithm, searching }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [speed, setSpeed] = useState(20); // speed multiplier
   const [elapsed, setElapsed] = useState(0); // current elapsed time in the animation
@@ -45,12 +46,11 @@ const TimeLine = ({ disabled, duration, onChange }) => {
   }
 
   useEffect(() => {
-    if(disabled) return;
+    if(searching) return;
     let mouseDown = false;
     
     const onMouseChange = (e) => {
       mouseDown = e.type === "mousedown";
-      setIsPlaying(e.type !== "mousedown");
       updateThumbPos(e); // update also if mouse is just pressed and not moved
     }
 
@@ -65,22 +65,29 @@ const TimeLine = ({ disabled, duration, onChange }) => {
       updateProgressBar(posToWidthRatio * duration); // new position is the ratio of total duration
     }
 
-    const spacebarUp = (e) => {
-      if(e.code === "Space") setIsPlaying(!isPlaying);
-    }
-
     barContainerRef.current?.addEventListener("mousedown", onMouseChange)
     document.addEventListener("mouseup", onMouseChange)
     document.addEventListener("mousemove", onMouseMove)
-    window.addEventListener("keyup", spacebarUp);
 
     return () => {
       barContainerRef.current?.removeEventListener("mousedown", onMouseChange)
       document.removeEventListener("mouseup", onMouseChange)
       document.removeEventListener("mousemove", onMouseMove)
+    }
+  }, [duration]);
+
+  
+  useEffect(() => {
+    const spacebarUp = (e) => {
+      if(e.code === "Space") onPlayBtnClick();
+    }
+    
+    window.addEventListener("keyup", spacebarUp);
+    return () => {
       window.removeEventListener("keyup", spacebarUp);
     }
-  }, [duration, isPlaying]);
+  }, [isPlaying])
+
 
   useEffect(() => {
     if(!isPlaying) return;
@@ -101,22 +108,34 @@ const TimeLine = ({ disabled, duration, onChange }) => {
     }
    }, [isPlaying, speed]);
 
+  const onPlayBtnClick = async () => {
+    if(isPlaying){
+      setIsPlaying(false);
+    } else {
+      const newData = await launchAlgorithm();
+      if(newData) setElapsed(0); // start animation from beginning if new data was generated
+      setIsPlaying(true);
+    }
+  }
+
   return (
-    <div className={`${styles.container} ${disabled ? styles.disabled : ""}`}>
+    <div className={`${styles.container} ${searching ? styles.disabled : ""}`}>
       <div 
         className={styles.playButton} 
-        onClick={() => !disabled && setIsPlaying(!isPlaying)}
+        onClick={onPlayBtnClick}
       >
-        {isPlaying 
-          ? <FaPause color="white" size={32}/> 
-          : <FaPlay color="white" size={32}/>
+        {searching 
+          ? <Spinner /> 
+          : isPlaying 
+            ? <FaPause color="white" size={32}/> 
+            : <FaPlay color="white" size={32}/>
         }
       </div>
       <div 
         className={styles.speedControl}
         onClick={changeSpeed}
       >
-        {speedOptions.find(o => disabled ? o.value === 20 : o.value === speed).label}
+        {speedOptions.find(o => o.value === speed).label}
       </div>
       <div 
         ref={barContainerRef}
@@ -137,7 +156,7 @@ const TimeLine = ({ disabled, duration, onChange }) => {
         </div>
       </div>
       <div className={styles.timeRender}>
-        {disabled ? "00:00 / 00:00" : `${formatTime(elapsed)} / ${formatTime(duration)}`}
+        {searching ? "00:00 / 00:00" : `${formatTime(elapsed)} / ${formatTime(duration)}`}
       </div>
     </div>
   )

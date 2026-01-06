@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import CustomSlider from "../sliders/slider";
 import { Switch } from '@chakra-ui/react'
 
-const BrushController = ({ onChange, brushMode }) => {
+const BrushController = ({ onChange, brushMode, tool }) => {
   const [brushSizeValue, setBrushSizeValue] = useState(3)
 
   const handleSpeedChange = (value) => {
@@ -16,7 +16,7 @@ const BrushController = ({ onChange, brushMode }) => {
 
   return (
     <>
-      <div className="grid grid-cols-5" style={{ width: "100%" }}>
+      <div className="grid grid-cols-5" style={{ width: "95%" }}>
         <p className="col-span-1 text-customWhite text-sm text-center mr-2">Brush size</p>
         <div className="col-span-4">
           <CustomSlider 
@@ -29,7 +29,7 @@ const BrushController = ({ onChange, brushMode }) => {
           />
         </div>
       </div>
-      <div className="grid grid-cols-5" style={{ width: "100%" }}>
+      {tool === "terrain" && <div className="grid grid-cols-5" style={{ width: "100%" }}>
         <p className="col-span-2 text-customWhite text-sm text-center mr-2">Brush mode</p>
         <div className="col-span-3 flex text-customWhite">
           <p className="pr-6 text-xl">-</p>
@@ -41,7 +41,7 @@ const BrushController = ({ onChange, brushMode }) => {
           />
           <p className="pl-6 text-xl">+</p>
         </div>
-      </div>
+      </div>}
     </>
   )
 }

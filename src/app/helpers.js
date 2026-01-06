@@ -8,6 +8,15 @@ const getMapSize = (NODE_SIZE) => {
   return { x: width, y: height }
 }
 
+export const validatePayload = (data, size) => {
+  if (!data || !Array.isArray(data) || data.length === 0) {
+    throw new Error("Invalid graph data provided");
+  }
+  if (!size || typeof size !== "object" || Object.keys(size).length === 0) {
+    throw new Error("Invalid graph size provided");
+  }
+}
+
 export const settingsReducer = (state, action) => {
   const { type, value } = action;
   switch (type) {
@@ -99,7 +108,10 @@ export const createPath = (parrents, node) => {
   return createPath(parrents, parrents[node]).concat(node);
 }
 
-export const validateStartAndTargetNodes = (start, target) => {
+export const getStartAndTargetNodes = (data) => {
+  const start = data.findIndex(node => node.state === 'start');
+  const target = data.findIndex(node => node.state === 'target');
+
   if(!start && !target) {
     const error = new Error("Start and target nodes not specified");
     error.status = 400;
@@ -113,4 +125,6 @@ export const validateStartAndTargetNodes = (start, target) => {
     error.status = 400;
     throw error;
   }
+
+  return { start, target };
 }

@@ -13,23 +13,22 @@ const createAnimationTerrainColor = (color) => {
   return color.replace('rgb', 'rgba').replace(')', `, 0.5)`);
 }
 
-const Node = ({ i, prevCellState, cellState, onClick, onMouseLeave, elevation }) => {
-  const bckGroundColor = baseColors.get(cellState) || elevationColors[elevation + 100];
+const Node = React.memo(({ i, cellState, elevation }) => {
+  // console.log(i);
+  const bckGroundColor = baseColors.get(cellState) || elevationColors[elevation];
   return (
     <div
+      data-idx={i}
       className={`${styles["cell"]} ${styles[cellState]}`}
-      onClick={onClick}
-      onMouseLeave={onMouseLeave}
       style={{ 
         backgroundColor: "rgb(53, 53, 53)", // pre-animation color
         "--delay": `${i / 1000}s`, 
         "--baseBackgroundColor": bckGroundColor,
-        "--animationFinalBackgroundColor": createAnimationTerrainColor(elevationColors[elevation + 100]),
-        "--animationInitialBackgroundColor": elevationColors[elevation + 100],
+        "--animationFinalBackgroundColor": createAnimationTerrainColor(elevationColors[elevation]),
+        "--animationInitialBackgroundColor": elevationColors[elevation],
       }}
-      data-testid="map-node"
     ></div>
   )
-};
+});
 
-export default memo(Node);
+export default Node;
