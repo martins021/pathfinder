@@ -55,8 +55,8 @@ const Map = ({
       if(!nodeToModify || nonMutableNodes.includes(nodeToModify.state)) return;
       nodeToModify.prevState = nodeToModify.state;
       nodeToModify.state = fwd ? animationType : "empty"
-      setMapData(mapDataCopy);      
     })
+    setMapData(mapDataCopy);      
   }
 
   const nonMutableNodes = ["start", "target", "wall"];

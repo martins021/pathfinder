@@ -65,22 +65,29 @@ const TimeLine = ({ duration, onChange, launchAlgorithm, searching }) => {
       updateProgressBar(posToWidthRatio * duration); // new position is the ratio of total duration
     }
 
-    const spacebarUp = (e) => {
-      if(e.code === "Space") onPlayBtnClick();
-    }
-
     barContainerRef.current?.addEventListener("mousedown", onMouseChange)
     document.addEventListener("mouseup", onMouseChange)
     document.addEventListener("mousemove", onMouseMove)
-    window.addEventListener("keyup", spacebarUp);
 
     return () => {
       barContainerRef.current?.removeEventListener("mousedown", onMouseChange)
       document.removeEventListener("mouseup", onMouseChange)
       document.removeEventListener("mousemove", onMouseMove)
+    }
+  }, [duration]);
+
+  
+  useEffect(() => {
+    const spacebarUp = (e) => {
+      if(e.code === "Space") onPlayBtnClick();
+    }
+    
+    window.addEventListener("keyup", spacebarUp);
+    return () => {
       window.removeEventListener("keyup", spacebarUp);
     }
-  }, [duration, isPlaying]);
+  }, [isPlaying])
+
 
   useEffect(() => {
     if(!isPlaying) return;
