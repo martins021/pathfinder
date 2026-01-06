@@ -11,6 +11,8 @@ const menuStyle ={
   gap: ".5vw",
 }
 
+const brushTools = ["terrain", "wall", "empty"];
+
 const ToolMenu = ({ tool, onChange, brushMode, algorithm }) => {
   return (
     <>
@@ -30,8 +32,8 @@ const ToolMenu = ({ tool, onChange, brushMode, algorithm }) => {
       </div>
       <div className="flex flex-col gap-8 mb-4 mt-4">
         <SizeController onChange={onChange} />
-        {tool === "terrain" && 
-          <BrushController onChange={onChange} brushMode={brushMode} />
+        {brushTools.includes(tool) && 
+          <BrushController onChange={onChange} brushMode={brushMode} tool={tool} />
         }
       </div>
     </>

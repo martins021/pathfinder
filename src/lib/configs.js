@@ -71,7 +71,7 @@ export const algorithmOptions = [
   {
     label: "Dijkstra",
     value: "dijkstra",
-    description: "Finds the shortest path between nodes when travel costs vary."
+    description: "Finds the shortest path between nodes when travel costs vary. (Uses Terrain tool)"
   },
   // {
   //   label: "A*",

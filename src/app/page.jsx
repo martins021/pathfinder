@@ -17,9 +17,9 @@ const PlayGround = () => {
   const [mapData, setMapData] = useState([]);
   const [searching, setSearching] = useState(false); // algorithm running
   const reCalc = useRef(true); // whether to recalculate path on next launch
-  const mapDataRef = useRef([]);
-  const sizeRef = useRef(size);
-  const prevAlgorithm = useRef("bfs");
+  const mapDataRef = useRef([]); // used so keyUp listener has access to latest mapData. With state it gets only the initial value
+  const sizeRef = useRef(size); // same as above for size
+  const prevAlgorithm = useRef("bfs"); 
   const toast = useToast();
 
   const handleSetTerrain = (index) => {
@@ -170,6 +170,9 @@ const PlayGround = () => {
       setSearching(false)
     }
   }
+
+  // TODO:
+  // add brush size option for wall and node tools
 
   useEffect(() => {
     mapDataRef.current = mapData;
