@@ -14,7 +14,6 @@ const createAnimationTerrainColor = (color) => {
 }
 
 const Node = React.memo(({ i, cellState, elevation }) => {
-  // console.log(i);
   const bckGroundColor = baseColors.get(cellState) || elevationColors[elevation];
   return (
     <div
@@ -31,4 +30,5 @@ const Node = React.memo(({ i, cellState, elevation }) => {
   )
 });
 
+Node.displayName = 'Node';
 export default Node;

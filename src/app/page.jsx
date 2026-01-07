@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useState, useLayoutEffect, useReducer, useRef, useMemo } from "react";
+import { useEffect, useState, useLayoutEffect, useReducer, useRef, useMemo, useCallback } from "react";
 import styles from "./styles/map.module.css"
 import Controls from "./components/map/controls";
 import Map from "./components/map/map";
@@ -108,7 +108,7 @@ const PlayGround = () => {
     reCalc.current = true;
   }
 
-  const createMap = () => {
+  const createMap = useCallback(() => {
     const startX = Math.floor(size.x / 3);
     const startY = Math.floor(size.y / 2);
     const targetX = Math.floor(size.x / 3 * 2) + 1;
@@ -128,7 +128,7 @@ const PlayGround = () => {
     }
     setMapData(data)
     reCalc.current = true;
-  }
+  }, [size.x, size.y])
 
   const resetNodes = (nodesToReset) => {
     if(nodesToReset === "elevation"){
@@ -181,7 +181,7 @@ const PlayGround = () => {
   useEffect(() => {
     createMap();
     sizeRef.current = size;
-  }, [size])
+  }, [createMap, size])
   
   useEffect(() => {
     if(prevAlgorithm.current = "dijkstra"){
@@ -194,13 +194,13 @@ const PlayGround = () => {
     prevAlgorithm.current = algorithm;
   }, [algorithm])
 
-  const handleResize = () => dispatch({type: "size", value: nodeSize});
+  const handleResize = useCallback(() => dispatch({type: "size", value: nodeSize}), [nodeSize])
 
   useLayoutEffect(() => {
     handleResize()
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
-  }, [nodeSize])
+  }, [handleResize, nodeSize])
 
   const gridStyle = useMemo(() => ({
     gridTemplateRows: `repeat(${size.y}, 1fr)`,

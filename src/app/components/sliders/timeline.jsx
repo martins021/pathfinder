@@ -1,4 +1,4 @@
-import { useRef, useEffect, useMemo, useState } from "react";
+import { useRef, useEffect, useMemo, useState, useCallback } from "react";
 import styles from "../../styles/timeline.module.css";
 import { FaPlay, FaPause } from "react-icons/fa6";
 import { speedOptions } from "@/lib/configs";
@@ -7,14 +7,14 @@ import { Spinner } from '@chakra-ui/react'
 const TimeLine = ({ duration, onChange, launchAlgorithm, searching }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [speed, setSpeed] = useState(20); // speed multiplier
-  const [elapsed, setElapsed] = useState(0); // current elapsed time in the animation
+  const elapsed = useRef(0); // current elapsed time in the animation
   const prevStep = useRef(0);
   const barContainerRef = useRef(null);
   const progressRef = useRef(null);
   const afIdRef = useRef(null);
   const autoStopped = useRef(false); // if time was auto stopped by reaching the end, on next play start from beginning
 
-  const formatTime = (seconds) => {
+  const formatTime = (seconds = elapsed.current) => {
     const wholeMins = Math.floor(seconds / speed / 60)
     const rem = Math.floor(seconds / speed % 60)
     return `${wholeMins < 10 ? "0" : ""}${wholeMins}:${rem < 10 ? "0" : ""}${rem}`
@@ -26,13 +26,15 @@ const TimeLine = ({ duration, onChange, launchAlgorithm, searching }) => {
     setSpeed(speedOptions[nextIx].value)
   }
 
-  useEffect(() => {
-    const step = Math.floor(elapsed);
-    onChange(step, prevStep.current);
+  const callMapAnimation = useCallback(timeElapsed => {
+    const step = Math.floor(timeElapsed);
+    if(step !== prevStep.current){
+      onChange(step, prevStep.current);
+    }
     prevStep.current = step
-  }, [elapsed]);
+  }, [onChange])
 
-  const updateProgressBar = (timeElapsed) => { // timeElapsed in seconds
+  const updateProgressBar = useCallback(timeElapsed => { // timeElapsed in seconds
     const progress = timeElapsed / duration // percentage of duration
     if(progress > 1) {
       setIsPlaying(false);
@@ -42,8 +44,21 @@ const TimeLine = ({ duration, onChange, launchAlgorithm, searching }) => {
     }
     if(!progressRef.current) return;
     progressRef.current.style.width = `${Math.min(progress * 100, 100)}%`;
-    setElapsed(timeElapsed);
-  }
+    elapsed.current = timeElapsed;
+
+    callMapAnimation(timeElapsed)
+  }, [callMapAnimation, duration])
+
+  const onPlayBtnClick = useCallback(async () => {
+    if(isPlaying){
+      setIsPlaying(false);
+    } else {
+      const newData = await launchAlgorithm();
+      if(newData) elapsed.current = 0; // start animation from beginning if new data was generated
+      setIsPlaying(true);
+    }
+  }, [isPlaying, launchAlgorithm])
+
 
   useEffect(() => {
     if(searching) return;
@@ -74,7 +89,7 @@ const TimeLine = ({ duration, onChange, launchAlgorithm, searching }) => {
       document.removeEventListener("mouseup", onMouseChange)
       document.removeEventListener("mousemove", onMouseMove)
     }
-  }, [duration]);
+  }, [duration, searching, updateProgressBar]);
 
   
   useEffect(() => {
@@ -86,13 +101,13 @@ const TimeLine = ({ duration, onChange, launchAlgorithm, searching }) => {
     return () => {
       window.removeEventListener("keyup", spacebarUp);
     }
-  }, [isPlaying])
+  }, [isPlaying, onPlayBtnClick])
 
 
   useEffect(() => {
     if(!isPlaying) return;
     const t0 = performance.now();
-    const elapsedAtStart = autoStopped.current ? 0 :elapsed * 1000; // elapsed time in ms at the start of playing
+    const elapsedAtStart = autoStopped.current ? 0 : elapsed.current * 1000; // elapsed time in ms at the start of playing
 
     const animateProgressBar = () => {
       if(!isPlaying) return;
@@ -106,17 +121,7 @@ const TimeLine = ({ duration, onChange, launchAlgorithm, searching }) => {
       if(afIdRef.current) cancelAnimationFrame(afIdRef.current);
       afIdRef.current = null;
     }
-   }, [isPlaying, speed]);
-
-  const onPlayBtnClick = async () => {
-    if(isPlaying){
-      setIsPlaying(false);
-    } else {
-      const newData = await launchAlgorithm();
-      if(newData) setElapsed(0); // start animation from beginning if new data was generated
-      setIsPlaying(true);
-    }
-  }
+   }, [isPlaying, speed, updateProgressBar]);
 
   return (
     <div className={`${styles.container} ${searching ? styles.disabled : ""}`}>
@@ -156,7 +161,7 @@ const TimeLine = ({ duration, onChange, launchAlgorithm, searching }) => {
         </div>
       </div>
       <div className={styles.timeRender}>
-        {searching ? "00:00 / 00:00" : `${formatTime(elapsed)} / ${formatTime(duration)}`}
+        {searching ? "00:00 / 00:00" : `${formatTime()} / ${formatTime(duration)}`}
       </div>
     </div>
   )
