@@ -4,6 +4,8 @@ import styles from "../../styles/map.module.css";
 import Node from "./node";
 import TimeLine from "../sliders/timeline";
 
+const nonMutableNodes = ["start", "target", "wall"];
+
 const Map = ({
   handleNodeAction,
   result: { path, visitedNodes },
@@ -41,25 +43,26 @@ const Map = ({
     return result;
   }, [visitedNodes, path]);
 
-  const animateNode = (step, prevStep) => {
+  const animateNode = useCallback((step, prevStep) => {
     if(!nodesToAnimate) return;
-
-    const mapDataCopy = [...mapData]
     const fwd = step >= prevStep;
     const sliceOfNodesToAnimate = fwd 
       ? nodesToAnimate.slice(prevStep, step + 1)
       : nodesToAnimate.slice(step, prevStep + 1)
+    
+    setMapData(prev => {
+      const mapDataCopy = [...prev]
+      
+      sliceOfNodesToAnimate?.map(({ node, animationType }) => {
+        const nodeToModify = mapDataCopy[node];
+        if(!nodeToModify || nonMutableNodes.includes(nodeToModify.state)) return;
+        nodeToModify.prevState = nodeToModify.state;
+        nodeToModify.state = fwd ? animationType : "empty"
+      })
 
-    sliceOfNodesToAnimate?.map(({ node, animationType }) => {
-      const nodeToModify = mapDataCopy[node];
-      if(!nodeToModify || nonMutableNodes.includes(nodeToModify.state)) return;
-      nodeToModify.prevState = nodeToModify.state;
-      nodeToModify.state = fwd ? animationType : "empty"
-    })
-    setMapData(mapDataCopy);      
-  }
-
-  const nonMutableNodes = ["start", "target", "wall"];
+      return mapDataCopy
+    });      
+  }, [nodesToAnimate, setMapData])
 
   const getNodeAndModify = (e) => {
     const el = e.target.closest("[data-idx]");
@@ -74,6 +77,7 @@ const Map = ({
         className={styles.main} 
         style={gridStyle}
         onClick={e => getNodeAndModify(e)}
+        onMouseDown={e => getNodeAndModify(e)}
         onPointerOver={e => {
           if (!isDownRef.current) return;
           getNodeAndModify(e);
