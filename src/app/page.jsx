@@ -178,9 +178,6 @@ const PlayGround = () => {
     }
   }
 
-  // TODO:
-  // add brush size option for wall and node tools
-
   useEffect(() => {
     mapDataRef.current = mapData;
   }, [mapData]);
