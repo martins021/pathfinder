@@ -22,7 +22,8 @@ const PlayGround = () => {
   const prevAlgorithm = useRef("bfs"); 
   const toast = useToast();
 
-  const handleSetTerrain = (index) => {
+  // sets all brush affected nodes including for setting terrain, walls and nodes
+  const handleBrushAction = (index) => {
     const mapSizeX = size.x; // horizontal map size
     const mapSizeY = size.y; // vertical map size
     const squareBrushSize = brushSize * 2 - 1;
@@ -48,14 +49,18 @@ const PlayGround = () => {
         const distance = Math.sqrt(Math.pow((mainNodeCoords - i), 2) + Math.pow((mainNodeCoords - j), 2)); 
         if(distance <= brushSize - 1){ // brush will only affect these nodes
           const distanceFloored = Math.floor(distance);
-          const elevToAdd = brushSize - distanceFloored;
           const affectedNodeIndex = brushNodes[i][j];
-
+          
           // check if node affected by brush is within map borders and all left and right neighbors are in the same row
           if(affectedNodeIndex >= 0 && affectedNodeIndex < mapSizeX * mapSizeY && (affectedNodeIndex / mapSizeX | 0) === middleElementRow){
-            const newNodeWeight = mapDataCopy[affectedNodeIndex].elev + (elevToAdd * brushMode)
-            if(newNodeWeight <= MAX_ELEVATION && newNodeWeight >= MIN_ELEVATION){
-              mapDataCopy[affectedNodeIndex].elev = newNodeWeight
+            if(tool === "terrain"){
+              const elevToAdd = brushSize - distanceFloored;
+              const newNodeWeight = mapDataCopy[affectedNodeIndex].elev + (elevToAdd * brushMode)
+              if(newNodeWeight <= MAX_ELEVATION && newNodeWeight >= MIN_ELEVATION){
+                mapDataCopy[affectedNodeIndex].elev = newNodeWeight
+              }
+            } else {
+              mapDataCopy[affectedNodeIndex].state = tool
             }
           }
         }
@@ -74,7 +79,7 @@ const PlayGround = () => {
 
     switch (tool) {
       case "empty":
-        setState = true;
+        handleBrushAction(index)
         break;
       case "start":
         if (state !== "target" && state !== "wall") setState = true;
@@ -83,11 +88,13 @@ const PlayGround = () => {
         if (state !== "start" && state !== "wall") setState = true;
         break;
       case "wall":
-        if (state !== "start" && state !== "target") setState = true;
+        if (state !== "start" && state !== "target") {
+          handleBrushAction(index)
+        }
         break;
       case "terrain":
         if(state === "empty" || state === "terrain" || state === "visited" || state === "path"){
-          handleSetTerrain(index)
+          handleBrushAction(index)
         }
         break;
     }
