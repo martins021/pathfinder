@@ -77,6 +77,7 @@ const Map = ({
         className={styles.main} 
         style={gridStyle}
         onClick={e => getNodeAndModify(e)}
+        onMouseDown={e => getNodeAndModify(e)}
         onPointerOver={e => {
           if (!isDownRef.current) return;
           getNodeAndModify(e);
