@@ -106,13 +106,18 @@ const TimeLine = ({ duration, onChange, launchAlgorithm, searching }) => {
 
   useEffect(() => {
     if(!isPlaying) return;
-    const t0 = performance.now();
-    const elapsedAtStart = autoStopped.current ? 0 : elapsed.current * 1000; // elapsed time in ms at the start of playing
+    let t0 = performance.now();
+    if(autoStopped.current){
+      elapsed.current = 0;
+      prevStep.current = 0;
+    }
 
     const animateProgressBar = () => {
       if(!isPlaying) return;
-      const delta = ((performance.now() - t0) * speed + elapsedAtStart) / 1000; // time passed from t0 plus previously elapsed time in seconds
-      updateProgressBar(delta);
+      const now = performance.now();
+      const deltaFromLastFrame = ((now - t0) * speed) / 1000;
+      t0 = now;
+      updateProgressBar(elapsed.current + deltaFromLastFrame);
       afIdRef.current = requestAnimationFrame(animateProgressBar);
     }
     afIdRef.current = requestAnimationFrame(animateProgressBar);
