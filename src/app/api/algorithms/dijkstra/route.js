@@ -14,7 +14,7 @@ const POST = async (request) => {
 
     const adjacencyList = createAdjacencyList(data, size.x, size.y, true);
     const nodeCount = adjacencyList.length;
-    const parrents = new Array(nodeCount).fill(null);
+    const parents = new Array(nodeCount).fill(null);
     const distance = new Array(nodeCount).fill(Infinity);
     const visitedNodeIDs = [];
     const unexploredNodes = Array.from({length: nodeCount}, (_, index) => index);
@@ -40,14 +40,14 @@ const POST = async (request) => {
         const newDistance = distance[node] + currNeighbors[i].weight; // calculate new distance to neighbor
         if(newDistance < distance[currNeighbors[i].nodeId]){ // if new distance is smaller than current distance update distance and parrent
           distance[currNeighbors[i].nodeId] = newDistance;
-          parrents[currNeighbors[i].nodeId] = node;
+          parents[currNeighbors[i].nodeId] = node;
         }
       }
     }
 
     let path = [];
     if(targetFound){
-      path = createPath(parrents, target);
+      path = createPath(parents, target);
     }
 
     const precentageVisited = (visitedNodeIDs.length / adjacencyList.length) * 100;

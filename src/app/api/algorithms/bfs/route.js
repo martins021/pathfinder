@@ -8,7 +8,7 @@ const { NextResponse } = require("next/server");
 
 const bfs = (start, target, graph) => {
   const visitedNodes = new Array(graph.length).fill(false);
-  const parrents = new Array(graph.length).fill(null); // ceļš no sākuma virsotnes līdz katrai apmeklētajai virsotnei
+  const parents = new Array(graph.length).fill(null); // ceļš no sākuma virsotnes līdz katrai apmeklētajai virsotnei
   
   const queue = [start];
   visitedNodes[start] = true;
@@ -24,7 +24,7 @@ const bfs = (start, target, graph) => {
         queue.push(currNeighbors[i]); // ieliek rindā kaimiņus
         visitedNodes[currNeighbors[i]] = true;
         visitedNodeIDs.push(currNeighbors[i]);
-        parrents[currNeighbors[i]] = currNode; // pašreizējo node ieraksta kā kaimiņa vecāku
+        parents[currNeighbors[i]] = currNode; // pašreizējo node ieraksta kā kaimiņa vecāku
         if(currNeighbors[i] === target){
           targetFound = true;
           break;
@@ -32,7 +32,7 @@ const bfs = (start, target, graph) => {
       }
     }
   }
-  const path = createPath(parrents, target);
+  const path = createPath(parents, target);
 
   return { targetFound, path, visitedNodes: visitedNodeIDs};
 }

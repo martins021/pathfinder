@@ -13,9 +13,9 @@ const POST = async (request) => {
     const { start, target } = getStartAndTargetNodes(data);
     const adjacencyList = createAdjacencyList(data, size.x, size.y);
     const visitedNodeIDs = [];
-    const parrents = new Array(data.length).fill(null)
+    const parents = new Array(data.length).fill(null)
 
-    let targetParrents;
+    let targetparents;
     let finalVisitedNodes;
     let targetFound = false;
 
@@ -26,10 +26,10 @@ const POST = async (request) => {
       const currNeighbors = graph[current];
       for(const neighbor of currNeighbors) {
         if(!visited[neighbor]) {
-          parrents[neighbor] = current;
+          parents[neighbor] = current;
           if(neighbor === target) {
             targetFound = true;
-            targetParrents = [...parrents]; // nokopē parrents masīvu brīdī, kad sastop mērķi
+            targetparents = [...parents]; // nokopē parents masīvu brīdī, kad sastop mērķi
             finalVisitedNodes = [...visitedNodeIDs];
           }
           dfs(neighbor, graph, visited);
@@ -42,7 +42,7 @@ const POST = async (request) => {
     
     let path = [];
     if(targetFound){
-      path = createPath(targetParrents, target);
+      path = createPath(targetparents, target);
     } else {
       finalVisitedNodes = [...visitedNodeIDs];
     }

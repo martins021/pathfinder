@@ -188,7 +188,7 @@ const PlayGround = () => {
   }, [createMap, size])
   
   useEffect(() => {
-    if(prevAlgorithm.current = "dijkstra"){
+    if(prevAlgorithm.current === "dijkstra"){
       // if we change from dijkstra to other alg, we remove elevation and set tool to start, because terrain tool is only available for dijkstra
       resetNodes("elevation")
       dispatch({ type: "tool", value: "start" })

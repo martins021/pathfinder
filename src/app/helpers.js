@@ -103,24 +103,24 @@ export const createAdjacencyList = (data, colCount, rowCount, weighted = false) 
   return adjList;
 }
 
-export const createPath = (parrents, node) => {
-  if(parrents[node] === null) return [node]; // ja nākamā virsotne ir null, tad tas ir sākums
-  return createPath(parrents, parrents[node]).concat(node);
+export const createPath = (parents, node) => {
+  if(parents[node] === null) return [node]; // ja nākamā virsotne ir null, tad tas ir sākums
+  return createPath(parents, parents[node]).concat(node);
 }
 
 export const getStartAndTargetNodes = (data) => {
   const start = data.findIndex(node => node.state === 'start');
   const target = data.findIndex(node => node.state === 'target');
 
-  if(!start && !target) {
+  if (start === -1 && target === -1) {
     const error = new Error("Start and target nodes not specified");
     error.status = 400;
     throw error;
-  } else if(!start) {
+  } else if(start === -1) {
     const error = new Error("Start node not specified");
     error.status = 400;
     throw error;
-  } else if (!target) {
+  } else if (target === -1) {
     const error = new Error("Target node not specified");
     error.status = 400;
     throw error;
