@@ -1,12 +1,11 @@
-import { useRef, useEffect, useMemo, useState, useCallback } from "react";
+import { useRef, useEffect, useLayoutEffect, useState, useCallback } from "react";
 import styles from "../../styles/timeline.module.css";
 import { FaPlay, FaPause } from "react-icons/fa6";
 import { speedOptions } from "@/lib/configs";
 import { Spinner } from '@chakra-ui/react'
 
-const TimeLine = ({ duration, onChange, launchAlgorithm, searching }) => {
+const TimeLine = ({ duration, onChange, launchAlgorithm, searching, speed, setSpeed }) => {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [speed, setSpeed] = useState(20); // speed multiplier
   const elapsed = useRef(0); // current elapsed time in the animation
   const prevStep = useRef(0);
   const barContainerRef = useRef(null);
@@ -35,6 +34,7 @@ const TimeLine = ({ duration, onChange, launchAlgorithm, searching }) => {
   }, [onChange])
 
   const updateProgressBar = useCallback(timeElapsed => { // timeElapsed in seconds
+    if(!duration) return;
     const progress = timeElapsed / duration // percentage of duration
     if(progress > 1) {
       setIsPlaying(false);
@@ -50,14 +50,16 @@ const TimeLine = ({ duration, onChange, launchAlgorithm, searching }) => {
   }, [callMapAnimation, duration])
 
   const onPlayBtnClick = useCallback(async () => {
+    if(searching) return;
     if(isPlaying){
       setIsPlaying(false);
     } else {
       const newData = await launchAlgorithm();
+      if(newData == null) return;
       if(newData) elapsed.current = 0; // start animation from beginning if new data was generated
       setIsPlaying(true);
     }
-  }, [isPlaying, launchAlgorithm])
+  }, [isPlaying, launchAlgorithm, searching])
 
 
   useEffect(() => {
@@ -104,7 +106,7 @@ const TimeLine = ({ duration, onChange, launchAlgorithm, searching }) => {
   }, [isPlaying, onPlayBtnClick])
 
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if(!isPlaying) return;
     let t0 = performance.now();
     if(autoStopped.current){
