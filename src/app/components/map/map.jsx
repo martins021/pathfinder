@@ -13,9 +13,11 @@ const Map = ({
   setMapData,
   gridStyle,
   launchAlgorithm,
-  searching
+  searching,
+  animationVersion
 }) => {
   const isDownRef = useRef(false);
+  const [speed, setSpeed] = useState(20);
 
   useEffect(() => {
     const onDown = (e) => {
@@ -94,6 +96,9 @@ const Map = ({
       </div>
       <div className={styles.mainTimeline}>
         <TimeLine 
+          key={animationVersion}
+          speed={speed}
+          setSpeed={setSpeed}
           duration={nodesToAnimate.length}
           onChange={animateNode}
           launchAlgorithm={launchAlgorithm}

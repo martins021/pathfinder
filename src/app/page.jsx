@@ -10,17 +10,34 @@ import { initialSettings } from "@/lib/configs";
 const MIN_ELEVATION = 0
 const MAX_ELEVATION = 99
 
+const clearSearchMarks = (nodes) => nodes.map(node => ({
+  ...node,
+  state: ["visited", "path"].includes(node.state) ? "empty" : node.state,
+  prevState: ["visited", "path"].includes(node.prevState) ? "empty" : node.prevState,
+}));
+
 const PlayGround = () => {
   const [settings, dispatch] = useReducer(settingsReducer, initialSettings);
   const { nodeSize, size, algorithm, tool, brushSize, brushMode } = settings;
   const [result, setResult] = useState({}) // result of the algorithm
   const [mapData, setMapData] = useState([]);
   const [searching, setSearching] = useState(false); // algorithm running
+  const [animationVersion, setAnimationVersion] = useState(0);
+  const gridVersion = useRef(0); // rejects results calculated before a grid edit
   const reCalc = useRef(true); // whether to recalculate path on next launch
   const mapDataRef = useRef([]); // used so keyUp listener has access to latest mapData. With state it gets only the initial value
   const sizeRef = useRef(size); // same as above for size
   const prevAlgorithm = useRef("bfs"); 
   const toast = useToast();
+
+  const invalidateResult = useCallback(() => {
+    gridVersion.current += 1;
+    reCalc.current = true;
+    setResult({});
+    setSearching(false);
+    setMapData(clearSearchMarks);
+    setAnimationVersion(version => version + 1);
+  }, []);
 
   // sets all brush affected nodes including for setting terrain, walls and nodes
   const handleBrushAction = (index) => {
@@ -39,7 +56,7 @@ const PlayGround = () => {
       brushNodes.push(subArray);
     }
 
-    const mapDataCopy = [...mapData];
+    const mapDataCopy = mapData.map(node => ({ ...node }));
     const mainNodeCoords = Math.floor(squareBrushSize / 2); // coordinates within the brush area of the clicked node
     for (let i = 0; i < brushNodes.length; i++) {
       // get row id of the middle element of the current brush area row
@@ -68,7 +85,7 @@ const PlayGround = () => {
     }
 
     setMapData(mapDataCopy);
-    reCalc.current = true;
+    invalidateResult();
   } 
 
   const handleNodeAction = (index) => {
@@ -112,7 +129,7 @@ const PlayGround = () => {
       copy[index] = {...copy[index], state: tool, prevState: copy[index].state };
       return copy;
     })
-    reCalc.current = true;
+    invalidateResult();
   }
 
   const createMap = useCallback(() => {
@@ -134,23 +151,21 @@ const PlayGround = () => {
       }
     }
     setMapData(data)
-    reCalc.current = true;
-  }, [size.x, size.y])
+    invalidateResult();
+  }, [size.x, size.y, invalidateResult])
 
-  const resetNodes = (nodesToReset) => {
+  const resetNodes = useCallback((nodesToReset) => {
     if(nodesToReset === "elevation"){
       setMapData(prev => prev.map(node => {
-        node.elev = 0;
-        return node;
+        return { ...node, elev: 0 };
       }))
     } else {
       setMapData(prev => prev.map(node => {
-        if(nodesToReset.includes(node.state)) node.state = 'empty'; 
-        return node;
+        return nodesToReset.includes(node.state) ? { ...node, state: "empty" } : node;
       }))
     }
-    reCalc.current = true;
-  }
+    invalidateResult();
+  }, [invalidateResult]);
 
   const apiReq = async (data, size) => {
     const res = await fetch(`/api/algorithms/${algorithm}`, {
@@ -162,19 +177,24 @@ const PlayGround = () => {
   }
 
   const launchAlgorithm = async () => {
+    const version = gridVersion.current;
     try {
       if(!reCalc.current) return false;
       setSearching(true)
-      resetNodes(["visited", "path"]);
-      const data = await apiReq(mapDataRef.current, sizeRef.current);
+      const nodes = clearSearchMarks(mapDataRef.current);
+      setMapData(nodes);
+      const data = await apiReq(nodes, sizeRef.current);
+      if(version !== gridVersion.current) return null;
       if(data.error) throw new Error(data.error);
       setResult(data)
       reCalc.current = false;
       return true;
     } catch (err) {
+      if(version !== gridVersion.current) return null;
       toast({ description: err.message, status: 'error', isClosable: true })
+      return null;
     } finally {
-      setSearching(false)
+      if(version === gridVersion.current) setSearching(false)
     }
   }
 
@@ -182,7 +202,7 @@ const PlayGround = () => {
     mapDataRef.current = mapData;
   }, [mapData]);
   
-  useEffect(() => {
+  useLayoutEffect(() => {
     createMap();
     sizeRef.current = size;
   }, [createMap, size])
@@ -193,10 +213,10 @@ const PlayGround = () => {
       resetNodes("elevation")
       dispatch({ type: "tool", value: "start" })
     } else {
-      reCalc.current = true 
+      invalidateResult();
     }
     prevAlgorithm.current = algorithm;
-  }, [algorithm])
+  }, [algorithm, invalidateResult, resetNodes])
 
   const handleResize = useCallback(() => dispatch({type: "size", value: nodeSize}), [nodeSize])
 
@@ -221,6 +241,7 @@ const PlayGround = () => {
         gridStyle={gridStyle}
         launchAlgorithm={launchAlgorithm}
         searching={searching}
+        animationVersion={animationVersion}
       />
       <Controls 
         dispatch={dispatch}

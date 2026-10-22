@@ -1,6 +1,9 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/preflight.css" layer(base);
+/* Keep utilities unlayered so Chakra's unlayered reset cannot override them. */
+@import "tailwindcss/utilities.css";
+@config "../../tailwind.config.js";
 
 :root {
   background-color: rgb(53, 53, 53);
