@@ -78,12 +78,16 @@ const Map = ({
         id="map" 
         className={styles.main} 
         style={gridStyle}
-        onClick={e => getNodeAndModify(e)}
-        onMouseDown={e => getNodeAndModify(e)}
+        onPointerDown={e => {
+          if (e.button !== 0) return;
+          e.preventDefault(); // Drawing must not start native text selection or dragging.
+          getNodeAndModify(e);
+        }}
         onPointerOver={e => {
           if (!isDownRef.current) return;
           getNodeAndModify(e);
         }}
+        onDragStart={e => e.preventDefault()}
       >
         {mapData.map((cell, i) => (
             <Node
