@@ -16,12 +16,11 @@
 .mainControls {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   grid-area: 1 / 5 / 11 / 6;
 }
 .mainTimeline{
   width: 100%;
-  grid-area: 11 / 1 / 12 / 6;
+  grid-area: 11 / 1 / 12 / 5;
   margin: auto;
 }
 .cell {
@@ -49,12 +48,17 @@
   animation-fill-mode: both;
 }
 
+.resultControlsHidden,
+.resultControlsActive {
+  grid-area: 11 / 5 / 12 / 6;
+  align-self: center;
+}
+
 .resultControlsHidden{
   display: flex;
   flex-direction: column;
   gap: 1.5em;
   visibility: hidden;
-  margin-top: -.8em;
 }
 
 .resultControlsActive{
@@ -62,7 +66,6 @@
   flex-direction: column;
   gap: 1.5em;
   visibility: visible;
-  margin-top: -.8em;
 }
 
 .results {

@@ -15,8 +15,8 @@ const Controls = ({
 }) => {
 
   return (
-    <div className={styles.mainControls}>
-      <div style={{ display: "flex", gap: "1em", flexDirection: "column" }}>
+    <>
+      <div className={styles.mainControls} style={{ gap: "1em" }}>
         <AlgorithmSelect 
           onChange={dispatch} 
           algorithm={algorithm} 
@@ -51,7 +51,7 @@ const Controls = ({
           </button>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 
