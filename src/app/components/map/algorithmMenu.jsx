@@ -30,7 +30,7 @@ const ToolMenu = ({ tool, onChange, brushMode, algorithm }) => {
             />    
         ))}
       </div>
-      <div className="flex flex-col gap-8 mb-4 mt-4">
+      <div className="flex flex-col gap-4 mb-2 mt-2">
         <SizeController onChange={onChange} />
         {brushTools.includes(tool) && 
           <BrushController onChange={onChange} brushMode={brushMode} tool={tool} />

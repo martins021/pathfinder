@@ -16,7 +16,7 @@ const Controls = ({
 
   return (
     <div className={styles.mainControls}>
-      <div style={{ display: "flex", gap: "1.5em", flexDirection: "column" }}>
+      <div style={{ display: "flex", gap: "1em", flexDirection: "column" }}>
         <AlgorithmSelect 
           onChange={dispatch} 
           algorithm={algorithm} 
@@ -36,16 +36,16 @@ const Controls = ({
           <p>Path length: {result.path?.length}</p>
           <p>Visited precentage: {result.precentageVisited?.toFixed(2)}%</p>
         </div> */}
-        <div className="flex flex-row gap-4">
+        <div className="flex flex-row gap-2">
           <button 
             onClick={() => resetNodes(["visited", "path"])}
-            className="rounded flex items-center gap-2 p-2 pl-7 pr-7 text-md font-semibold bg-customWhite hover:bg-customHoverGray w-full"
+            className="rounded flex items-center gap-2 px-3 py-2 text-sm font-semibold bg-customWhite hover:bg-customHoverGray w-full"
           >
             <FaBroom /> Clear visited
           </button>
           <button 
             onClick={createMap}
-            className="rounded flex items-center gap-2 p-2 pl-7 pr-7 text-md font-semibold bg-customWhite hover:bg-customHoverGray w-full"
+            className="rounded flex items-center gap-2 px-3 py-2 text-sm font-semibold bg-customWhite hover:bg-customHoverGray w-full"
           >
             <FaTrash /> Reset map
           </button>

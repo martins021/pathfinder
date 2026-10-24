@@ -8,12 +8,13 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: 16px 32px;
+  padding: 10px 16px;
   border-radius: 5px;
   cursor: pointer;
   background-color: rgb(255,215,0);
   color: rgb(0, 0, 0);
   font-weight: 600;
+  font-size: 14px;
 }
 .dropdownContent {
   position: absolute;
