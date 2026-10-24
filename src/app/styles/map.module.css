@@ -71,10 +71,26 @@
 .results {
   display: flex;
   flex-direction: column;
+  gap: 8px;
+  margin-top: auto;
   color: white;
-  border: 2px solid white;
-  padding: .7em;
+  font-size: 14px;
+  border: 1px solid rgb(255 215 0 / 25%);
+  padding: 12px;
   border-radius: .5em;
+}
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px 12px;
+}
+.metrics dt {
+  color: rgb(187, 187, 181);
+  font-size: 12px;
+}
+.metrics dd {
+  color: rgb(255, 215, 0);
+  font-weight: 600;
 }
 
 @keyframes cellAppear {

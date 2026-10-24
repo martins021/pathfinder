@@ -14,7 +14,8 @@ const Map = ({
   gridStyle,
   launchAlgorithm,
   searching,
-  animationVersion
+  animationVersion,
+  onStepChange
 }) => {
   const isDownRef = useRef(false);
   const [speed, setSpeed] = useState(20);
@@ -47,6 +48,7 @@ const Map = ({
 
   const animateNode = useCallback((step, prevStep) => {
     if(!nodesToAnimate) return;
+    onStepChange(step);
     const fwd = step >= prevStep;
     const sliceOfNodesToAnimate = fwd 
       ? nodesToAnimate.slice(prevStep, step)
@@ -69,7 +71,7 @@ const Map = ({
 
       return mapDataCopy
     });      
-  }, [nodesToAnimate, setMapData])
+  }, [nodesToAnimate, setMapData, onStepChange])
 
   const getNodeAndModify = (e) => {
     const el = e.target.closest("[data-idx]");

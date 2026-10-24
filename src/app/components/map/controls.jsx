@@ -11,8 +11,12 @@ const Controls = ({
   createMap, 
   brushMode,
   algorithm,
-  result
+  result,
+  animationStep,
+  totalNodes
 }) => {
+  const visitedCount = Math.min(animationStep, result.visitedNodes?.length ?? 0);
+  const pathCount = Math.max(0, Math.min(result.path?.length ?? 0, animationStep - (result.visitedNodes?.length ?? 0)));
 
   return (
     <>
@@ -27,15 +31,31 @@ const Controls = ({
           tool={tool} 
           brushMode={brushMode}
         />
+        <section className={styles.results} aria-label="Search results">
+          <h2 className="font-semibold">Search results</h2>
+          <dl className={styles.metrics}>
+            <div>
+              <dt>Visited cells</dt>
+              <dd>{animationStep > 0 ? visitedCount : "—"}</dd>
+            </div>
+            <div>
+              <dt>Coverage</dt>
+              <dd>{animationStep > 0 && totalNodes ? `${(visitedCount / totalNodes * 100).toFixed(1)}%` : "—"}</dd>
+            </div>
+            <div>
+              <dt>Path length</dt>
+              <dd>{result.targetFound && pathCount > 0 ? `${pathCount - 1} steps` : "—"}</dd>
+            </div>
+            <div>
+              <dt>Path cost</dt>
+              <dd>{result.targetFound && pathCount > 0 ? result.pathCosts?.[pathCount - 1]?.toLocaleString("en-US", { maximumFractionDigits: 3 }) ?? "—" : "—"}</dd>
+            </div>
+          </dl>
+          {result.targetFound === false && animationStep >= result.visitedNodes.length && <p>No route found</p>}
+        </section>
       </div>
 
       <div className={styles[`${result.path?.length ? "resultControlsActive" : "resultControlsHidden"}`]}>
-        {/* <div className={styles.results}>
-          <p className="font-bold">Results:</p>
-          <p>Visited nodes: {result.visitedNodes?.length}</p>
-          <p>Path length: {result.path?.length}</p>
-          <p>Visited precentage: {result.precentageVisited?.toFixed(2)}%</p>
-        </div> */}
         <div className="flex flex-row gap-2">
           <button 
             onClick={() => resetNodes(["visited", "path"])}

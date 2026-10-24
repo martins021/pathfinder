@@ -23,6 +23,7 @@ const PlayGround = () => {
   const [mapData, setMapData] = useState([]);
   const [searching, setSearching] = useState(false); // algorithm running
   const [animationVersion, setAnimationVersion] = useState(0);
+  const [animationStep, setAnimationStep] = useState(0);
   const gridVersion = useRef(0); // rejects results calculated before a grid edit
   const reCalc = useRef(true); // whether to recalculate path on next launch
   const mapDataRef = useRef([]); // used so keyUp listener has access to latest mapData. With state it gets only the initial value
@@ -34,6 +35,7 @@ const PlayGround = () => {
     gridVersion.current += 1;
     reCalc.current = true;
     setResult({});
+    setAnimationStep(0);
     setSearching(false);
     setMapData(clearSearchMarks);
     setAnimationVersion(version => version + 1);
@@ -242,6 +244,7 @@ const PlayGround = () => {
         launchAlgorithm={launchAlgorithm}
         searching={searching}
         animationVersion={animationVersion}
+        onStepChange={setAnimationStep}
       />
       <Controls 
         dispatch={dispatch}
@@ -251,6 +254,8 @@ const PlayGround = () => {
         resetNodes={resetNodes}
         brushMode={brushMode}
         result={result}
+        animationStep={animationStep}
+        totalNodes={mapData.length}
       />
     </div>
   )

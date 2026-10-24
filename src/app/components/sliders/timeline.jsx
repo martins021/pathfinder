@@ -119,8 +119,7 @@ const TimeLine = ({ duration, onChange, launchAlgorithm, searching, speed, setSp
     if(!isPlaying) return;
     let t0 = performance.now();
     if(autoStopped.current){
-      elapsed.current = 0;
-      prevStep.current = 0;
+      updateProgressBar(0);
     }
 
     const animateProgressBar = () => {
