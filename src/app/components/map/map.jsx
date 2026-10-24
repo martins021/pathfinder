@@ -49,8 +49,8 @@ const Map = ({
     if(!nodesToAnimate) return;
     const fwd = step >= prevStep;
     const sliceOfNodesToAnimate = fwd 
-      ? nodesToAnimate.slice(prevStep, step + 1)
-      : nodesToAnimate.slice(step, prevStep + 1)
+      ? nodesToAnimate.slice(prevStep, step)
+      : nodesToAnimate.slice(step, prevStep)
     
     setMapData(prev => {
       const mapDataCopy = [...prev]
@@ -58,8 +58,13 @@ const Map = ({
       sliceOfNodesToAnimate?.map(({ node, animationType }) => {
         const nodeToModify = mapDataCopy[node];
         if(!nodeToModify || nonMutableNodes.includes(nodeToModify.state)) return;
-        nodeToModify.prevState = nodeToModify.state;
-        nodeToModify.state = fwd ? animationType : "empty"
+        // Undoing a path step restores its earlier visited state, if present.
+        const previousAnimation = !fwd && nodesToAnimate.slice(0, step).findLast(item => item.node === node);
+        mapDataCopy[node] = {
+          ...nodeToModify,
+          prevState: nodeToModify.state,
+          state: fwd ? animationType : previousAnimation?.animationType || "empty",
+        };
       })
 
       return mapDataCopy

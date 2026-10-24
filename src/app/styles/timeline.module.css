@@ -1,6 +1,15 @@
 .playButton{
   cursor: pointer;
 }
+.stepButton{
+  padding: 8px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+.stepButton:disabled{
+  opacity: 0.4;
+  cursor: not-allowed;
+}
 .container{
   color: white;
   grid-area: 5 / 1 / 7 / 6;
