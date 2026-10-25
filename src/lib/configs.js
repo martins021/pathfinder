@@ -61,17 +61,17 @@ export const algorithmOptions = [
   {
     label: "BFS",
     value: "bfs",
-    description: "Searches outward evenly; finds nearest solution first."
+    description: "Searches outward evenly. Guarantees the shortest path on unweighted graphs."
   },
   {
     label: "DFS",
     value: "dfs",
-    description: "Explores as far as possible along each branch before backtracking."
+    description: "Explores deep before wide down a branch. Does not guarantee the shortest path."
   },
   {
     label: "Dijkstra",
     value: "dijkstra",
-    description: "Finds the shortest path between nodes when travel costs vary. (Uses Terrain tool)"
+    description: "Finds the shortest path between nodes when travel costs vary. Uses Terrain tool to make the graph weighted."
   },
   // {
   //   label: "A*",

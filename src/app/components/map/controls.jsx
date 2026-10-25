@@ -35,7 +35,7 @@ const Controls = ({
           <h2 className="font-semibold">Search results</h2>
           <dl className={styles.metrics}>
             <div>
-              <dt>Visited cells</dt>
+              <dt>Visited nodes</dt>
               <dd>{animationStep > 0 ? visitedCount : "—"}</dd>
             </div>
             <div>
