@@ -55,6 +55,8 @@ const POST = async (request) => {
       targetFound,
       precentageVisited,
       name: "Dijkstra",
+      pathCost: targetFound ? distance[target] : null,
+      pathCosts: path.map(node => distance[node]),
       path, 
       visitedNodes: visitedNodeIDs 
     });

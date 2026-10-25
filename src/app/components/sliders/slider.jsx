@@ -22,9 +22,10 @@ const CustomSlider = ({ defaultValue, min, max, step, handleChange, value, disab
         value={value}
         textAlign='center'
         color='white' 
-        mt='-10' 
-        ml='-5' 
-        w='10'
+        mt='-6'
+        ml='-3'
+        w='6'
+        fontSize='xs'
       >
         {value}
       </SliderMark>

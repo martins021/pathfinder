@@ -16,9 +16,9 @@ const BrushController = ({ onChange, brushMode, tool }) => {
 
   return (
     <>
-      <div className="grid grid-cols-5" style={{ width: "95%" }}>
-        <p className="col-span-1 text-customWhite text-sm text-center mr-2">Brush size</p>
-        <div className="col-span-4">
+      <div className="grid grid-cols-5 items-center" style={{ width: "95%" }}>
+        <p className="col-span-2 text-customWhite text-sm whitespace-nowrap mr-2">Brush size</p>
+        <div className="col-span-3">
           <CustomSlider 
             defaultValue={3} 
             min={1} 
@@ -29,17 +29,17 @@ const BrushController = ({ onChange, brushMode, tool }) => {
           />
         </div>
       </div>
-      {tool === "terrain" && <div className="grid grid-cols-5" style={{ width: "100%" }}>
-        <p className="col-span-2 text-customWhite text-sm text-center mr-2">Brush mode</p>
-        <div className="col-span-3 flex text-customWhite">
-          <p className="pr-6 text-xl">-</p>
+      {tool === "terrain" && <div className="grid grid-cols-5 items-center" style={{ width: "95%" }}>
+        <p className="col-span-2 text-customWhite text-sm whitespace-nowrap mr-2">Brush mode</p>
+        <div className="col-span-3 flex items-center gap-3 text-customWhite">
+          <p>-</p>
           <Switch 
             sx={{ '.chakra-switch__track': { bg: 'rgb(144, 122, 0)' } }} 
-            size='lg' 
+            size='md'
             onChange={onSwitchChange}
             isChecked={brushMode === 1 ? true : false}
           />
-          <p className="pl-6 text-xl">+</p>
+          <p>+</p>
         </div>
       </div>}
     </>

@@ -52,6 +52,8 @@ const POST = async (request) => {
       targetFound,
       precentageVisited,
       name: "DFS",
+      pathCost: targetFound ? path.length - 1 : null,
+      pathCosts: targetFound ? path.map((_, index) => index) : [],
       path, 
       visitedNodes: finalVisitedNodes 
     });

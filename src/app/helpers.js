@@ -42,11 +42,11 @@ export const settingsReducer = (state, action) => {
 
 const getWeight = (nodeTo, nodeFrom) => {
   if(nodeFrom > nodeTo){ // going from higher elevation to lower
-    return 200 + 15 * (Math.abs(nodeTo - nodeFrom) + 1);
+    return 1 + 0.075 * Math.abs(nodeTo - nodeFrom);
   } else if (nodeFrom < nodeTo) { // going from lower elevation to higher
-    return 200 + 50 * (Math.abs(nodeTo - nodeFrom) + 1);
+    return 1 + 0.25 * Math.abs(nodeTo - nodeFrom);
   } else {
-    return 200; // no elevation change
+    return 1; // no elevation change
   }
 }
 

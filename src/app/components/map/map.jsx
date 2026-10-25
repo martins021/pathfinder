@@ -14,7 +14,8 @@ const Map = ({
   gridStyle,
   launchAlgorithm,
   searching,
-  animationVersion
+  animationVersion,
+  onStepChange
 }) => {
   const isDownRef = useRef(false);
   const [speed, setSpeed] = useState(20);
@@ -47,10 +48,11 @@ const Map = ({
 
   const animateNode = useCallback((step, prevStep) => {
     if(!nodesToAnimate) return;
+    onStepChange(step);
     const fwd = step >= prevStep;
     const sliceOfNodesToAnimate = fwd 
-      ? nodesToAnimate.slice(prevStep, step + 1)
-      : nodesToAnimate.slice(step, prevStep + 1)
+      ? nodesToAnimate.slice(prevStep, step)
+      : nodesToAnimate.slice(step, prevStep)
     
     setMapData(prev => {
       const mapDataCopy = [...prev]
@@ -58,13 +60,18 @@ const Map = ({
       sliceOfNodesToAnimate?.map(({ node, animationType }) => {
         const nodeToModify = mapDataCopy[node];
         if(!nodeToModify || nonMutableNodes.includes(nodeToModify.state)) return;
-        nodeToModify.prevState = nodeToModify.state;
-        nodeToModify.state = fwd ? animationType : "empty"
+        // Undoing a path step restores its earlier visited state, if present.
+        const previousAnimation = !fwd && nodesToAnimate.slice(0, step).findLast(item => item.node === node);
+        mapDataCopy[node] = {
+          ...nodeToModify,
+          prevState: nodeToModify.state,
+          state: fwd ? animationType : previousAnimation?.animationType || "empty",
+        };
       })
 
       return mapDataCopy
     });      
-  }, [nodesToAnimate, setMapData])
+  }, [nodesToAnimate, setMapData, onStepChange])
 
   const getNodeAndModify = (e) => {
     const el = e.target.closest("[data-idx]");
@@ -78,12 +85,16 @@ const Map = ({
         id="map" 
         className={styles.main} 
         style={gridStyle}
-        onClick={e => getNodeAndModify(e)}
-        onMouseDown={e => getNodeAndModify(e)}
+        onPointerDown={e => {
+          if (e.button !== 0) return;
+          e.preventDefault(); // Drawing must not start native text selection or dragging.
+          getNodeAndModify(e);
+        }}
         onPointerOver={e => {
           if (!isDownRef.current) return;
           getNodeAndModify(e);
         }}
+        onDragStart={e => e.preventDefault()}
       >
         {mapData.map((cell, i) => (
             <Node

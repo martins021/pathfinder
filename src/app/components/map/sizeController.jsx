@@ -13,9 +13,9 @@ const SizeController = ({ onChange }) => {
 
   return (
     <>
-      <div className="grid grid-cols-5" style={{ width: "95%" }}>
-        <p className="col-span-1 text-customWhite text-sm text-center mr-2">Node size</p>
-        <div className="col-span-4">
+      <div className="grid grid-cols-5 items-center" style={{ width: "95%" }}>
+        <p className="col-span-2 text-customWhite text-sm whitespace-nowrap mr-2">Node size</p>
+        <div className="col-span-3">
           <CustomSlider 
             defaultValue={DEFAULT} 
             min={1} 

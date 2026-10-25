@@ -1,6 +1,6 @@
 import { useRef, useEffect, useLayoutEffect, useState, useCallback } from "react";
 import styles from "../../styles/timeline.module.css";
-import { FaPlay, FaPause } from "react-icons/fa6";
+import { FaPlay, FaPause, FaBackwardStep, FaForwardStep } from "react-icons/fa6";
 import { speedOptions } from "@/lib/configs";
 import { Spinner } from '@chakra-ui/react'
 
@@ -26,12 +26,12 @@ const TimeLine = ({ duration, onChange, launchAlgorithm, searching, speed, setSp
   }
 
   const callMapAnimation = useCallback(timeElapsed => {
-    const step = Math.floor(timeElapsed);
+    const step = Math.min(Math.floor(timeElapsed), duration);
     if(step !== prevStep.current){
       onChange(step, prevStep.current);
     }
     prevStep.current = step
-  }, [onChange])
+  }, [onChange, duration])
 
   const updateProgressBar = useCallback(timeElapsed => { // timeElapsed in seconds
     if(!duration) return;
@@ -48,6 +48,14 @@ const TimeLine = ({ duration, onChange, launchAlgorithm, searching, speed, setSp
 
     callMapAnimation(timeElapsed)
   }, [callMapAnimation, duration])
+
+  const stepAnimation = (direction) => {
+    if(searching || !duration) return;
+    setIsPlaying(false);
+    const step = Math.max(0, Math.min(duration, Math.floor(elapsed.current) + direction));
+    updateProgressBar(step);
+    autoStopped.current = step === duration;
+  }
 
   const onPlayBtnClick = useCallback(async () => {
     if(searching) return;
@@ -96,6 +104,7 @@ const TimeLine = ({ duration, onChange, launchAlgorithm, searching, speed, setSp
   
   useEffect(() => {
     const spacebarUp = (e) => {
+      if(e.target.closest("button")) return;
       if(e.code === "Space") onPlayBtnClick();
     }
     
@@ -110,8 +119,7 @@ const TimeLine = ({ duration, onChange, launchAlgorithm, searching, speed, setSp
     if(!isPlaying) return;
     let t0 = performance.now();
     if(autoStopped.current){
-      elapsed.current = 0;
-      prevStep.current = 0;
+      updateProgressBar(0);
     }
 
     const animateProgressBar = () => {
@@ -132,6 +140,15 @@ const TimeLine = ({ duration, onChange, launchAlgorithm, searching, speed, setSp
 
   return (
     <div className={`${styles.container} ${searching ? styles.disabled : ""}`}>
+      <button
+        type="button"
+        className={styles.stepButton}
+        aria-label="Step backward"
+        disabled={searching || !duration}
+        onClick={() => stepAnimation(-1)}
+      >
+        <FaBackwardStep size={24} />
+      </button>
       <div 
         className={styles.playButton} 
         onClick={onPlayBtnClick}
@@ -143,6 +160,15 @@ const TimeLine = ({ duration, onChange, launchAlgorithm, searching, speed, setSp
             : <FaPlay color="white" size={32}/>
         }
       </div>
+      <button
+        type="button"
+        className={styles.stepButton}
+        aria-label="Step forward"
+        disabled={searching || !duration}
+        onClick={() => stepAnimation(1)}
+      >
+        <FaForwardStep size={24} />
+      </button>
       <div 
         className={styles.speedControl}
         onClick={changeSpeed}
