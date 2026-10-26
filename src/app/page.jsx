@@ -5,7 +5,7 @@ import Controls from "./components/map/controls";
 import Map from "./components/map/map";
 import { useToast } from '@chakra-ui/react'
 import { settingsReducer } from "./helpers";
-import { initialSettings } from "@/lib/configs";
+import { initialSettings, algorithmOptions } from "@/lib/configs";
 
 const MIN_ELEVATION = 0
 const MAX_ELEVATION = 99
@@ -233,6 +233,74 @@ const PlayGround = () => {
     gridTemplateColumns: `repeat(${size.x}, 1fr)`,
   }), [size]);
 
+  const storeRLE = (urlEncodedNodes, prev, rleCount, i) => {
+    if(rleCount.value === 0) return
+
+    urlEncodedNodes.pop() // the first consecutive element was already stored. Now we remove it. 
+    const consecutiveNodes = rleCount.value + 1 // + 1 for the first consecutive node
+    // store the RLE value and count pair in format [starting index,count:value] 
+    urlEncodedNodes.push(`${i - consecutiveNodes},${consecutiveNodes}:${prev}`)
+    rleCount.value = 0
+  }
+
+  const generateUrl = () => {
+    const url = new URL(window.location.href);
+    const params = new URLSearchParams(url.search);
+    const sizeParam = size.x + "," + size.y
+
+    // nodes are encoded like ?map=index[state[elevation]]-index[state[elevation]]
+    // for example 3s5-12t-18-25e7 represents 4 nodes: 
+    // ix 3, start state, and elevation of 5
+    // ix 12, target state, and elevation of 0 (if no elevation shown, then 0 is assumed)
+    // ix 18, empty state (if no state shown then empty is assumed), and elevation of 0
+    // ix 25, empty state, and elevation of 7 (if elevation is not 0 we still show the empty state explicitly so that it acts as separator between index and elevation)
+    // additionally we use Run-length encoding (RLE) that replaces consecutive repeating nodes with a single value-and-count pair
+
+    // Used for RLE. Stores the state and elevation representation of the previous node. Example: s9 or e4 or empty string
+    let prev = null;
+    // Used for RLE. Amount of currently consecutive repeating nodes that can be encoded using RLE.
+    const rleCount = { value: 0 }; // store in object so that its passed as reference to storeRLE func
+    const urlEncodedNodes = []
+    for (let i = 0; i < mapData.length; i++) {
+      let { state, elev } = mapData[i];
+      // dont encode walls. While decoding, all missing indices will become walls automatically
+      if (state === "wall") {
+        storeRLE(urlEncodedNodes, prev, rleCount, i)
+        prev = "wall"
+        continue
+      } else if (["visited", "path"].includes(state)){
+        state = "empty"
+      }
+
+      const startOrTarget = ["start", "target"].includes(state) 
+      const urlEncodedNode = `${i}${elev || startOrTarget ? state.charAt(0) : ""}${elev || ""}`
+      const ixOfLetter = urlEncodedNode.search(/[a-z]/i);
+      const withoutIx = ixOfLetter === -1 ? "" : urlEncodedNode.slice(ixOfLetter);
+
+      if(withoutIx === prev && i !== mapData.length - 1){ // if its the last one we store it instead of continuing
+        rleCount.value++
+        continue
+      }
+
+      storeRLE(urlEncodedNodes, prev, rleCount, i)
+      urlEncodedNodes.push(urlEncodedNode)
+      prev = withoutIx
+    }
+
+    const mapParam = urlEncodedNodes.join("-");
+
+    params.set("alg", algorithm);
+    params.set("size", sizeParam);
+    params.set("map", mapParam);
+    url.search = params.toString();
+
+    console.log(mapParam);
+  };
+
+  const shareUrl = () => {
+    generateUrl();
+  }
+
   return (
     <div className={styles.mainGrid} >
       <Map 
@@ -256,6 +324,7 @@ const PlayGround = () => {
         result={result}
         animationStep={animationStep}
         totalNodes={mapData.length}
+        onShare={shareUrl}
       />
     </div>
   )

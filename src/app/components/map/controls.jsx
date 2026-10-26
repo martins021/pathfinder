@@ -2,7 +2,7 @@
 import AlgorithmSelect from "../dropdowns/algorithms";
 import ToolMenu from "./algorithmMenu";
 import styles from "../../styles/map.module.css";
-import { FaTrash, FaBroom } from "react-icons/fa6";
+import { FaTrash, FaBroom, FaShareNodes } from "react-icons/fa6";
 
 const Controls = ({ 
   dispatch,
@@ -13,7 +13,8 @@ const Controls = ({
   algorithm,
   result,
   animationStep,
-  totalNodes
+  totalNodes,
+  onShare
 }) => {
   const visitedCount = Math.min(animationStep, result.visitedNodes?.length ?? 0);
   const pathCount = Math.max(0, Math.min(result.path?.length ?? 0, animationStep - (result.visitedNodes?.length ?? 0)));
@@ -53,6 +54,13 @@ const Controls = ({
           </dl>
           {result.targetFound === false && animationStep >= result.visitedNodes.length && <p>No route found</p>}
         </section>
+        <button
+          type="button"
+          onClick={onShare}
+          className="rounded flex items-center justify-center gap-2 px-3 py-2 text-sm font-semibold bg-customWhite hover:bg-customHoverGray"
+        >
+          <FaShareNodes /> Share map
+        </button>
       </div>
 
       <div className={styles[`${result.path?.length ? "resultControlsActive" : "resultControlsHidden"}`]}>
