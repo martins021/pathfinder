@@ -2,6 +2,7 @@
 import { useEffect, useState, useLayoutEffect, useReducer, useRef, useMemo, useCallback } from "react";
 import styles from "./styles/map.module.css"
 import Controls from "./components/map/controls";
+import ShareModal from "./components/map/shareModal";
 import Map from "./components/map/map";
 import { useToast } from '@chakra-ui/react'
 import { settingsReducer } from "./helpers";
@@ -20,6 +21,7 @@ const PlayGround = () => {
   const [settings, dispatch] = useReducer(settingsReducer, initialSettings);
   const { nodeSize, size, algorithm, tool, brushSize, brushMode } = settings;
   const [result, setResult] = useState({}) // result of the algorithm
+  const [shareLink, setShareLink] = useState("");
   const [mapData, setMapData] = useState([]);
   const [searching, setSearching] = useState(false); // algorithm running
   const [animationVersion, setAnimationVersion] = useState(0);
@@ -295,10 +297,11 @@ const PlayGround = () => {
     url.search = params.toString();
 
     console.log(mapParam);
+    return url.href;
   };
 
   const shareUrl = () => {
-    generateUrl();
+    setShareLink(generateUrl());
   }
 
   return (
@@ -326,6 +329,7 @@ const PlayGround = () => {
         totalNodes={mapData.length}
         onShare={shareUrl}
       />
+      {shareLink && <ShareModal url={shareLink} onClose={() => setShareLink("")} />}
     </div>
   )
 }
