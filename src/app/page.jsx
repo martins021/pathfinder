@@ -11,6 +11,60 @@ import { initialSettings, algorithmOptions } from "@/lib/configs";
 const MIN_ELEVATION = 0
 const MAX_ELEVATION = 99
 
+const decodeUrl = ({ algorithm, size, map }) => {
+
+  const dimensions = size?.split(",").map(Number) ?? [];
+  const [x, y] = dimensions;
+  if (dimensions.length !== 2 || !Number.isSafeInteger(x) || !Number.isSafeInteger(y) || x <= 0 || y <= 0) return null;
+  // Missing indices are walls. Each node gets its coordinates from its index.
+  const reconstructedMap = Array.from({ length: x * y }, (_, index) => ({
+    x: index % x,
+    y: Math.floor(index / x),
+    state: "wall",
+    prevState: "empty",
+    elev: 0,
+  }));
+
+  const mapParam = map ? map.split("-") : [];
+  for (const node of mapParam) {
+    if (node.includes(",")) {
+      // expand RLE records: 1,2:e5 
+      const match = node.match(/^(\d+),(\d+):([est])?(\d*)$/);
+      if (!match) return null;
+
+      const startIx = Number(match[1]);
+      const amount = Number(match[2]);
+      const state = { s: "start", t: "target", e: "empty" }[match[3]] ?? "empty";
+      const elev = Number(match[4]); // An omitted elevation becomes 0.
+      const endIx = startIx + amount;
+      if (amount < 1 || endIx > reconstructedMap.length || elev > MAX_ELEVATION) {
+        return null;
+      }
+
+      for (let index = startIx; index < endIx; index++) {
+        reconstructedMap[index] = { ...reconstructedMap[index], state, elev };
+      }
+
+      continue;
+    }
+
+    // "3s5" => index 3, state "s", elevation 5. "18" => empty at index 18.
+    const match = node.match(/^(\d+)([est])?(\d*)$/);
+    if (!match) return null;
+
+    const index = Number(match[1]);
+    const state = { s: "start", t: "target", e: "empty" }[match[2]] ?? "empty";
+    const elev = Number(match[3]); // An omitted elevation becomes 0.
+    if (index >= reconstructedMap.length || elev > MAX_ELEVATION) return null;
+
+    reconstructedMap[index] = { ...reconstructedMap[index], state, elev };
+  }
+
+  const selectedAlgorithm = algorithmOptions.some(option => option.value === algorithm)
+    ? algorithm : initialSettings.algorithm;
+  return { size: { x, y }, mapData: reconstructedMap, algorithm: selectedAlgorithm };
+};
+
 const clearSearchMarks = (nodes) => nodes.map(node => ({
   ...node,
   state: ["visited", "path"].includes(node.state) ? "empty" : node.state,
@@ -31,7 +85,25 @@ const PlayGround = () => {
   const mapDataRef = useRef([]); // used so keyUp listener has access to latest mapData. With state it gets only the initial value
   const sizeRef = useRef(size); // same as above for size
   const prevAlgorithm = useRef("bfs"); 
+  const sharedMapLoaded = useRef(false);
   const toast = useToast();
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (!params.has("map")) return;
+
+    const decoded = decodeUrl({
+      algorithm: params.get("alg"),
+      size: params.get("size"),
+      map: params.get("map"),
+    });
+    if (!decoded) return;
+
+    sharedMapLoaded.current = true;
+    dispatch({ type: "mapSize", value: decoded.size });
+    dispatch({ type: "algorithm", value: decoded.algorithm });
+    setMapData(decoded.mapData);
+  }, []);
 
   const invalidateResult = useCallback(() => {
     gridVersion.current += 1;
@@ -207,11 +279,12 @@ const PlayGround = () => {
   }, [mapData]);
   
   useLayoutEffect(() => {
-    createMap();
+    if (!sharedMapLoaded.current) createMap();
     sizeRef.current = size;
   }, [createMap, size])
   
   useEffect(() => {
+    if (prevAlgorithm.current === algorithm) return;
     if(prevAlgorithm.current === "dijkstra"){
       // if we change from dijkstra to other alg, we remove elevation and set tool to start, because terrain tool is only available for dijkstra
       resetNodes("elevation")
@@ -222,7 +295,9 @@ const PlayGround = () => {
     prevAlgorithm.current = algorithm;
   }, [algorithm, invalidateResult, resetNodes])
 
-  const handleResize = useCallback(() => dispatch({type: "size", value: nodeSize}), [nodeSize])
+  const handleResize = useCallback(() => {
+    if (!sharedMapLoaded.current) dispatch({ type: "size", value: nodeSize });
+  }, [nodeSize])
 
   useLayoutEffect(() => {
     handleResize()
@@ -245,18 +320,17 @@ const PlayGround = () => {
     rleCount.value = 0
   }
 
+  // nodes are encoded like ?map=index[state[elevation]]-index[state[elevation]]
+  // for example 3s5-12t-18-25e7 represents 4 nodes: 
+  // ix 3, start state, and elevation of 5
+  // ix 12, target state, and elevation of 0 (if no elevation shown, then 0 is assumed)
+  // ix 18, empty state (if no state shown then empty is assumed), and elevation of 0
+  // ix 25, empty state, and elevation of 7 (if elevation is not 0 we still show the empty state explicitly so that it acts as separator between index and elevation)
+  // additionally we use Run-length encoding (RLE) that replaces consecutive repeating nodes with a single value-and-count pair
   const generateUrl = () => {
     const url = new URL(window.location.href);
     const params = new URLSearchParams(url.search);
     const sizeParam = size.x + "," + size.y
-
-    // nodes are encoded like ?map=index[state[elevation]]-index[state[elevation]]
-    // for example 3s5-12t-18-25e7 represents 4 nodes: 
-    // ix 3, start state, and elevation of 5
-    // ix 12, target state, and elevation of 0 (if no elevation shown, then 0 is assumed)
-    // ix 18, empty state (if no state shown then empty is assumed), and elevation of 0
-    // ix 25, empty state, and elevation of 7 (if elevation is not 0 we still show the empty state explicitly so that it acts as separator between index and elevation)
-    // additionally we use Run-length encoding (RLE) that replaces consecutive repeating nodes with a single value-and-count pair
 
     // Used for RLE. Stores the state and elevation representation of the previous node. Example: s9 or e4 or empty string
     let prev = null;
@@ -270,6 +344,7 @@ const PlayGround = () => {
         storeRLE(urlEncodedNodes, prev, rleCount, i)
         prev = "wall"
         continue
+      // we share visited paths as empty because user will open the map as empty
       } else if (["visited", "path"].includes(state)){
         state = "empty"
       }
@@ -295,8 +370,6 @@ const PlayGround = () => {
     params.set("size", sizeParam);
     params.set("map", mapParam);
     url.search = params.toString();
-
-    console.log(mapParam);
     return url.href;
   };
 
@@ -318,7 +391,11 @@ const PlayGround = () => {
         onStepChange={setAnimationStep}
       />
       <Controls 
-        dispatch={dispatch}
+        dispatch={action => {
+          // A deliberate node-size change starts a fresh, screen-sized map.
+          if (action.type === "size") sharedMapLoaded.current = false;
+          dispatch(action);
+        }}
         tool={tool} 
         algorithm={algorithm}
         createMap={createMap}
