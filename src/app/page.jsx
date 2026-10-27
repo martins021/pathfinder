@@ -2,13 +2,68 @@
 import { useEffect, useState, useLayoutEffect, useReducer, useRef, useMemo, useCallback } from "react";
 import styles from "./styles/map.module.css"
 import Controls from "./components/map/controls";
+import ShareModal from "./components/map/shareModal";
 import Map from "./components/map/map";
 import { useToast } from '@chakra-ui/react'
 import { settingsReducer } from "./helpers";
-import { initialSettings } from "@/lib/configs";
+import { initialSettings, algorithmOptions } from "@/lib/configs";
 
 const MIN_ELEVATION = 0
 const MAX_ELEVATION = 99
+
+const decodeUrl = ({ algorithm, size, map }) => {
+
+  const dimensions = size?.split(",").map(Number) ?? [];
+  const [x, y] = dimensions;
+  if (dimensions.length !== 2 || !Number.isSafeInteger(x) || !Number.isSafeInteger(y) || x <= 0 || y <= 0) return null;
+  // Missing indices are walls. Each node gets its coordinates from its index.
+  const reconstructedMap = Array.from({ length: x * y }, (_, index) => ({
+    x: index % x,
+    y: Math.floor(index / x),
+    state: "wall",
+    prevState: "empty",
+    elev: 0,
+  }));
+
+  const mapParam = map ? map.split("-") : [];
+  for (const node of mapParam) {
+    if (node.includes(",")) {
+      // expand RLE records: 1,2:e5 
+      const match = node.match(/^(\d+),(\d+):([est])?(\d*)$/);
+      if (!match) return null;
+
+      const startIx = Number(match[1]);
+      const amount = Number(match[2]);
+      const state = { s: "start", t: "target", e: "empty" }[match[3]] ?? "empty";
+      const elev = Number(match[4]); // An omitted elevation becomes 0.
+      const endIx = startIx + amount;
+      if (amount < 1 || endIx > reconstructedMap.length || elev > MAX_ELEVATION) {
+        return null;
+      }
+
+      for (let index = startIx; index < endIx; index++) {
+        reconstructedMap[index] = { ...reconstructedMap[index], state, elev };
+      }
+
+      continue;
+    }
+
+    // "3s5" => index 3, state "s", elevation 5. "18" => empty at index 18.
+    const match = node.match(/^(\d+)([est])?(\d*)$/);
+    if (!match) return null;
+
+    const index = Number(match[1]);
+    const state = { s: "start", t: "target", e: "empty" }[match[2]] ?? "empty";
+    const elev = Number(match[3]); // An omitted elevation becomes 0.
+    if (index >= reconstructedMap.length || elev > MAX_ELEVATION) return null;
+
+    reconstructedMap[index] = { ...reconstructedMap[index], state, elev };
+  }
+
+  const selectedAlgorithm = algorithmOptions.some(option => option.value === algorithm)
+    ? algorithm : initialSettings.algorithm;
+  return { size: { x, y }, mapData: reconstructedMap, algorithm: selectedAlgorithm };
+};
 
 const clearSearchMarks = (nodes) => nodes.map(node => ({
   ...node,
@@ -20,6 +75,7 @@ const PlayGround = () => {
   const [settings, dispatch] = useReducer(settingsReducer, initialSettings);
   const { nodeSize, size, algorithm, tool, brushSize, brushMode } = settings;
   const [result, setResult] = useState({}) // result of the algorithm
+  const [shareLink, setShareLink] = useState("");
   const [mapData, setMapData] = useState([]);
   const [searching, setSearching] = useState(false); // algorithm running
   const [animationVersion, setAnimationVersion] = useState(0);
@@ -29,7 +85,25 @@ const PlayGround = () => {
   const mapDataRef = useRef([]); // used so keyUp listener has access to latest mapData. With state it gets only the initial value
   const sizeRef = useRef(size); // same as above for size
   const prevAlgorithm = useRef("bfs"); 
+  const sharedMapLoaded = useRef(false);
   const toast = useToast();
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (!params.has("map")) return;
+
+    const decoded = decodeUrl({
+      algorithm: params.get("alg"),
+      size: params.get("size"),
+      map: params.get("map"),
+    });
+    if (!decoded) return;
+
+    sharedMapLoaded.current = true;
+    dispatch({ type: "mapSize", value: decoded.size });
+    dispatch({ type: "algorithm", value: decoded.algorithm });
+    setMapData(decoded.mapData);
+  }, []);
 
   const invalidateResult = useCallback(() => {
     gridVersion.current += 1;
@@ -205,11 +279,12 @@ const PlayGround = () => {
   }, [mapData]);
   
   useLayoutEffect(() => {
-    createMap();
+    if (!sharedMapLoaded.current) createMap();
     sizeRef.current = size;
   }, [createMap, size])
   
   useEffect(() => {
+    if (prevAlgorithm.current === algorithm) return;
     if(prevAlgorithm.current === "dijkstra"){
       // if we change from dijkstra to other alg, we remove elevation and set tool to start, because terrain tool is only available for dijkstra
       resetNodes("elevation")
@@ -220,7 +295,9 @@ const PlayGround = () => {
     prevAlgorithm.current = algorithm;
   }, [algorithm, invalidateResult, resetNodes])
 
-  const handleResize = useCallback(() => dispatch({type: "size", value: nodeSize}), [nodeSize])
+  const handleResize = useCallback(() => {
+    if (!sharedMapLoaded.current) dispatch({ type: "size", value: nodeSize });
+  }, [nodeSize])
 
   useLayoutEffect(() => {
     handleResize()
@@ -232,6 +309,73 @@ const PlayGround = () => {
     gridTemplateRows: `repeat(${size.y}, 1fr)`,
     gridTemplateColumns: `repeat(${size.x}, 1fr)`,
   }), [size]);
+
+  const storeRLE = (urlEncodedNodes, prev, rleCount, i) => {
+    if(rleCount.value === 0) return
+
+    urlEncodedNodes.pop() // the first consecutive element was already stored. Now we remove it. 
+    const consecutiveNodes = rleCount.value + 1 // + 1 for the first consecutive node
+    // store the RLE value and count pair in format [starting index,count:value] 
+    urlEncodedNodes.push(`${i - consecutiveNodes},${consecutiveNodes}:${prev}`)
+    rleCount.value = 0
+  }
+
+  // nodes are encoded like ?map=index[state[elevation]]-index[state[elevation]]
+  // for example 3s5-12t-18-25e7 represents 4 nodes: 
+  // ix 3, start state, and elevation of 5
+  // ix 12, target state, and elevation of 0 (if no elevation shown, then 0 is assumed)
+  // ix 18, empty state (if no state shown then empty is assumed), and elevation of 0
+  // ix 25, empty state, and elevation of 7 (if elevation is not 0 we still show the empty state explicitly so that it acts as separator between index and elevation)
+  // additionally we use Run-length encoding (RLE) that replaces consecutive repeating nodes with a single value-and-count pair
+  const generateUrl = () => {
+    const url = new URL(window.location.href);
+    const params = new URLSearchParams(url.search);
+    const sizeParam = size.x + "," + size.y
+
+    // Used for RLE. Stores the state and elevation representation of the previous node. Example: s9 or e4 or empty string
+    let prev = null;
+    // Used for RLE. Amount of currently consecutive repeating nodes that can be encoded using RLE.
+    const rleCount = { value: 0 }; // store in object so that its passed as reference to storeRLE func
+    const urlEncodedNodes = []
+    for (let i = 0; i < mapData.length; i++) {
+      let { state, elev } = mapData[i];
+      // dont encode walls. While decoding, all missing indices will become walls automatically
+      if (state === "wall") {
+        storeRLE(urlEncodedNodes, prev, rleCount, i)
+        prev = "wall"
+        continue
+      // we share visited paths as empty because user will open the map as empty
+      } else if (["visited", "path"].includes(state)){
+        state = "empty"
+      }
+
+      const startOrTarget = ["start", "target"].includes(state) 
+      const urlEncodedNode = `${i}${elev || startOrTarget ? state.charAt(0) : ""}${elev || ""}`
+      const ixOfLetter = urlEncodedNode.search(/[a-z]/i);
+      const withoutIx = ixOfLetter === -1 ? "" : urlEncodedNode.slice(ixOfLetter);
+
+      if(withoutIx === prev && i !== mapData.length - 1){ // if its the last one we store it instead of continuing
+        rleCount.value++
+        continue
+      }
+
+      storeRLE(urlEncodedNodes, prev, rleCount, i)
+      urlEncodedNodes.push(urlEncodedNode)
+      prev = withoutIx
+    }
+
+    const mapParam = urlEncodedNodes.join("-");
+
+    params.set("alg", algorithm);
+    params.set("size", sizeParam);
+    params.set("map", mapParam);
+    url.search = params.toString();
+    return url.href;
+  };
+
+  const shareUrl = () => {
+    setShareLink(generateUrl());
+  }
 
   return (
     <div className={styles.mainGrid} >
@@ -247,7 +391,11 @@ const PlayGround = () => {
         onStepChange={setAnimationStep}
       />
       <Controls 
-        dispatch={dispatch}
+        dispatch={action => {
+          // A deliberate node-size change starts a fresh, screen-sized map.
+          if (action.type === "size") sharedMapLoaded.current = false;
+          dispatch(action);
+        }}
         tool={tool} 
         algorithm={algorithm}
         createMap={createMap}
@@ -256,7 +404,9 @@ const PlayGround = () => {
         result={result}
         animationStep={animationStep}
         totalNodes={mapData.length}
+        onShare={shareUrl}
       />
+      {shareLink && <ShareModal url={shareLink} onClose={() => setShareLink("")} />}
     </div>
   )
 }

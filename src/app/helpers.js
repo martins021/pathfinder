@@ -20,6 +20,9 @@ export const validatePayload = (data, size) => {
 export const settingsReducer = (state, action) => {
   const { type, value } = action;
   switch (type) {
+    // used so that when we create map from shared link it doesnt get resized automatically
+    case "mapSize":
+      return { ...state, size: value }
     case "size":
       const newMapSize = getMapSize(value)
       return { 
