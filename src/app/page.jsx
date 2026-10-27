@@ -86,6 +86,7 @@ const PlayGround = () => {
   const sizeRef = useRef(size); // same as above for size
   const prevAlgorithm = useRef("bfs"); 
   const sharedMapLoaded = useRef(false);
+  const generateUrlRef = useRef(null);
   const toast = useToast();
 
   useEffect(() => {
@@ -376,6 +377,18 @@ const PlayGround = () => {
   const shareUrl = () => {
     setShareLink(generateUrl());
   }
+
+  useEffect(() => {
+    generateUrlRef.current = generateUrl;
+  });
+
+  useEffect(() => {
+    if (!size.x || !size.y) return;
+    const timeout = setTimeout(() => {
+      window.history.replaceState(window.history.state, "", generateUrlRef.current());
+    }, 750);
+    return () => clearTimeout(timeout);
+  }, [animationVersion, algorithm, size]);
 
   return (
     <div className={styles.mainGrid} >
