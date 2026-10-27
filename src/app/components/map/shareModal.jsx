@@ -25,13 +25,13 @@ const ShareModal = ({ url, onClose }) => {
     <Modal isOpen onClose={onClose} isCentered>
       <ModalOverlay />
       <ModalContent bg="rgb(42, 42, 42)" color="white" mx={4}>
-        <ModalHeader>Share map</ModalHeader>
+        <ModalHeader>Share graph</ModalHeader>
         <ModalCloseButton />
         <ModalBody pb={6}>
-          <Text fontSize="sm" mb={3}>Copy this link to share your map.</Text>
+          <Text fontSize="sm" mb={3}>Copy this link to share your graph.</Text>
           <Flex gap={2}>
             <Input
-              aria-label="Map link"
+              aria-label="Graph link"
               value={url}
               isReadOnly
               minW={0}

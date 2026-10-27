@@ -59,7 +59,7 @@ const Controls = ({
           onClick={onShare}
           className="rounded flex items-center justify-center gap-2 px-3 py-2 text-sm font-semibold bg-customWhite hover:bg-customHoverGray"
         >
-          <FaShareNodes /> Share map
+          <FaShareNodes /> Share graph
         </button>
       </div>
 
