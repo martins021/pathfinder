@@ -21,7 +21,7 @@ const Controls = ({
 
   return (
     <>
-      <div className={styles.mainControls} style={{ gap: "1em" }}>
+      <div className={styles.mainControls} style={{ gap: ".75em" }}>
         <AlgorithmSelect 
           onChange={dispatch} 
           algorithm={algorithm} 
@@ -33,7 +33,16 @@ const Controls = ({
           brushMode={brushMode}
         />
         <section className={styles.results} aria-label="Search results">
-          <h2 className="font-semibold">Search results</h2>
+          <div className="flex items-center justify-between gap-2">
+            <h2 className="font-semibold">Search results</h2>
+            <button
+              type="button"
+              onClick={onShare}
+              className="rounded flex items-center gap-2 px-2 py-1 text-xs font-semibold text-customBlack bg-customWhite hover:bg-customHoverGray shrink-0"
+            >
+              <FaShareNodes /> Share graph
+            </button>
+          </div>
           <dl className={styles.metrics}>
             <div>
               <dt>Visited nodes</dt>
@@ -54,13 +63,6 @@ const Controls = ({
           </dl>
           {result.targetFound === false && animationStep >= result.visitedNodes.length && <p>No route found</p>}
         </section>
-        <button
-          type="button"
-          onClick={onShare}
-          className="rounded flex items-center justify-center gap-2 px-3 py-2 text-sm font-semibold bg-customWhite hover:bg-customHoverGray"
-        >
-          <FaShareNodes /> Share graph
-        </button>
       </div>
 
       <div className={styles[`${result.path?.length ? "resultControlsActive" : "resultControlsHidden"}`]}>
@@ -75,7 +77,7 @@ const Controls = ({
             onClick={createMap}
             className="rounded flex items-center gap-2 px-3 py-2 text-sm font-semibold bg-customWhite hover:bg-customHoverGray w-full"
           >
-            <FaTrash /> Reset map
+            <FaTrash /> Reset graph
           </button>
         </div>
       </div>
